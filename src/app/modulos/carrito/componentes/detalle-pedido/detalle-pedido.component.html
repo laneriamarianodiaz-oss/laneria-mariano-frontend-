@@ -56,8 +56,8 @@
               <span class="producto-cantidad">Cantidad: {{ producto.cantidad }}</span>
             </div>
             <div class="producto-precios">
-              <span class="precio-unitario">S/ {{ producto.precio_unitario?.toFixed(2) || '0.00' }}</span>
-              <span class="subtotal">S/ {{ producto.subtotal?.toFixed(2) || '0.00' }}</span>
+              <span class="precio-unitario">S/ {{ producto.precio_unitario.toFixed(2) || '0.00' }}</span>
+              <span class="subtotal">S/ {{ producto.subtotal.toFixed(2) || '0.00' }}</span>
             </div>
           </div>
         </div>
@@ -76,11 +76,11 @@
           </div>
           <div class="resumen-item" *ngIf="pedido.descuento && pedido.descuento > 0">
             <span class="label">Descuento:</span>
-            <span class="valor descuento">- S/ {{ pedido.descuento?.toFixed(2) }}</span>
+            <span class="valor descuento">- S/ {{ pedido.descuento.toFixed(2) }}</span>
           </div>
           <div class="resumen-item total">
             <span class="label">TOTAL:</span>
-            <span class="valor">S/ {{ pedido.total_venta?.toFixed(2) || '0.00' }}</span>
+            <span class="valor">S/ {{ pedido.total_venta.toFixed(2) || '0.00' }}</span>
           </div>
         </div>
       </div>
