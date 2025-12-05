@@ -1,0 +1,214 @@
+<div class="pedidos-container pedidos-scroll">
+  
+  @if (cargando()) {
+    <div class="cargando">
+      <div class="spinner"></div>
+      <p>Cargando pedidos...</p>
+    </div>
+  } @else {
+
+    <!-- PEDIDOS PENDIENTES -->
+    <div class="seccion-pedidos">
+      <div class="seccion-header">
+        <h3>🟡 Pedidos Pendientes</h3>
+        <span class="badge-count">{{ pedidosPendientes().length }}</span>
+      </div>
+
+      @if (pedidosPendientes().length === 0) {
+        <div class="sin-pedidos">
+          <p>No hay pedidos pendientes</p>
+        </div>
+      } @else {
+        <div class="lista-pedidos">
+          @for (pedido of pedidosPendientes(); track pedido.venta_id) {
+            <div class="tarjeta-pedido pendiente">
+              <div class="pedido-header">
+                <div class="pedido-info">
+                  <h4>#{{ pedido.numero_venta }}</h4>
+                  <p class="cliente">{{ pedido.cliente_nombre }}</p>
+                  @if (pedido.cliente_telefono) {
+                    <p class="telefono">📞 {{ pedido.cliente_telefono }}</p>
+                  }
+                </div>
+                <div class="pedido-monto">
+                  <span class="total">S/ {{ pedido.total.toFixed(2) }}</span>
+                  <span class="metodo">{{ pedido.metodo_pago }}</span>
+                  <span class="canal">{{ pedido.canal_venta }}</span>
+                </div>
+              </div>
+
+              <div class="pedido-items">
+                <p class="items-titulo">Productos:</p>
+                @for (item of pedido.items; track item.producto_id) {
+                  <div class="item">
+                    <span>{{ item.cantidad }}x {{ item.nombre_producto }}</span>
+                    <span>S/ {{ item.subtotal.toFixed(2) }}</span>
+                  </div>
+                }
+              </div>
+
+              <div class="pedido-footer">
+                <span class="fecha">{{ formatearFecha(pedido.fecha_venta) }}</span>
+                <div class="acciones">
+                  <button class="btn-rechazar" (click)="rechazarPedido(pedido)">
+                    ❌ Rechazar
+                  </button>
+                  <button class="btn-aceptar" (click)="aceptarPedido(pedido)">
+                    ✅ Aceptar
+                  </button>
+                  <button class="btn-ver" (click)="verDetalle(pedido)">
+                    👁️ Ver
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <!-- PEDIDOS CONFIRMADOS -->
+    <div class="seccion-pedidos">
+      <div class="seccion-header">
+        <h3>🟢 Pedidos Confirmados</h3>
+        <span class="badge-count">{{ pedidosConfirmados().length }}</span>
+      </div>
+
+      @if (pedidosConfirmados().length === 0) {
+        <div class="sin-pedidos">
+          <p>No hay pedidos confirmados</p>
+        </div>
+      } @else {
+        <div class="lista-pedidos">
+          @for (pedido of pedidosConfirmados(); track pedido.venta_id) {
+            <div class="tarjeta-pedido confirmado">
+              <div class="pedido-header">
+                <div class="pedido-info">
+                  <h4>#{{ pedido.numero_venta }}</h4>
+                  <p class="cliente">{{ pedido.cliente_nombre }}</p>
+                </div>
+                <div class="pedido-monto">
+                  <span class="total">S/ {{ pedido.total.toFixed(2) }}</span>
+                </div>
+              </div>
+
+              <div class="pedido-items">
+                @for (item of pedido.items; track item.producto_id) {
+                  <div class="item">
+                    <span>{{ item.cantidad }}x {{ item.nombre_producto }}</span>
+                  </div>
+                }
+              </div>
+
+              <div class="pedido-footer">
+                <span class="fecha">{{ formatearFecha(pedido.fecha_venta) }}</span>
+                <div class="acciones">
+                  <button class="btn-completar" (click)="completarPedido(pedido)">
+                    ✅ Completar
+                  </button>
+                  <button class="btn-ver" (click)="verDetalle(pedido)">
+                    👁️ Ver
+                  </button>
+                  <button (click)="verDetallePedido(pedido.venta_id)">
+                    Ver Detalle
+                  </button>
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+  }
+
+  <!-- MODAL DETALLE -->
+  @if (mostrarModal && pedidoSeleccionado) {
+    <div class="modal-overlay" (click)="cerrarModal()">
+      <div class="modal-contenido" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h2>Detalle del Pedido #{{ pedidoSeleccionado.numero_venta }}</h2>
+          <button class="btn-cerrar" (click)="cerrarModal()">✕</button>
+        </div>
+
+        <div class="modal-body">
+
+          <div class="detalle-seccion">
+            <h3>Cliente</h3>
+            <p><strong>Nombre:</strong> {{ pedidoSeleccionado.cliente_nombre }}</p>
+            @if (pedidoSeleccionado.cliente_telefono) {
+              <p><strong>Teléfono:</strong> {{ pedidoSeleccionado.cliente_telefono }}</p>
+            }
+          </div>
+
+          <div class="detalle-seccion">
+            <h3>Productos</h3>
+            <table class="tabla-items">
+              <thead>
+                <tr>
+                  <th>Producto</th>
+                  <th>Cantidad</th>
+                  <th>Precio Unit.</th>
+                  <th>Subtotal</th>
+                </tr>
+              </thead>
+              <tbody>
+                @for (item of pedidoSeleccionado.items; track item.producto_id) {
+                  <tr>
+                    <td>{{ item.nombre_producto }}</td>
+                    <td>{{ item.cantidad }}</td>
+                    <td>S/ {{ item.precio_unitario.toFixed(2) }}</td>
+                    <td>S/ {{ item.subtotal.toFixed(2) }}</td>
+                  </tr>
+                }
+              </tbody>
+            </table>
+          </div>
+
+          <div class="detalle-seccion">
+            <div class="totales">
+              <div class="total-linea">
+                <span>Subtotal:</span>
+                <span>S/ {{ pedidoSeleccionado.subtotal.toFixed(2) }}</span>
+              </div>
+
+              @if (pedidoSeleccionado.descuento > 0) {
+                <div class="total-linea">
+                  <span>Descuento:</span>
+                  <span>-S/ {{ pedidoSeleccionado.descuento.toFixed(2) }}</span>
+                </div>
+              }
+
+              <div class="total-linea total-final">
+                <span><strong>TOTAL:</strong></span>
+                <span><strong>S/ {{ pedidoSeleccionado.total.toFixed(2) }}</strong></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="detalle-seccion">
+            <h3>Información Adicional</h3>
+            <p><strong>Método de Pago:</strong> {{ pedidoSeleccionado.metodo_pago }}</p>
+            <p><strong>Canal:</strong> {{ pedidoSeleccionado.canal_venta }}</p>
+            <p><strong>Estado:</strong> 
+              <span [class]="getEstadoClase(pedidoSeleccionado.estado_venta)">
+                {{ getEstadoIcono(pedidoSeleccionado.estado_venta) }} {{ pedidoSeleccionado.estado_venta }}
+              </span>
+            </p>
+            <p><strong>Fecha:</strong> {{ formatearFecha(pedidoSeleccionado.fecha_venta) }}</p>
+
+            @if (pedidoSeleccionado.observaciones) {
+              <p><strong>Observaciones:</strong> {{ pedidoSeleccionado.observaciones }}</p>
+            }
+          </div>
+
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn-secundario" (click)="cerrarModal()">Cerrar</button>
+        </div>
+
+      </div>
+    </div>
+  }
+</div>

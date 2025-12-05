@@ -1,0 +1,176 @@
+<div class="detalle-container">
+  @if (cargando()) {
+    <div class="cargando">
+      <div class="spinner"></div>
+      <p>Cargando detalle de venta...</p>
+    </div>
+  }
+
+  @if (!cargando() && venta()) {
+    <!-- Header -->
+    <div class="detalle-header">
+      <button class="btn-volver" (click)="volver()">
+        ← Volver a la lista
+      </button>
+      <div class="acciones-header">
+        <button class="btn-pdf" (click)="generarComprobante()">
+          📄 Generar PDF
+        </button>
+        @if (venta()!.estado_venta === 'Pendiente') {
+          <button
+            class="btn-completar"
+            (click)="cambiarEstado('Completada')"
+          >
+            ✓ Completar Venta
+          </button>
+          <button
+            class="btn-cancelar"
+            (click)="cambiarEstado('Cancelada')"
+          >
+            ✗ Cancelar Venta
+          </button>
+        }
+      </div>
+    </div>
+
+    <!-- Información principal -->
+    <div class="tarjeta-principal">
+      <div class="info-venta">
+        <div class="numero-grande">{{ venta()!.numero_venta }}</div>
+        <app-insignia-estado [estado]="venta()!.estado_venta" />
+      </div>
+      <div class="fecha-venta">
+        📅 {{ formatearFecha(venta()!.fecha_venta) }}
+      </div>
+    </div>
+
+    <!-- Grid de información -->
+    <div class="grid-info">
+      <!-- Cliente -->
+      <div class="tarjeta-info">
+        <h3 class="titulo-tarjeta">👤 Cliente</h3>
+        @if (venta()!.cliente) {
+          <div class="contenido-tarjeta">
+            <p class="info-linea">
+              <strong>Nombre:</strong> {{ venta()!.cliente!.nombre_clie }}
+            </p>
+            <p class="info-linea">
+              <strong>Teléfono:</strong> {{ venta()!.cliente!.telefono }}
+            </p>
+            @if (venta()!.cliente!.email) {
+              <p class="info-linea">
+                <strong>Email:</strong> {{ venta()!.cliente!.email }}
+              </p>
+            }
+            @if (venta()!.cliente!.direccion) {
+              <p class="info-linea">
+                <strong>Dirección:</strong> {{ venta()!.cliente!.direccion }}
+              </p>
+            }
+          </div>
+        } @else {
+          <p class="sin-info">Sin información de cliente</p>
+        }
+      </div>
+
+      <!-- Método de pago y canal -->
+      <div class="tarjeta-info">
+        <h3 class="titulo-tarjeta">💳 Información de Pago</h3>
+        <div class="contenido-tarjeta">
+          <p class="info-linea">
+            <strong>Método de Pago:</strong>
+            <span class="badge-info">
+              {{ obtenerIconoPago(venta()!.metodo_pago) }}
+              {{ venta()!.metodo_pago }}
+            </span>
+          </p>
+          <p class="info-linea">
+            <strong>Canal de Venta:</strong>
+            <span class="badge-info">
+              {{ obtenerIconoCanal(venta()!.canal_venta || 'Tienda física') }}
+              {{ venta()!.canal_venta || 'Tienda física' }}
+            </span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Observaciones -->
+    @if (venta()!.observaciones) {
+      <div class="tarjeta-observaciones">
+        <h3 class="titulo-tarjeta">📝 Observaciones</h3>
+        <p class="texto-observaciones">{{ venta()!.observaciones }}</p>
+      </div>
+    }
+
+    <!-- Productos -->
+    <div class="tarjeta-productos">
+      <h3 class="titulo-tarjeta">🛒 Productos</h3>
+      <div class="tabla-productos">
+        <table>
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Cantidad</th>
+              <th>Precio Unitario</th>
+              <th>Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (detalle of venta()!.detalles; track detalle.detalle_venta_id) {
+              <tr>
+                <td>
+                  <div class="producto-info">
+                    <span class="producto-nombre">{{ detalle.producto.nombre }}</span>
+                    @if (detalle.producto.tipo_lana || detalle.producto.color) {
+                      <span class="producto-detalles">
+                        {{ detalle.producto.tipo_lana }}
+                        @if (detalle.producto.color) {
+                          - {{ detalle.producto.color }}
+                        }
+                        @if (detalle.producto.talla_tamano) {
+                          - {{ detalle.producto.talla_tamano }}
+                        }
+                      </span>
+                    }
+                  </div>
+                </td>
+                <td class="cantidad">{{ detalle.cantidad }}</td>
+                <td class="precio">{{ formatearMoneda(detalle.precio_unitario) }}</td>
+                <td class="subtotal">{{ formatearMoneda(detalle.subtotal) }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Total -->
+      <div class="total-container">
+        @if (venta()!.subtotal && venta()!.descuento) {
+          <div class="linea-total">
+            <span>Subtotal:</span>
+            <span>{{ formatearMoneda(venta()!.subtotal!) }}</span>
+          </div>
+          <div class="linea-total">
+            <span>Descuento:</span>
+            <span class="descuento">-{{ formatearMoneda(venta()!.descuento!) }}</span>
+          </div>
+        }
+        <div class="linea-total total-final">
+          <span>TOTAL:</span>
+          <span>{{ formatearMoneda(venta()!.total_venta) }}</span>
+        </div>
+      </div>
+    </div>
+  }
+
+  @if (!cargando() && !venta()) {
+    <div class="sin-datos">
+      <p class="icono-vacio">❌</p>
+      <p class="texto-vacio">No se encontró la venta</p>
+      <button class="btn-volver" (click)="volver()">
+        ← Volver a la lista
+      </button>
+    </div>
+  }
+</div>

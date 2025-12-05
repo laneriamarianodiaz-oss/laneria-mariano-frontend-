@@ -1,0 +1,89 @@
+<div class="filtros-container">
+  
+  <div class="filtros-grid">
+    
+    <!-- Búsqueda -->
+    <div class="filtro-item filtro-busqueda">
+      <label>
+        <span class="filtro-icon">🔍</span>
+        Buscar producto
+      </label>
+      <input 
+        type="text" 
+        class="filtro-input"
+        placeholder="Por nombre o código de lana..."
+        [(ngModel)]="busqueda"
+        (input)="aplicarFiltros()"
+      >
+    </div>
+
+    <!-- Categoría -->
+    <div class="filtro-item">
+      <label>Categoría</label>
+      <select 
+        class="filtro-select"
+        [(ngModel)]="categoriaSeleccionada"
+        (change)="aplicarFiltros()"
+      >
+        @for (cat of categorias; track cat) {
+          <option [value]="cat">{{ cat }}</option>
+        }
+      </select>
+    </div>
+
+    <!-- Tipo de lana -->
+    <div class="filtro-item">
+      <label>Tipo de lana</label>
+      <select 
+        class="filtro-select"
+        [(ngModel)]="tipoLanaSeleccionado"
+        (change)="aplicarFiltros()"
+      >
+        @for (tipo of tiposLana; track tipo) {
+          <option [value]="tipo">{{ tipo }}</option>
+        }
+      </select>
+    </div>
+
+    <!-- Color -->
+    <div class="filtro-item">
+      <label>Color</label>
+      <select 
+        class="filtro-select"
+        [(ngModel)]="colorSeleccionado"
+        (change)="aplicarFiltros()"
+      >
+        @for (color of colores; track color) {
+          <option [value]="color">{{ color }}</option>
+        }
+      </select>
+    </div>
+
+    <!-- Estado -->
+    <div class="filtro-item">
+      <label>Estado</label>
+      <select 
+        class="filtro-select"
+        [(ngModel)]="estadoSeleccionado"
+        (change)="aplicarFiltros()"
+      >
+        @for (estado of estados; track estado.valor) {
+          <option [value]="estado.valor">{{ estado.texto }}</option>
+        }
+      </select>
+    </div>
+
+    <!-- Botón Limpiar -->
+    <div class="filtro-item filtro-boton">
+      <button 
+        class="btn-limpiar"
+        (click)="limpiarFiltros()"
+        [disabled]="!hayFiltrosActivos()"
+      >
+        Limpiar
+      </button>
+    </div>
+
+  </div>
+
+</div>

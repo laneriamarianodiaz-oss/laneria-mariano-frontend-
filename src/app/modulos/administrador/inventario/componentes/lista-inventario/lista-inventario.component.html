@@ -1,0 +1,250 @@
+<div class="inventario-container">
+  
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <h1 class="page-title">📊 Gestión de Inventario</h1>
+      <p class="page-subtitle">Control y seguimiento de stock</p>
+    </div>
+    <div class="header-right">
+      <button class="btn-primary" (click)="cargarDatos()">
+        <span class="btn-icon">🔄</span>
+        <span>Actualizar</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Panel de Alertas COMENTADO TEMPORALMENTE -->
+  <!--
+  @if (estadisticas()) {
+    <app-panel-alertas-stock [estadisticas]="estadisticas()!" />
+  }
+  -->
+
+  <!-- Alertas -->
+  <div class="alertas-grid">
+    @if (productosStockCritico() > 0) {
+      <div class="alerta alerta-critico">
+        <span class="alerta-icon">🚨</span>
+        <div class="alerta-content">
+          <span class="alerta-numero">{{ productosStockCritico() }}</span>
+          <span class="alerta-texto">productos en estado crítico</span>
+        </div>
+      </div>
+    }
+    
+    @if (productosStockBajo() > 0) {
+      <div class="alerta alerta-bajo">
+        <span class="alerta-icon">⚠️</span>
+        <div class="alerta-content">
+          <span class="alerta-numero">{{ productosStockBajo() }}</span>
+          <span class="alerta-texto">productos con stock bajo</span>
+        </div>
+      </div>
+    }
+  </div>
+
+  <!-- Filtros -->
+  <div class="filtros-container">
+    <div class="filtros-grid">
+      
+      <!-- Búsqueda -->
+      <div class="filtro-item filtro-busqueda">
+        <label>
+          <span class="filtro-icon">🔍</span>
+          Buscar producto
+        </label>
+        <input 
+          type="text" 
+          class="filtro-input"
+          placeholder="Por nombre o código..."
+          [(ngModel)]="filtrosActivos().busqueda"
+          (input)="aplicarFiltros(filtrosActivos())"
+        >
+      </div>
+
+      <!-- Categoría -->
+      <div class="filtro-item">
+        <label>Categoría</label>
+        <select 
+          class="filtro-select"
+          [(ngModel)]="filtrosActivos().categoria"
+          (change)="aplicarFiltros(filtrosActivos())"
+        >
+          @for (cat of categorias; track cat) {
+            <option [value]="cat === 'Todas' ? '' : cat">{{ cat }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Estado de Stock -->
+      <div class="filtro-item">
+        <label>Estado de Stock</label>
+        <select 
+          class="filtro-select"
+          [(ngModel)]="filtrosActivos().estado_stock"
+          (change)="aplicarFiltros(filtrosActivos())"
+        >
+          <option value="">Todos</option>
+          @for (estado of estadosStock; track estado.valor) {
+            <option [value]="estado.valor">{{ estado.texto }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Ordenar por -->
+      <div class="filtro-item">
+        <label>Ordenar por</label>
+        <select 
+          class="filtro-select"
+          [(ngModel)]="filtrosActivos().orden"
+          (change)="aplicarFiltros(filtrosActivos())"
+        >
+          @for (orden of ordenamiento; track orden.valor) {
+            <option [value]="orden.valor">{{ orden.texto }}</option>
+          }
+        </select>
+      </div>
+
+      <!-- Botón Limpiar -->
+      <div class="filtro-item filtro-boton">
+        <button 
+          class="btn-limpiar"
+          (click)="limpiarFiltros()"
+        >
+          Limpiar
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Loading -->
+  @if (cargando()) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>Cargando inventario...</p>
+    </div>
+  }
+
+  <!-- Tabla de Inventario -->
+  @if (!cargando() && productos().length > 0) {
+    <div class="table-container">
+      <table class="table-inventario">
+        <thead>
+          <tr>
+            <th>Código</th>
+            <th>Producto</th>
+            <th>Categoría</th>
+            <th>Stock Actual</th>
+            <th>Stock Mínimo</th>
+            <th>Estado</th>
+            <th>Precio Unit.</th>
+            <th>Valor Total</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (producto of productos(); track producto.id) {
+            <tr [class.fila-critico]="producto.estado_stock === 'critico'">
+              
+              <td class="producto-codigo">{{ producto.codigo_lana }}</td>
+
+              <td>
+                <div class="producto-info">
+                  <span class="producto-nombre">{{ producto.nombre }}</span>
+                  <span class="producto-tipo">{{ producto.tipo_lana }} - {{ producto.color }}</span>
+                </div>
+              </td>
+
+              <td>{{ producto.categoria }}</td>
+
+              <td>
+                <div class="stock-actual">
+                  <span class="stock-numero" [class.stock-critico]="producto.estado_stock === 'critico'">
+                    {{ producto.stock }}
+                  </span>
+                  <span class="stock-unidad">unid.</span>
+                </div>
+              </td>
+
+              <td class="text-muted">{{ producto.stock_minimo }} unid.</td>
+
+              <td>
+                <span 
+                  class="badge" 
+                  [ngClass]="getStockBadgeClass(producto.estado_stock)"
+                >
+                  {{ getEstadoTexto(producto.estado_stock) }}
+                </span>
+              </td>
+
+              <td class="precio">S/ {{ producto.precio_unitario | number:'1.2-2' }}</td>
+
+              <td class="valor-total">S/ {{ producto.valor_total | number:'1.2-2' }}</td>
+
+              <td>
+                <div class="action-buttons">
+                  <button 
+                    class="btn-icon btn-ajustar" 
+                    (click)="abrirModalAjuste(producto)"
+                    title="Ajustar stock"
+                  >
+                    🔧
+                  </button>
+                  <button 
+                    class="btn-icon btn-historial" 
+                    (click)="abrirHistorial(producto)"
+                    title="Ver historial"
+                  >
+                    📜
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+
+      <div class="table-footer">
+        <div class="footer-info">
+          <span>Total de productos: <strong>{{ productos().length }}</strong></span>
+          <span class="separator">|</span>
+          <span>Valor total del inventario: <strong>S/ {{ valorTotalInventario() | number:'1.2-2' }}</strong></span>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Estado Vacío -->
+  @if (!cargando() && productos().length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">📦</div>
+      <h3>No hay productos en el inventario</h3>
+      <p>No se encontraron productos con los filtros seleccionados</p>
+      <button class="btn-primary" (click)="limpiarFiltros()">
+        Limpiar Filtros
+      </button>
+    </div>
+  }
+
+  <!-- MODALES COMENTADOS TEMPORALMENTE -->
+  <!--
+  @if (mostrarModalAjuste() && productoSeleccionado()) {
+    <app-modal-ajuste-stock
+      [producto]="productoSeleccionado()!"
+      (cerrar)="cerrarModales()"
+      (stockAjustado)="stockAjustado()"
+    />
+  }
+
+  @if (mostrarModalHistorial() && productoSeleccionado()) {
+    <app-historial-stock
+      [productoId]="productoSeleccionado()!.id"
+      [productoNombre]="productoSeleccionado()!.nombre"
+      (cerrar)="cerrarModales()"
+    />
+  }
+  -->
+
+</div>

@@ -1,0 +1,460 @@
+.finalizar-compra {
+  background: #F5E6F1;
+  min-height: 100vh;
+  padding: 0;
+  padding-top: 70px;
+
+  $morado: #B49BC8;
+  $morado-oscuro: #9370B8;
+  $blanco: #FFFFFF;
+  $gris: #666666;
+  $gris-claro: #999999;
+  $rosa-claro: #F5E6F1;
+
+  .contenedor {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0;
+  }
+
+  // Breadcrumb
+  .breadcrumb {
+    background: $blanco;
+    padding: 1rem 2rem;
+    border-bottom: 1px solid #E0E0E0;
+
+    span {
+      color: $gris;
+      font-size: 0.9rem;
+    }
+  }
+
+  // Banner envío gratis
+  .banner-envio {
+    background: #FFE8F5;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.95rem;
+
+    .badge-oferta {
+      background: $morado;
+      color: $blanco;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 600;
+    }
+  }
+
+  // Layout principal
+  .layout-checkout {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    gap: 2rem;
+    padding: 2rem;
+    background: $rosa-claro;
+
+    @media (max-width: 1024px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  // Columna principal
+  .columna-principal {
+    .seccion {
+      background: $blanco;
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+      &.seccion-yape {
+        padding: 2rem;
+      }
+    }
+
+    .seccion-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+
+      h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #333;
+        margin: 0;
+      }
+
+      .btn-link {
+        background: none;
+        border: none;
+        color: $morado-oscuro;
+        font-size: 0.9rem;
+        cursor: pointer;
+        text-decoration: underline;
+
+        &:hover {
+          color: $morado;
+        }
+      }
+    }
+
+    // Datos de envío
+    .datos-envio {
+      .nombre,
+      .telefono,
+      .direccion {
+        margin: 0.5rem 0;
+        color: $gris;
+        line-height: 1.6;
+      }
+
+      .nombre {
+        font-weight: 600;
+        color: #333;
+        font-size: 1.05rem;
+      }
+    }
+
+    // Formulario
+    .formulario,
+    .form-comprobante {
+      .form-group {
+        margin-bottom: 1rem;
+
+        label {
+          display: block;
+          font-weight: 600;
+          color: #333;
+          margin-bottom: 0.5rem;
+          font-size: 0.95rem;
+        }
+
+        .input-field {
+          width: 100%;
+          padding: 0.75rem;
+          border: 1px solid #DDD;
+          border-radius: 6px;
+          font-size: 0.95rem;
+          box-sizing: border-box;
+
+          &:focus {
+            outline: none;
+            border-color: $morado;
+            box-shadow: 0 0 0 3px rgba(180, 155, 200, 0.1);
+          }
+
+          &::placeholder {
+            color: $gris-claro;
+          }
+        }
+      }
+    }
+
+    // Contenido Yape
+    .contenido-yape {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2rem;
+
+      @media (max-width: 768px) {
+        grid-template-columns: 1fr;
+      }
+
+      .instrucciones {
+        .header-yape {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          padding: 1rem;
+          background: linear-gradient(135deg, #722C8F 0%, #9B4AAD 100%);
+          border-radius: 8px;
+          margin-bottom: 1.5rem;
+
+          .logo-yape {
+            width: 50px;
+            height: 50px;
+            background: $blanco;
+            border-radius: 8px;
+            padding: 0.5rem;
+            object-fit: contain;
+          }
+
+          h4 {
+            color: $blanco;
+            margin: 0 0 0.25rem;
+            font-size: 1.1rem;
+          }
+
+          p {
+            color: rgba(255, 255, 255, 0.9);
+            margin: 0;
+            font-size: 0.85rem;
+          }
+        }
+
+        .pasos {
+          background: #F8F9FA;
+          padding: 1rem;
+          border-radius: 8px;
+          border-left: 3px solid $morado;
+
+          p {
+            margin: 0 0 0.75rem;
+            font-weight: 600;
+            color: #333;
+          }
+
+          ol {
+            margin: 0;
+            padding-left: 1.5rem;
+            color: $gris;
+
+            li {
+              margin: 0.5rem 0;
+              line-height: 1.6;
+              font-size: 0.9rem;
+
+              strong {
+                color: $morado-oscuro;
+              }
+            }
+          }
+        }
+      }
+
+      .qr-container {
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+
+        .qr-box {
+          text-align: center;
+          background: #F8F9FA;
+          padding: 1.5rem;
+          border-radius: 8px;
+
+          .qr-image {
+            width: 180px;
+            height: 180px;
+            border: 2px solid $morado;
+            border-radius: 8px;
+            padding: 0.5rem;
+            background: $blanco;
+          }
+
+          .qr-monto {
+            margin: 1rem 0 0;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: $morado-oscuro;
+          }
+        }
+      }
+
+      .form-comprobante {
+        grid-column: 1 / -1;
+      }
+    }
+
+    // Upload area
+    .upload-area {
+      border: 2px dashed #DDD;
+      border-radius: 8px;
+      padding: 2rem;
+      text-align: center;
+      background: #FAFAFA;
+      cursor: pointer;
+      transition: all 0.3s;
+
+      &:hover {
+        border-color: $morado;
+        background: #F8F3FF;
+      }
+
+      .upload-label {
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+
+        .upload-icon {
+          font-size: 2rem;
+        }
+
+        .upload-text {
+          color: $morado-oscuro;
+          font-weight: 600;
+        }
+
+        .upload-hint {
+          color: $gris-claro;
+          font-size: 0.85rem;
+        }
+      }
+    }
+
+    .preview-box {
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 2px solid $morado;
+
+      img {
+        width: 100%;
+        display: block;
+        max-height: 300px;
+        object-fit: contain;
+        background: #F8F9FA;
+      }
+
+      .btn-remove {
+        position: absolute;
+        top: 0.5rem;
+        right: 0.5rem;
+        background: rgba(255, 0, 0, 0.9);
+        color: $blanco;
+        border: none;
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 1.5rem;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover {
+          background: rgba(200, 0, 0, 1);
+        }
+      }
+    }
+
+    // Lista de productos
+    .lista-productos {
+      .producto-item {
+        display: flex;
+        gap: 1rem;
+        padding: 1rem 0;
+        border-bottom: 1px solid #F0F0F0;
+
+        &:last-child {
+          border-bottom: none;
+        }
+
+        img {
+          width: 80px;
+          height: 80px;
+          object-fit: cover;
+          border-radius: 6px;
+        }
+
+        .producto-info {
+          flex: 1;
+
+          .producto-nombre {
+            font-weight: 600;
+            color: #333;
+            margin: 0 0 0.5rem;
+          }
+
+          .producto-cantidad {
+            color: $gris;
+            margin: 0;
+            font-size: 0.9rem;
+          }
+        }
+
+        .producto-precio {
+          font-weight: 600;
+          color: #333;
+          white-space: nowrap;
+        }
+      }
+    }
+  }
+
+  // Columna resumen (sticky)
+  .columna-resumen {
+    .resumen-card {
+      background: $blanco;
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+      position: sticky;
+      top: 90px;
+
+      h3 {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #333;
+        margin: 0 0 1.5rem;
+      }
+
+      .resumen-linea {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.75rem;
+        font-size: 0.95rem;
+        color: $gris;
+      }
+
+      .resumen-envio {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 0.75rem;
+        padding: 0.75rem;
+        background: $morado;
+        border-radius: 6px;
+        font-size: 0.95rem;
+        color: $blanco;
+
+        .gratis {
+          font-weight: 600;
+        }
+      }
+
+      .resumen-total {
+        display: flex;
+        justify-content: space-between;
+        padding: 1rem 0;
+        border-top: 2px solid #F0F0F0;
+        margin-top: 1rem;
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #333;
+      }
+
+      .btn-finalizar {
+        width: 100%;
+        background: $morado;
+        color: $blanco;
+        border: none;
+        padding: 1rem;
+        border-radius: 6px;
+        font-size: 1rem;
+        font-weight: 600;
+        cursor: pointer;
+        margin-top: 1rem;
+        transition: all 0.3s;
+
+        &:hover:not(:disabled) {
+          background: $morado-oscuro;
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(180, 155, 200, 0.3);
+        }
+
+        &:disabled {
+          background: #CCC;
+          cursor: not-allowed;
+          transform: none;
+        }
+      }
+    }
+  }
+}

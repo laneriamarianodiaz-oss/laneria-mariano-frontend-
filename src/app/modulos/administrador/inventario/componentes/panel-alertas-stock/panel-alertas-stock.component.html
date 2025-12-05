@@ -1,0 +1,53 @@
+<div class="estadisticas-grid">
+  
+  <!-- Valor Total -->
+  <div class="stat-card valor-total">
+    <div class="stat-icon">💰</div>
+    <div class="stat-content">
+      <div class="stat-label">Valor Total Inventario</div>
+      <div class="stat-value">S/ {{ estadisticas.valor_total_inventario | number:'1.2-2' }}</div>
+      <div class="stat-detail">{{ estadisticas.total_productos }} productos</div>
+    </div>
+  </div>
+
+  <!-- Stock Crítico -->
+  <div class="stat-card critico">
+    <div class="stat-icon">🚨</div>
+    <div class="stat-content">
+      <div class="stat-label">Stock Crítico</div>
+      <div class="stat-value">{{ estadisticas.productos_stock_critico }}</div>
+      <div class="stat-detail">requiere atención urgente</div>
+    </div>
+  </div>
+
+  <!-- Stock Bajo -->
+  <div class="stat-card bajo">
+    <div class="stat-icon">⚠️</div>
+    <div class="stat-content">
+      <div class="stat-label">Stock Bajo</div>
+      <div class="stat-value">{{ estadisticas.productos_stock_bajo }}</div>
+      <div class="stat-detail">necesita reabastecimiento</div>
+    </div>
+  </div>
+
+  <!-- Stock Normal -->
+  <div class="stat-card normal">
+    <div class="stat-icon">✅</div>
+    <div class="stat-content">
+      <div class="stat-label">Stock Normal</div>
+      <div class="stat-value">{{ estadisticas.productos_stock_normal }}</div>
+      <div class="stat-detail">en nivel óptimo</div>
+    </div>
+  </div>
+
+  <!-- Movimientos del Mes -->
+  <div class="stat-card movimientos">
+    <div class="stat-icon">📦</div>
+    <div class="stat-content">
+      <div class="stat-label">Movimientos del Mes</div>
+      <div class="stat-value">{{ estadisticas.movimientos_mes }}</div>
+      <div class="stat-detail">{{ estadisticas.movimientos_hoy }} hoy</div>
+    </div>
+  </div>
+
+</div>

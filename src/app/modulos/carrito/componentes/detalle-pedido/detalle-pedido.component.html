@@ -1,0 +1,98 @@
+<!-- Modal Detalle Pedido -->
+<div class="modal-overlay" *ngIf="mostrar && pedido" (click)="cerrarModal()">
+  <div class="modal-content" (click)="$event.stopPropagation()">
+    
+    <!-- Header -->
+    <div class="modal-header">
+      <div class="header-info">
+        <h2>Detalle del Pedido</h2>
+        <p class="numero-pedido">#{{ pedido.numero_venta }}</p>
+      </div>
+      <button class="btn-cerrar" (click)="cerrarModal()">
+        <span>×</span>
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="modal-body">
+      
+      <!-- ⭐ COMPONENTE DE SEGUIMIENTO -->
+      <app-seguimiento-pedido
+        [estadoActual]="pedido.estado_venta || 'Pendiente'"
+        [observaciones]="pedido.observaciones"
+        [fechaPedido]="pedido.fecha_venta">
+      </app-seguimiento-pedido>
+
+      <!-- Información del Cliente -->
+      <div class="seccion">
+        <h3>📋 Información de Entrega</h3>
+        <div class="info-grid">
+          <div class="info-item">
+            <span class="label">Cliente:</span>
+            <span class="valor">{{ pedido.cliente?.nombre_cliente || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Teléfono:</span>
+            <span class="valor">{{ pedido.cliente?.telefono || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Canal de venta:</span>
+            <span class="valor">{{ pedido.canal_venta || 'N/A' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Método de pago:</span>
+            <span class="valor">{{ pedido.metodo_pago || 'N/A' }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Productos -->
+      <div class="seccion">
+        <h3>🛍️ Productos ({{ totalProductos }} items)</h3>
+        <div class="productos-lista" *ngIf="pedido.productos && pedido.productos.length > 0">
+          <div class="producto-item" *ngFor="let producto of pedido.productos">
+            <div class="producto-info">
+              <span class="producto-nombre">{{ producto.nombre_producto }}</span>
+              <span class="producto-cantidad">Cantidad: {{ producto.cantidad }}</span>
+            </div>
+            <div class="producto-precios">
+              <span class="precio-unitario">S/ {{ producto.precio_unitario?.toFixed(2) || '0.00' }}</span>
+              <span class="subtotal">S/ {{ producto.subtotal?.toFixed(2) || '0.00' }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="estado-vacio" *ngIf="!pedido.productos || pedido.productos.length === 0">
+          <p>No hay productos en este pedido</p>
+        </div>
+      </div>
+
+      <!-- Resumen de Pago -->
+      <div class="seccion resumen-pago">
+        <h3>💰 Resumen de Pago</h3>
+        <div class="resumen-grid">
+          <div class="resumen-item">
+            <span class="label">Subtotal:</span>
+            <span class="valor">S/ {{ pedido.subtotal?.toFixed(2) || '0.00' }}</span>
+          </div>
+          <div class="resumen-item" *ngIf="pedido.descuento && pedido.descuento > 0">
+            <span class="label">Descuento:</span>
+            <span class="valor descuento">- S/ {{ pedido.descuento?.toFixed(2) }}</span>
+          </div>
+          <div class="resumen-item total">
+            <span class="label">TOTAL:</span>
+            <span class="valor">S/ {{ pedido.total_venta?.toFixed(2) || '0.00' }}</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer">
+      <button class="btn btn-secondary" (click)="cerrarModal()">
+        Cerrar
+      </button>
+    </div>
+
+  </div>
+</div>

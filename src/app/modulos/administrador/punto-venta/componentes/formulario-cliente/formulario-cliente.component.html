@@ -1,0 +1,182 @@
+<div class="formulario-container">
+  <!-- Header -->
+  <div class="formulario-header">
+    <h2 class="titulo">👤 Seleccionar Cliente</h2>
+    <button class="btn-cerrar" (click)="cancelar()">✕</button>
+  </div>
+
+  <!-- ⭐ BÚSQUEDA UNIVERSAL -->
+  @if (!modoCrear() && resultadosBusqueda().length === 0) {
+    <form [formGroup]="formBusqueda" (ngSubmit)="buscarCliente()">
+      <div class="formulario-body">
+        <p class="descripcion">Busca al cliente por nombre, DNI o teléfono</p>
+
+        <div class="campo-formulario">
+          <label>Búsqueda</label>
+          <input
+            type="text"
+            formControlName="termino"
+            [placeholder]="placeholderBusqueda"
+            autocomplete="off"
+          />
+          <small class="hint-busqueda">{{ hintBusqueda }}</small>
+        </div>
+      </div>
+
+      <div class="formulario-footer">
+        <button type="button" class="btn-secundario" (click)="cancelar()">
+          Cancelar
+        </button>
+        <button
+          type="submit"
+          class="btn-primario"
+          [disabled]="formBusqueda.invalid || buscando()"
+        >
+          @if (buscando()) {
+            <span class="spinner-btn"></span>
+            Buscando...
+          } @else {
+            🔍 Buscar Cliente
+          }
+        </button>
+      </div>
+    </form>
+  }
+
+  <!-- ⭐ RESULTADOS DE BÚSQUEDA (si hay múltiples) -->
+  @if (resultadosBusqueda().length > 0) {
+    <div class="formulario-body">
+      <div class="alerta-info">
+        <span class="icono-info">✓</span>
+        <p>Se encontraron {{ resultadosBusqueda().length }} clientes:</p>
+      </div>
+
+      <div class="lista-clientes">
+        @for (cliente of resultadosBusqueda(); track cliente.cliente_id) {
+          <div class="tarjeta-cliente-resultado" (click)="seleccionarCliente(cliente)">
+            <div class="info-cliente-resultado">
+              <p class="nombre-resultado">
+                <strong>{{ cliente.nombre_clie }}</strong>
+              </p>
+              @if (cliente.dni) {
+                <p class="dato-resultado">🪪 DNI: {{ cliente.dni }}</p>
+              }
+              <p class="dato-resultado">📞 {{ cliente.telefono }}</p>
+              @if (cliente.email) {
+                <p class="dato-resultado">✉️ {{ cliente.email }}</p>
+              }
+            </div>
+            <button class="btn-seleccionar-resultado">Seleccionar →</button>
+          </div>
+        }
+      </div>
+
+      <div class="formulario-footer">
+        <button type="button" class="btn-secundario" (click)="volverBusqueda()">
+          ← Nueva Búsqueda
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- ⭐ FORMULARIO DE CREACIÓN -->
+  @if (modoCrear()) {
+    <form [formGroup]="formCrear" (ngSubmit)="crearCliente()">
+      <div class="formulario-body">
+        <div class="alerta-info">
+          <span class="icono-info">ℹ️</span>
+          <p>Cliente no encontrado. Completa los datos para registrarlo.</p>
+        </div>
+
+        <div class="campo-formulario">
+          <label>Nombre Completo *</label>
+          <input
+            type="text"
+            formControlName="nombre"
+            placeholder="Ej: Juan Pérez García"
+          />
+          @if (
+            formCrear.get('nombre')?.invalid &&
+            formCrear.get('nombre')?.touched
+          ) {
+            <span class="mensaje-error">El nombre es requerido</span>
+          }
+        </div>
+
+        <div class="campo-formulario">
+          <label>DNI (opcional)</label>
+          <input
+            type="text"
+            formControlName="dni"
+            placeholder="8 dígitos"
+            maxlength="8"
+          />
+          @if (
+            formCrear.get('dni')?.invalid &&
+            formCrear.get('dni')?.touched
+          ) {
+            <span class="mensaje-error">El DNI debe tener 8 dígitos</span>
+          }
+        </div>
+
+        <div class="campo-formulario">
+          <label>Teléfono *</label>
+          <input
+            type="tel"
+            formControlName="telefono"
+            placeholder="Ej: 987654321"
+            maxlength="9"
+          />
+          @if (
+            formCrear.get('telefono')?.invalid &&
+            formCrear.get('telefono')?.touched
+          ) {
+            <span class="mensaje-error">Debe comenzar con 9 y tener 9 dígitos</span>
+          }
+        </div>
+
+        <div class="campo-formulario">
+          <label>Correo Electrónico</label>
+          <input
+            type="email"
+            formControlName="email"
+            placeholder="Ej: cliente@example.com"
+          />
+          @if (
+            formCrear.get('email')?.invalid &&
+            formCrear.get('email')?.touched
+          ) {
+            <span class="mensaje-error">Ingrese un correo válido</span>
+          }
+        </div>
+
+        <div class="campo-formulario">
+          <label>Dirección</label>
+          <textarea
+            formControlName="direccion"
+            placeholder="Ej: Av. Principal 123, Pacucha"
+            rows="2"
+          ></textarea>
+        </div>
+      </div>
+
+      <div class="formulario-footer">
+        <button type="button" class="btn-secundario" (click)="volverBusqueda()">
+          ← Volver
+        </button>
+        <button
+          type="submit"
+          class="btn-primario"
+          [disabled]="formCrear.invalid || cargando()"
+        >
+          @if (cargando()) {
+            <span class="spinner-btn"></span>
+            Guardando...
+          } @else {
+            ✓ Crear Cliente
+          }
+        </button>
+      </div>
+    </form>
+  }
+</div>

@@ -1,0 +1,404 @@
+.grafico-ventas-container {
+  width: 100%;
+}
+
+/* ============================
+   HEADER
+   ============================ */
+
+.grafico-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #f3f4f6;
+}
+
+.header-info .grafico-titulo {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 4px 0;
+}
+
+.header-info .grafico-subtitulo {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.btn-detalle {
+  padding: 8px 16px;
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-detalle:hover {
+  border-color: #8b5cf6;
+  color: #8b5cf6;
+  transform: translateY(-2px);
+}
+
+/* ============================
+   FILTROS
+   ============================ */
+
+.filtros-periodo {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.selector-agrupacion {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-agrupacion {
+  padding: 8px 16px;
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex: 1;
+}
+
+.btn-agrupacion:hover {
+  border-color: #8b5cf6;
+  color: #8b5cf6;
+}
+
+.btn-agrupacion.activo {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  border-color: #8b5cf6;
+  color: white;
+}
+
+.filtro-fechas {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+}
+
+.fecha-input {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.fecha-input label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.input-fecha {
+  padding: 8px 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.input-fecha:focus {
+  outline: none;
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
+.btn-aplicar {
+  padding: 8px 20px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-aplicar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+/* ============================
+   CARGANDO
+   ============================ */
+
+.cargando {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 40px 20px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.spinner-small {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #f3f4f6;
+  border-top-color: #8b5cf6;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================
+   RESUMEN
+   ============================ */
+
+.resumen-ventas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: 16px;
+  background: #f9fafb;
+  border-radius: 8px;
+}
+
+.resumen-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.resumen-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.resumen-valor {
+  font-size: 18px;
+  font-weight: 700;
+  color: #8b5cf6;
+}
+
+/* ============================
+   GRÁFICO DE BARRAS
+   ============================ */
+
+.grafico-barras {
+  margin-bottom: 24px;
+}
+
+.barras-container {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8px;
+  height: 300px;
+  padding: 20px 0;
+  border-bottom: 2px solid #e5e7eb;
+  overflow-x: auto;
+}
+
+.barra-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  min-width: 40px;
+  max-width: 80px;
+  height: 100%;
+  position: relative;
+}
+
+.barra-info {
+  position: absolute;
+  top: 0;
+  font-size: 10px;
+  font-weight: 700;
+  color: #1f2937;
+  white-space: nowrap;
+}
+
+.barra {
+  width: 100%;
+  min-height: 20px;
+  border-radius: 8px 8px 0 0;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  margin-top: auto;
+}
+
+.barra:hover {
+  opacity: 0.8;
+  transform: scaleY(1.05);
+}
+
+.barra-etiqueta {
+  margin-top: 8px;
+  font-size: 11px;
+  color: #6b7280;
+  text-align: center;
+  font-weight: 600;
+}
+
+/* Leyenda */
+.leyenda {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  padding: 16px;
+  background: #f9fafb;
+  border-radius: 8px;
+  margin-top: 16px;
+}
+
+.leyenda-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.leyenda-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+}
+
+/* ============================
+   TABLA DETALLE
+   ============================ */
+
+.tabla-detalle {
+  margin-top: 24px;
+}
+
+.tabla-titulo {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 16px 0;
+}
+
+.tabla-scroll {
+  overflow-x: auto;
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabla thead {
+  background: #f9fafb;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.tabla th {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tabla tbody tr {
+  border-bottom: 1px solid #f3f4f6;
+  transition: background 0.2s ease;
+}
+
+.tabla tbody tr:hover {
+  background: #fefcf9;
+}
+
+.tabla td {
+  padding: 12px 16px;
+  font-size: 14px;
+  color: #374151;
+}
+
+.valor-destacado {
+  font-weight: 700;
+  color: #8b5cf6;
+  font-size: 15px;
+}
+
+/* ============================
+   SIN DATOS
+   ============================ */
+
+.sin-datos {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6b7280;
+}
+
+.sin-datos-icono {
+  font-size: 48px;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.sin-datos p {
+  font-size: 14px;
+  margin: 0;
+}
+
+/* ============================
+   RESPONSIVE
+   ============================ */
+
+@media (max-width: 768px) {
+  .filtros-periodo {
+    gap: 12px;
+  }
+
+  .selector-agrupacion {
+    flex-direction: column;
+  }
+
+  .filtro-fechas {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-aplicar {
+    width: 100%;
+  }
+
+  .resumen-ventas {
+    grid-template-columns: 1fr;
+  }
+
+  .leyenda {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .barras-container {
+    height: 250px;
+  }
+}

@@ -1,0 +1,155 @@
+<div class="formulario-container">
+  <!-- Header -->
+  <div class="formulario-header">
+    <button class="btn-volver" (click)="volver()">
+      ← Volver a la lista
+    </button>
+    <h1 class="titulo">
+      {{ modoEdicion() ? '✏️ Editar Proveedor' : '➕ Nuevo Proveedor' }}
+    </h1>
+  </div>
+
+  <!-- Indicador de carga -->
+  @if (cargando()) {
+    <div class="cargando">
+      <div class="spinner"></div>
+      <p>Cargando datos del proveedor...</p>
+    </div>
+  }
+
+  <!-- Formulario -->
+  @if (!cargando()) {
+    <div class="formulario-card">
+      <form (ngSubmit)="guardar()">
+        <!-- Información del Proveedor -->
+        <div class="seccion">
+          <h3 class="seccion-titulo">📦 Información del Proveedor</h3>
+          
+          <div class="form-grid">
+            <!-- Nombre -->
+            <div class="form-group">
+              <label class="form-label">
+                Nombre del Proveedor <span class="obligatorio">*</span>
+              </label>
+              <input
+                type="text"
+                class="form-input"
+                [class.error]="errores()['nombre']"
+                placeholder="Ej: Distribuidora de Lanas S.A.C."
+                [(ngModel)]="nombre"
+                name="nombre"
+                required
+              />
+              @if (errores()['nombre']) {
+                <span class="mensaje-error">{{ errores()['nombre'] }}</span>
+              }
+            </div>
+
+            <!-- Persona de Contacto -->
+            <div class="form-group">
+              <label class="form-label">Persona de Contacto (Opcional)</label>
+              <input
+                type="text"
+                class="form-input"
+                placeholder="Ej: Juan Pérez - Gerente de Ventas"
+                [(ngModel)]="contacto"
+                name="contacto"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Datos de Contacto -->
+        <div class="seccion">
+          <h3 class="seccion-titulo">📞 Datos de Contacto</h3>
+          
+          <div class="form-grid">
+            <!-- Teléfono -->
+            <div class="form-group">
+              <label class="form-label">Teléfono (Opcional)</label>
+              <input
+                type="tel"
+                class="form-input"
+                [class.error]="errores()['telefono']"
+                placeholder="Ej: 987654321"
+                [(ngModel)]="telefono"
+                name="telefono"
+                maxlength="9"
+              />
+              @if (errores()['telefono']) {
+                <span class="mensaje-error">{{ errores()['telefono'] }}</span>
+              }
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+              <label class="form-label">Email (Opcional)</label>
+              <input
+                type="email"
+                class="form-input"
+                [class.error]="errores()['email']"
+                placeholder="Ej: ventas@proveedor.com"
+                [(ngModel)]="email"
+                name="email"
+              />
+              @if (errores()['email']) {
+                <span class="mensaje-error">{{ errores()['email'] }}</span>
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- Dirección -->
+        <div class="seccion">
+          <h3 class="seccion-titulo">📍 Ubicación</h3>
+          
+          <div class="form-group">
+            <label class="form-label">Dirección Completa (Opcional)</label>
+            <textarea
+              class="form-textarea"
+              placeholder="Ej: Jr. Los Cedros 456, San Isidro, Lima"
+              [(ngModel)]="direccion"
+              name="direccion"
+              rows="3"
+            ></textarea>
+            <span class="form-ayuda">
+              💡 Incluya detalles como distrito, provincia y referencias
+            </span>
+          </div>
+        </div>
+
+        <!-- Botones de acción -->
+        <div class="form-actions">
+          <button
+            type="button"
+            class="btn-limpiar"
+            (click)="limpiar()"
+            [disabled]="guardando()"
+          >
+            🗑️ Limpiar
+          </button>
+          <button
+            type="button"
+            class="btn-cancelar"
+            (click)="volver()"
+            [disabled]="guardando()"
+          >
+            ✗ Cancelar
+          </button>
+          <button
+            type="submit"
+            class="btn-guardar"
+            [disabled]="guardando()"
+          >
+            @if (guardando()) {
+              <span class="spinner-small"></span>
+              Guardando...
+            } @else {
+              ✓ {{ modoEdicion() ? 'Actualizar' : 'Crear' }} Proveedor
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+</div>

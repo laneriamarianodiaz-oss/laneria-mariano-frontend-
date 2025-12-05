@@ -1,0 +1,286 @@
+/* ===========================
+   CONTENEDOR CARRITO
+   =========================== */
+.carrito-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.carrito-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #F3F4F6;
+}
+
+.carrito-header .titulo {
+  font-size: 18px;
+  font-weight: 600;
+  color: #1F2937;
+  margin: 0;
+}
+
+.badge-items {
+  background: #8B5CF6;
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ===========================
+   CARRITO VACÍO
+   =========================== */
+.carrito-vacio {
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.icono-vacio {
+  font-size: 64px;
+  margin-bottom: 16px;
+  opacity: 0.3;
+}
+
+.texto-vacio {
+  font-size: 16px;
+  font-weight: 600;
+  color: #6B7280;
+  margin: 0 0 8px 0;
+}
+
+.subtexto-vacio {
+  font-size: 14px;
+  color: #9CA3AF;
+  margin: 0;
+}
+
+/* ===========================
+   LISTA DE ITEMS
+   =========================== */
+.lista-items {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.item-carrito {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid #F3F4F6;
+  transition: background 0.2s;
+}
+
+.item-carrito:hover {
+  background: #F9FAFB;
+}
+
+.item-carrito:last-child {
+  border-bottom: none;
+}
+
+/* ===========================
+   INFORMACIÓN DEL ITEM
+   =========================== */
+.item-info {
+  flex: 1;
+  margin-right: 16px;
+}
+
+.item-nombre {
+  font-size: 15px;
+  font-weight: 600;
+  color: #1F2937;
+  margin: 0 0 4px 0;
+}
+
+.item-detalles {
+  font-size: 13px;
+  color: #6B7280;
+  margin: 0 0 8px 0;
+}
+
+.item-precio {
+  font-size: 14px;
+  font-weight: 600;
+  color: #8B5CF6;
+  margin: 0;
+}
+
+/* ===========================
+   CONTROLES DEL ITEM
+   =========================== */
+.item-controles {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.control-cantidad {
+  display: flex;
+  align-items: center;
+  border: 1px solid #E5E7EB;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.btn-cantidad {
+  width: 32px;
+  height: 32px;
+  background: #F9FAFB;
+  border: none;
+  cursor: pointer;
+  font-size: 18px;
+  color: #6B7280;
+  transition: all 0.2s;
+}
+
+.btn-cantidad:hover:not(:disabled) {
+  background: #8B5CF6;
+  color: white;
+}
+
+.btn-cantidad:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.input-cantidad {
+  width: 50px;
+  height: 32px;
+  border: none;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1F2937;
+}
+
+.input-cantidad:focus {
+  outline: none;
+  background: #F9FAFB;
+}
+
+/* Remove spinner arrows */
+.input-cantidad::-webkit-inner-spin-button,
+.input-cantidad::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.input-cantidad {
+  -moz-appearance: textfield;
+}
+
+.item-subtotal {
+  text-align: right;
+  min-width: 80px;
+}
+
+.texto-subtotal {
+  font-size: 11px;
+  color: #9CA3AF;
+  margin: 0 0 2px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.valor-subtotal {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1F2937;
+  margin: 0;
+}
+
+.btn-eliminar {
+  width: 36px;
+  height: 36px;
+  background: #FEE2E2;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.2s;
+}
+
+.btn-eliminar:hover {
+  background: #EF4444;
+  transform: scale(1.05);
+}
+
+/* ===========================
+   TOTALES DEL CARRITO
+   =========================== */
+.carrito-totales {
+  padding: 20px;
+  border-top: 2px solid #F3F4F6;
+  background: #F9FAFB;
+  border-radius: 0 0 12px 12px;
+}
+
+.linea-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.linea-total:last-child {
+  margin-bottom: 0;
+}
+
+.label-total {
+  font-size: 14px;
+  color: #6B7280;
+  font-weight: 500;
+}
+
+.valor-total {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1F2937;
+}
+
+.linea-total.descuento .valor-total {
+  color: #EF4444;
+}
+
+.linea-total.total-final {
+  padding-top: 12px;
+  border-top: 1px solid #E5E7EB;
+  margin-top: 8px;
+}
+
+.linea-total.total-final .label-total {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1F2937;
+}
+
+.linea-total.total-final .valor-total {
+  font-size: 24px;
+  font-weight: 700;
+  color: #8B5CF6;
+}
+
+/* ===========================
+   SCROLLBAR PERSONALIZADO
+   =========================== */
+.lista-items::-webkit-scrollbar {
+  width: 6px;
+}
+
+.lista-items::-webkit-scrollbar-track {
+  background: #F3F4F6;
+}
+
+.lista-items::-webkit-scrollbar-thumb {
+  background: #D1D5DB;
+  border-radius: 3px;
+}
+
+.lista-items::-webkit-scrollbar-thumb:hover {
+  background: #9CA3AF;
+}

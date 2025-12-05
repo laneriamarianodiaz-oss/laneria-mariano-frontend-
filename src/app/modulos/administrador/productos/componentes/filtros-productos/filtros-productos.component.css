@@ -1,0 +1,139 @@
+/* ========================================
+   CONTENEDOR DE FILTROS
+======================================== */
+
+.filtros-container {
+  background: white;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+/* ========================================
+   GRID DE FILTROS
+======================================== */
+
+.filtros-grid {
+  display: grid;
+  grid-template-columns: 2fr repeat(4, 1fr) auto;
+  gap: 15px;
+  align-items: end;
+}
+
+/* ========================================
+   ITEM DE FILTRO
+======================================== */
+
+.filtro-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.filtro-item label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #2c3e50;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.filtro-icon {
+  font-size: 16px;
+}
+
+/* ========================================
+   INPUTS Y SELECTS
+======================================== */
+
+.filtro-input,
+.filtro-select {
+  width: 100%;
+  padding: 10px 15px;
+  border: 1px solid #dfe6e9;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #2c3e50;
+  background: white;
+  transition: all 0.3s ease;
+}
+
+.filtro-input:focus,
+.filtro-select:focus {
+  outline: none;
+  border-color: #8e44ad;
+  box-shadow: 0 0 0 3px rgba(142, 68, 173, 0.1);
+}
+
+.filtro-input::placeholder {
+  color: #95a5a6;
+}
+
+.filtro-select {
+  cursor: pointer;
+}
+
+/* ========================================
+   BOTÓN LIMPIAR
+======================================== */
+
+.filtro-boton {
+  justify-content: flex-end;
+}
+
+.btn-limpiar {
+  padding: 10px 20px;
+  background: #95a5a6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-limpiar:hover:not(:disabled) {
+  background: #7f8c8d;
+  transform: translateY(-2px);
+}
+
+.btn-limpiar:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ========================================
+   RESPONSIVE
+======================================== */
+
+@media (max-width: 1200px) {
+  .filtros-grid {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .filtro-busqueda {
+    grid-column: 1 / -1;
+  }
+
+  .filtro-boton {
+    grid-column: 1 / -1;
+  }
+
+  .btn-limpiar {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .filtros-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filtro-busqueda {
+    grid-column: 1;
+  }
+}

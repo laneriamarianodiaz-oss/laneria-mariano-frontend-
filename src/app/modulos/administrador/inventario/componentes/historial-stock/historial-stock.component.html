@@ -1,0 +1,132 @@
+<div class="modal-overlay" (click)="cerrarModal()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    
+    <!-- Header -->
+    <div class="modal-header">
+      <div class="header-content">
+        <h2>📜 Historial de Movimientos</h2>
+        <p class="producto-info">{{ productoNombre }}</p>
+      </div>
+      <button class="btn-close" (click)="cerrarModal()">✕</button>
+    </div>
+
+    <!-- Body -->
+    <div class="modal-body">
+      
+      <!-- Loading -->
+      @if (cargando()) {
+        <div class="loading-container">
+          <div class="spinner"></div>
+          <p>Cargando historial...</p>
+        </div>
+      }
+
+      <!-- Timeline de Movimientos -->
+      @if (!cargando() && movimientos().length > 0) {
+        <div class="timeline-container">
+          @for (movimiento of movimientos(); track movimiento.id) {
+            <div class="timeline-item" [attr.data-tipo]="movimiento.tipo_movimiento">
+              
+              <!-- Icono y línea -->
+              <div class="timeline-marker">
+                <div 
+                  class="timeline-icon" 
+                  [style.background]="getTipoMovimientoInfo(movimiento.tipo_movimiento)?.color"
+                >
+                  {{ getTipoMovimientoInfo(movimiento.tipo_movimiento)?.icono }}
+                </div>
+                @if (!$last) {
+                  <div class="timeline-line"></div>
+                }
+              </div>
+
+              <!-- Contenido -->
+              <div class="timeline-content">
+                <div class="timeline-card">
+                  
+                  <!-- Header del Card -->
+                  <div class="card-header">
+                    <div class="header-left">
+                      <span 
+                        class="tipo-badge"
+                        [style.background]="getTipoMovimientoInfo(movimiento.tipo_movimiento)?.color + '20'"
+                        [style.color]="getTipoMovimientoInfo(movimiento.tipo_movimiento)?.color"
+                      >
+                        {{ getTipoMovimientoInfo(movimiento.tipo_movimiento)?.texto }}
+                      </span>
+                      <span class="fecha">{{ formatearFecha(movimiento.fecha) }}</span>
+                    </div>
+                    <div class="header-right">
+                      <span 
+                        class="cantidad-badge"
+                        [class.entrada]="movimiento.tipo_movimiento === 'entrada' || movimiento.tipo_movimiento === 'devolucion'"
+                        [class.salida]="movimiento.tipo_movimiento === 'salida'"
+                        [class.ajuste]="movimiento.tipo_movimiento === 'ajuste'"
+                      >
+                        @if (movimiento.tipo_movimiento === 'entrada' || movimiento.tipo_movimiento === 'devolucion') {
+                          +{{ movimiento.cantidad }}
+                        } @else if (movimiento.tipo_movimiento === 'salida') {
+                          -{{ movimiento.cantidad }}
+                        } @else {
+                          {{ movimiento.cantidad }}
+                        }
+                        unid.
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- Cuerpo del Card -->
+                  <div class="card-body">
+                    <div class="stock-change">
+                      <span class="stock-label">Stock:</span>
+                      <span class="stock-anterior">{{ movimiento.stock_anterior }}</span>
+                      <span class="stock-arrow">→</span>
+                      <span class="stock-nuevo">{{ movimiento.stock_nuevo }}</span>
+                    </div>
+
+                    <div class="motivo">
+                      <strong>Motivo:</strong> {{ movimiento.motivo }}
+                    </div>
+
+                    @if (movimiento.referencia) {
+                      <div class="referencia">
+                        <strong>Referencia:</strong> {{ movimiento.referencia }}
+                      </div>
+                    }
+
+                    @if (movimiento.usuario_nombre) {
+                      <div class="usuario">
+                        <span class="usuario-icon">👤</span>
+                        {{ movimiento.usuario_nombre }}
+                      </div>
+                    }
+                  </div>
+
+                </div>
+              </div>
+
+            </div>
+          }
+        </div>
+      }
+
+      <!-- Estado Vacío -->
+      @if (!cargando() && movimientos().length === 0) {
+        <div class="empty-state">
+          <div class="empty-icon">📭</div>
+          <h3>No hay movimientos</h3>
+          <p>Aún no se han registrado movimientos para este producto</p>
+        </div>
+      }
+
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer">
+      <button class="btn-primary" (click)="cerrarModal()">
+        Cerrar
+      </button>
+    </div>
+
+  </div>
+</div>

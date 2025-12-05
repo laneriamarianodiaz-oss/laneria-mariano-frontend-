@@ -1,0 +1,179 @@
+<div class="resumen-container">
+  <!-- Header -->
+  <div class="resumen-header">
+    <h3 class="titulo">💳 Resumen de Pago</h3>
+  </div>
+
+  <!-- Método de pago -->
+  <div class="seccion-resumen">
+    <label class="label-seccion">Método de Pago</label>
+    <div class="selector-container">
+      <button
+        class="selector-btn"
+        (click)="toggleMetodos()"
+        [class.seleccionado]="metodoPago()"
+      >
+        @if (metodoPago()) {
+          <span class="icono-selector">{{ iconosPago[metodoPago()!] }}</span>
+          <span>{{ metodoPago() }}</span>
+        } @else {
+          <span class="placeholder">Seleccionar método</span>
+        }
+        <span class="icono-flecha">▼</span>
+      </button>
+
+      @if (mostrarMetodos()) {
+        <div class="dropdown-opciones">
+          @for (metodo of metodosPago; track metodo) {
+            <button
+              class="opcion-btn"
+              (click)="seleccionarMetodo(metodo)"
+              [class.activo]="metodoPago() === metodo"
+            >
+              <span class="icono-opcion">{{ iconosPago[metodo] }}</span>
+              <span>{{ metodo }}</span>
+              @if (metodoPago() === metodo) {
+                <span class="check-icono">✓</span>
+              }
+            </button>
+          }
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Canal de venta -->
+  <div class="seccion-resumen">
+    <label class="label-seccion">Canal de Venta</label>
+    <div class="selector-container">
+      <button
+        class="selector-btn"
+        (click)="toggleCanales()"
+        [class.seleccionado]="canalVenta()"
+      >
+        @if (canalVenta()) {
+          <span class="icono-selector">{{ iconosCanal[canalVenta()!] }}</span>
+          <span>{{ canalVenta() }}</span>
+        } @else {
+          <span class="placeholder">Seleccionar canal</span>
+        }
+        <span class="icono-flecha">▼</span>
+      </button>
+
+      @if (mostrarCanales()) {
+        <div class="dropdown-opciones">
+          @for (canal of canalesVenta; track canal) {
+            <button
+              class="opcion-btn"
+              (click)="seleccionarCanal(canal)"
+              [class.activo]="canalVenta() === canal"
+            >
+              <span class="icono-opcion">{{ iconosCanal[canal] }}</span>
+              <span>{{ canal }}</span>
+              @if (canalVenta() === canal) {
+                <span class="check-icono">✓</span>
+              }
+            </button>
+          }
+        </div>
+      }
+    </div>
+  </div>
+
+  <!-- Observaciones -->
+  <div class="seccion-resumen">
+    <label class="label-seccion">Observaciones (Opcional)</label>
+    <textarea
+      class="textarea-observaciones"
+      placeholder="Ej: Cliente solicita entrega en la tarde..."
+      rows="3"
+      [value]="observaciones()"
+      (input)="actualizarObservaciones($event)"
+    ></textarea>
+  </div>
+
+  <!-- Resumen de totales -->
+  <div class="seccion-totales">
+    <div class="linea-total">
+      <span class="label-total">Subtotal</span>
+      <span class="valor-total">S/ {{ carrito().subtotal.toFixed(2) }}</span>
+    </div>
+
+    @if (carrito().descuento_total > 0) {
+      <div class="linea-total descuento">
+        <span class="label-total">Descuento</span>
+        <span class="valor-total">
+          - S/ {{ carrito().descuento_total.toFixed(2) }}
+        </span>
+      </div>
+    }
+
+    <div class="linea-total total-final">
+      <span class="label-total">Total a Pagar</span>
+      <span class="valor-total">S/ {{ carrito().total.toFixed(2) }}</span>
+    </div>
+  </div>
+
+  <!-- Botón procesar -->
+  <button
+    class="btn-procesar"
+    (click)="procesarVenta()"
+    [disabled]="
+      procesandoVenta() ||
+      carrito().items.length === 0 ||
+      !clienteSeleccionado() ||
+      !metodoPago()
+    "
+  >
+    @if (procesandoVenta()) {
+      <span class="spinner-btn"></span>
+      Procesando...
+    } @else {
+      <span class="icono-btn">✓</span>
+      Procesar Venta
+    }
+  </button>
+
+  <!-- Indicadores de estado -->
+  <div class="indicadores-estado">
+    <div
+      class="indicador"
+      [class.completado]="carrito().items.length > 0"
+    >
+      @if (carrito().items.length > 0) {
+        <span class="check">✓</span>
+      } @else {
+        <span class="numero">1</span>
+      }
+      <span class="texto">Productos</span>
+    </div>
+
+    <div class="separador">→</div>
+
+    <div
+      class="indicador"
+      [class.completado]="clienteSeleccionado()"
+    >
+      @if (clienteSeleccionado()) {
+        <span class="check">✓</span>
+      } @else {
+        <span class="numero">2</span>
+      }
+      <span class="texto">Cliente</span>
+    </div>
+
+    <div class="separador">→</div>
+
+    <div
+      class="indicador"
+      [class.completado]="metodoPago()"
+    >
+      @if (metodoPago()) {
+        <span class="check">✓</span>
+      } @else {
+        <span class="numero">3</span>
+      }
+      <span class="texto">Pago</span>
+    </div>
+  </div>
+</div>

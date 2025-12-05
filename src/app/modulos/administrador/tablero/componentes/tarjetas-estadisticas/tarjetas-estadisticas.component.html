@@ -1,0 +1,56 @@
+<!-- Indicador de carga -->
+<div *ngIf="cargando" class="loading-container">
+  <div class="spinner"></div>
+  <p class="loading-text">Cargando estadísticas...</p>
+</div>
+
+<!-- Grid de estadísticas -->
+<div class="stats-grid" *ngIf="!cargando">
+  
+  <!-- Ventas del Día -->
+  <div class="stat-card">
+    <div class="stat-icon ventas">💰</div>
+    <div class="stat-content">
+      <div class="stat-label">Ventas Hoy</div>
+      <div class="stat-value">{{ formatearMoneda(estadisticas.ventasHoy) }}</div>
+      <div class="stat-change" [ngClass]="esPositivo(estadisticas.cambioVentasHoy) ? 'positive' : 'negative'">
+        {{ formatearPorcentaje(estadisticas.cambioVentasHoy) }} vs ayer
+      </div>
+    </div>
+  </div>
+
+  <!-- Ventas del Mes -->
+  <div class="stat-card">
+    <div class="stat-icon mes">📦</div>
+    <div class="stat-content">
+      <div class="stat-label">Ventas del Mes</div>
+      <div class="stat-value">{{ formatearMoneda(estadisticas.ventasMes) }}</div>
+      <div class="stat-change" [ngClass]="esPositivo(estadisticas.cambioVentasMes) ? 'positive' : 'negative'">
+        {{ formatearPorcentaje(estadisticas.cambioVentasMes) }} vs anterior
+      </div>
+    </div>
+  </div>
+
+  <!-- Ticket Promedio -->
+  <div class="stat-card">
+    <div class="stat-icon ticket">💳</div>
+    <div class="stat-content">
+      <div class="stat-label">Ticket Promedio</div>
+      <div class="stat-value">{{ formatearMoneda(estadisticas.ticketPromedio) }}</div>
+      <div class="stat-change" [ngClass]="esPositivo(estadisticas.cambioTicket) ? 'positive' : 'negative'">
+        {{ formatearPorcentaje(estadisticas.cambioTicket) }} vs anterior
+      </div>
+    </div>
+  </div>
+
+  <!-- Stock Bajo -->
+  <div class="stat-card">
+    <div class="stat-icon alerta">⚠️</div>
+    <div class="stat-content">
+      <div class="stat-label">Stock Bajo</div>
+      <div class="stat-value">{{ estadisticas.productosStockBajo }}</div>
+      <div class="stat-change neutral">productos con stock crítico</div>
+    </div>
+  </div>
+
+</div>

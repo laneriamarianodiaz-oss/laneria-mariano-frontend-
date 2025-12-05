@@ -1,0 +1,178 @@
+<!-- ============================================ -->
+<!-- NUEVO HTML: cambiar-estado-pedido.component.html -->
+<!-- ============================================ -->
+
+<div class="cambiar-estado-container">
+  
+  <!-- Estado Actual - Card Grande -->
+  <div class="estado-actual-grande">
+    <div class="estado-actual-header">
+      <h3>Estado Actual del Pedido</h3>
+    </div>
+    <div class="estado-actual-body">
+      <div class="estado-badge-grande" [ngClass]="getBadgeClass(estadoActualInfo.color)">
+        <span class="estado-icono-grande">{{ estadoActualInfo.icono }}</span>
+        <div class="estado-texto-grande">
+          <span class="estado-nombre">{{ estadoActualInfo.texto }}</span>
+          <span class="estado-descripcion">{{ estadoActualInfo.descripcion }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Acciones Disponibles - Grid de Cards -->
+  <div class="acciones-container" *ngIf="puedeActualizar">
+    <h3 class="acciones-titulo">
+      <span class="icono-titulo">🔄</span>
+      Cambiar Estado del Pedido
+    </h3>
+    <p class="acciones-subtitulo">Selecciona el nuevo estado para actualizar el pedido</p>
+    
+    <div class="estados-grid">
+      <div 
+        *ngFor="let estado of estadosDisponibles"
+        class="estado-card"
+        [ngClass]="getCardClass(estado.color)"
+        (click)="abrirModal(estado.valor)">
+        
+        <div class="estado-card-header">
+          <span class="estado-card-icono">{{ estado.icono }}</span>
+        </div>
+        
+        <div class="estado-card-body">
+          <h4 class="estado-card-titulo">{{ estado.texto }}</h4>
+          <p class="estado-card-descripcion">{{ estado.descripcion }}</p>
+        </div>
+        
+        <div class="estado-card-footer">
+          <button class="btn-cambiar" [ngClass]="'btn-' + estado.color">
+            Cambiar a este estado →
+          </button>
+        </div>
+        
+        <div class="estado-card-hover-effect"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mensaje Estado Final -->
+  <div class="estado-final-card" *ngIf="!puedeActualizar">
+    <div class="estado-final-icono" *ngIf="estadoActual === 'Completado'">
+      <span class="icono-grande">✅</span>
+    </div>
+    <div class="estado-final-icono" *ngIf="estadoActual === 'Cancelado'">
+      <span class="icono-grande">❌</span>
+    </div>
+    
+    <div class="estado-final-texto">
+      <h3 *ngIf="estadoActual === 'Completado'">Pedido Completado</h3>
+      <h3 *ngIf="estadoActual === 'Cancelado'">Pedido Cancelado</h3>
+      
+      <p *ngIf="estadoActual === 'Completado'">
+        Este pedido ha sido completado exitosamente. No se pueden realizar más cambios.
+      </p>
+      <p *ngIf="estadoActual === 'Cancelado'">
+        Este pedido fue cancelado. No se pueden realizar más cambios.
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<!-- Modal de Confirmación Mejorado -->
+<div class="modal-overlay" *ngIf="mostrarModal" (click)="cerrarModal()">
+  <div class="modal-content-mejorado" (click)="$event.stopPropagation()">
+    
+    <div class="modal-header-mejorado">
+      <div class="modal-header-icon">
+        <span>🔄</span>
+      </div>
+      <div class="modal-header-texto">
+        <h3>Confirmar Cambio de Estado</h3>
+        <p>Estás a punto de actualizar el estado del pedido</p>
+      </div>
+      <button class="btn-cerrar-mejorado" (click)="cerrarModal()">
+        <span>×</span>
+      </button>
+    </div>
+
+    <div class="modal-body-mejorado">
+      
+      <!-- Visualización del Cambio -->
+      <div class="cambio-visual">
+        <div class="cambio-desde">
+          <span class="cambio-label">Estado Actual</span>
+          <div class="cambio-badge" [ngClass]="getBadgeClass(estadoActualInfo.color)">
+            <span class="cambio-icono">{{ estadoActualInfo.icono }}</span>
+            <span class="cambio-texto">{{ estadoActualInfo.texto }}</span>
+          </div>
+        </div>
+        
+        <div class="cambio-flecha">
+          <div class="flecha-animada">
+            <span>→</span>
+            <span>→</span>
+            <span>→</span>
+          </div>
+        </div>
+        
+        <div class="cambio-hasta">
+          <span class="cambio-label">Nuevo Estado</span>
+          <div class="cambio-badge cambio-badge-nuevo" 
+               [ngClass]="getBadgeClass(obtenerInfoEstadoSeleccionado()?.color || 'primary')">
+            <span class="cambio-icono">{{ obtenerInfoEstadoSeleccionado()?.icono }}</span>
+            <span class="cambio-texto">{{ obtenerInfoEstadoSeleccionado()?.texto }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Descripción del nuevo estado -->
+      <div class="nuevo-estado-info">
+        <div class="info-icon">ℹ️</div>
+        <div class="info-texto">
+          <strong>{{ obtenerInfoEstadoSeleccionado()?.texto }}</strong>
+          <p>{{ obtenerInfoEstadoSeleccionado()?.descripcion }}</p>
+        </div>
+      </div>
+
+      <!-- Campo de Observaciones -->
+      <div class="form-group-mejorado">
+        <label for="observaciones">
+          <span class="label-icon">📝</span>
+          {{ estadoSeleccionado === 'Cancelado' ? 'Motivo de cancelación *' : 'Observaciones (opcional)' }}
+        </label>
+        <textarea
+          id="observaciones"
+          [(ngModel)]="observaciones"
+          rows="4"
+          class="textarea-mejorado"
+          [placeholder]="estadoSeleccionado === 'Cancelado' ? 'Ingresa el motivo de la cancelación...' : 'Agrega observaciones sobre este cambio (opcional)...'"
+          [required]="estadoSeleccionado === 'Cancelado'">
+        </textarea>
+        <span class="textarea-contador">{{ observaciones.length }} caracteres</span>
+      </div>
+
+      <!-- Alerta para Cancelación -->
+      <div class="alerta-cancelacion" *ngIf="estadoSeleccionado === 'Cancelado'">
+        <div class="alerta-icon">⚠️</div>
+        <div class="alerta-texto">
+          <strong>¡Atención!</strong>
+          <p>Esta acción no se puede deshacer. El pedido será marcado como cancelado permanentemente.</p>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="modal-footer-mejorado">
+      <button class="btn-modal btn-cancelar" (click)="cerrarModal()">
+        <span class="btn-icon">←</span>
+        <span>Cancelar</span>
+      </button>
+      <button class="btn-modal btn-confirmar" (click)="confirmarCambio()">
+        <span>Confirmar Cambio</span>
+        <span class="btn-icon">✓</span>
+      </button>
+    </div>
+
+  </div>
+</div>

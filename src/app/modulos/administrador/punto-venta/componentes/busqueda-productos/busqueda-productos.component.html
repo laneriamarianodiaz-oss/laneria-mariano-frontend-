@@ -1,0 +1,64 @@
+<div class="busqueda-container">
+  <div class="busqueda-header">
+    <h3 class="titulo">🔍 Buscar Productos</h3>
+  </div>
+
+  <div class="busqueda-input-wrapper">
+    <input
+      type="text"
+      class="input-busqueda"
+      placeholder="Buscar por nombre, código de lana..."
+      [value]="terminoBusqueda()"
+      (input)="onBuscar($event)"
+      (blur)="cerrarResultados()"
+    />
+
+    @if (cargando()) {
+      <div class="spinner-busqueda"></div>
+    }
+
+    @if (mostrarResultados() && productos().length > 0) {
+      <div class="resultados-dropdown">
+        @for (producto of productos(); track producto.id) {
+          <div
+            class="item-resultado"
+            (mousedown)="seleccionarProducto(producto)"
+            [class.sin-stock]="producto.stock <= 0"
+          >
+            <div class="item-info">
+              <p class="item-nombre">{{ producto.nombre }}</p>
+              <p class="item-detalles">
+                {{ producto.tipo_lana }}
+                @if (producto.color) {
+                  • {{ producto.color }}
+                }
+                @if (producto.talla_tamano) {
+                  • Talla {{ producto.talla_tamano }}
+                }
+              </p>
+            </div>
+
+            <div class="item-meta">
+              <p class="item-precio">S/ {{ producto.precio_unitario.toFixed(2) }}</p>
+              <p class="item-stock" [class.sin-stock]="producto.stock <= 0">
+                @if (producto.stock > 0) {
+                  Stock: {{ producto.stock }}
+                } @else {
+                  Sin stock
+                }
+              </p>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    @if (mostrarResultados() && productos().length === 0 && !cargando() && terminoBusqueda().length >= 2) {
+      <div class="resultados-dropdown">
+        <div class="sin-resultados">
+          <p>No se encontraron productos</p>
+        </div>
+      </div>
+    }
+  </div>
+</div>

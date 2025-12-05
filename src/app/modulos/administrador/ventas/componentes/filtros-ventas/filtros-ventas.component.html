@@ -1,0 +1,106 @@
+<div class="filtros-container">
+  <div class="filtros-header">
+    <h3 class="titulo">🔍 Filtros de Búsqueda</h3>
+    <div class="botones-rapidos">
+      <button class="btn-rapido" (click)="aplicarFiltroRapido('hoy')">
+        📅 Hoy
+      </button>
+      <button class="btn-rapido" (click)="aplicarFiltroRapido('semana')">
+        📆 Esta Semana
+      </button>
+      <button class="btn-rapido" (click)="aplicarFiltroRapido('mes')">
+        📊 Este Mes
+      </button>
+    </div>
+  </div>
+
+  <div class="filtros-body">
+    <!-- Búsqueda general -->
+    <div class="campo-filtro campo-completo">
+      <label>🔎 Buscar por número de venta o cliente</label>
+      <input
+        type="text"
+        class="input-filtro"
+        placeholder="Ej: VT-001234 o María García"
+        [(ngModel)]="busqueda"
+        (ngModelChange)="busqueda.set($event)"
+        (keyup.enter)="aplicarFiltros()"
+      />
+    </div>
+
+    <!-- Fechas -->
+    <div class="campo-filtro">
+      <label>📅 Fecha Desde</label>
+      <input
+        type="date"
+        class="input-filtro"
+        [(ngModel)]="fechaDesde"
+        (ngModelChange)="fechaDesde.set($event)"
+      />
+    </div>
+
+    <div class="campo-filtro">
+      <label>📅 Fecha Hasta</label>
+      <input
+        type="date"
+        class="input-filtro"
+        [(ngModel)]="fechaHasta"
+        (ngModelChange)="fechaHasta.set($event)"
+      />
+    </div>
+
+    <!-- Estado -->
+    <div class="campo-filtro">
+      <label>📌 Estado</label>
+      <select
+        class="select-filtro"
+        [(ngModel)]="estado"
+        (ngModelChange)="estado.set($event)"
+      >
+        <option value="">Todos los estados</option>
+        @for (est of estadosDisponibles; track est) {
+          <option [value]="est">{{ est }}</option>
+        }
+      </select>
+    </div>
+
+    <!-- Método de pago -->
+    <div class="campo-filtro">
+      <label>💳 Método de Pago</label>
+      <select
+        class="select-filtro"
+        [(ngModel)]="metodoPago"
+        (ngModelChange)="metodoPago.set($event)"
+      >
+        <option value="">Todos los métodos</option>
+        @for (metodo of metodosPago; track metodo) {
+          <option [value]="metodo">{{ metodo }}</option>
+        }
+      </select>
+    </div>
+
+    <!-- Canal de venta -->
+    <div class="campo-filtro">
+      <label>🏪 Canal de Venta</label>
+      <select
+        class="select-filtro"
+        [(ngModel)]="canalVenta"
+        (ngModelChange)="canalVenta.set($event)"
+      >
+        <option value="">Todos los canales</option>
+        @for (canal of canalesVenta; track canal) {
+          <option [value]="canal">{{ canal }}</option>
+        }
+      </select>
+    </div>
+  </div>
+
+  <div class="filtros-footer">
+    <button class="btn-limpiar" (click)="limpiarFiltros()">
+      🗑️ Limpiar Filtros
+    </button>
+    <button class="btn-aplicar" (click)="aplicarFiltros()">
+      ✓ Aplicar Filtros
+    </button>
+  </div>
+</div>

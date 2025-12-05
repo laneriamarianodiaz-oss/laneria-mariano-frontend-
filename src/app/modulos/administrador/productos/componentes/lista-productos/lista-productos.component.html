@@ -1,0 +1,250 @@
+<div class="productos-container">
+  
+  <!-- Header -->
+  <div class="page-header">
+    <div class="header-left">
+      <h1 class="page-title">📦 Gestión de Productos</h1>
+    </div>
+    <div class="header-right">
+      <button class="btn-primary" (click)="abrirModalCrear()">
+        <span class="btn-icon">+</span>
+        Nuevo Producto
+      </button>
+    </div>
+  </div>
+
+  <!-- Alerta de Stock Bajo -->
+  @if (productosStockBajo() > 0) {
+    <div class="alert alert-warning">
+      <span class="alert-icon">⚠️</span>
+      <span>{{ productosStockBajo() }} productos con stock bajo</span>
+    </div>
+  }
+
+  <!-- Filtros -->
+  <app-filtros-productos
+    [filtrosActuales]="filtrosActivos()"
+    (filtrosChange)="aplicarFiltros($event)"
+    (limpiar)="limpiarFiltros()"
+  />
+
+  <!-- Loading -->
+  @if (cargando()) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>Cargando productos...</p>
+    </div>
+  }
+
+  <!-- Tabla de Productos -->
+  @if (!cargando() && productos().length > 0) {
+    <div class="table-container">
+      <table class="table-productos">
+        <thead>
+          <tr>
+            <th>Imagen</th>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Categoría</th>
+            <th>Color</th>
+            <th>Talla/Tamaño</th>
+            <th>Precio</th>
+            <th>Stock</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (producto of productos(); track producto.id) {
+            <tr>
+              <!-- Imagen -->
+              <td>
+                <div class="producto-imagen">
+                  @if (producto.imagen_url) {
+                    <img [src]="producto.imagen_url | imagenUrl" 
+                         [alt]="producto.nombre || producto.nombre_producto"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <div class="imagen-placeholder" style="display: none;">📦</div>
+                  } @else if (producto.imagenes && producto.imagenes.length > 0) {
+                    <img [src]="producto.imagenes[0] | imagenUrl" 
+                         [alt]="producto.nombre || producto.nombre_producto"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+                    <div class="imagen-placeholder" style="display: none;">📦</div>
+                  } @else {
+                    <div class="imagen-placeholder">📦</div>
+                  }
+                </div>
+              </td>
+
+              <!-- Código -->
+              <td class="producto-codigo">
+                {{ producto.codigo_producto || producto.codigo_lana || 'Sin código' }}
+              </td>
+
+              <!-- Nombre -->
+              <td class="producto-nombre">
+                {{ producto.nombre || producto.nombre_producto || 'Sin nombre' }}
+              </td>
+
+              <td>{{ producto.categoria || 'Sin categoría' }}</td>
+
+              <!-- Color -->
+              <td>{{ producto.color || producto.color_producto }}</td>
+
+              <!-- Talla/Tamaño -->
+              <td>{{ producto.talla_tamano || producto.talla_producto || '-' }}</td>
+
+              <!-- Precio -->
+              <td class="producto-precio">
+                S/ {{ (producto.precio_unitario || producto.precio_producto || 0) | number:'1.2-2' }}
+              </td>
+
+              <!-- Stock -->
+              <td>
+                <span 
+                  class="badge" 
+                  [ngClass]="getStockBadgeClass(producto)"
+                >
+                  {{ getStockText(producto.stock || producto.stock_disponible || 0) }}
+                </span>
+              </td>
+
+              <!-- Estado -->
+              <td>
+                <span 
+                  class="badge"
+                  [class.badge-success]="producto.estado === 'activo' || producto.estado_producto === 'Activo'"
+                  [class.badge-secondary]="producto.estado === 'inactivo' || producto.estado_producto === 'Inactivo'"
+                >
+                  {{ (producto.estado === 'activo' || producto.estado_producto === 'Activo') ? 'Activo' : 'Inactivo' }}
+                </span>
+              </td>
+
+              <!-- Acciones -->
+              <td>
+                <div class="action-buttons">
+                  <!-- VER -->
+                  <button 
+                    class="btn-icon btn-view" 
+                    (click)="verProducto(producto)"
+                    title="Ver detalles"
+                  >
+                    👁️
+                  </button>
+                  
+                  <!-- EDITAR -->
+                  <button 
+                    class="btn-icon btn-edit" 
+                    (click)="abrirModalEditar(producto)"
+                    title="Editar"
+                  >
+                    ✏️
+                  </button>
+                  
+                  <!-- ELIMINAR -->
+                  <button 
+                    class="btn-icon btn-delete" 
+                    (click)="eliminarProducto(producto)"
+                    title="Eliminar"
+                  >
+                    🗑️
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Paginación -->
+    @if (paginacion()) {
+      <div class="pagination-container">
+        <div class="pagination-info">
+          Mostrando {{ productos().length }} de {{ paginacion()!.total }} productos
+        </div>
+        
+        <div class="pagination-controls">
+          <button 
+            class="btn-pagination"
+            [disabled]="paginacion()!.current_page === 1"
+            (click)="cambiarPagina(paginacion()!.current_page - 1)"
+          >
+            ❮
+          </button>
+
+          @if (paginacion()!.current_page > 2) {
+            <button class="btn-pagination" (click)="cambiarPagina(1)">1</button>
+            @if (paginacion()!.current_page > 3) {
+              <span class="pagination-dots">...</span>
+            }
+          }
+
+          @if (paginacion()!.current_page > 1) {
+            <button 
+              class="btn-pagination"
+              (click)="cambiarPagina(paginacion()!.current_page - 1)"
+            >
+              {{ paginacion()!.current_page - 1 }}
+            </button>
+          }
+
+          <button class="btn-pagination active">
+            {{ paginacion()!.current_page }}
+          </button>
+
+          @if (paginacion()!.current_page < paginacion()!.last_page) {
+            <button 
+              class="btn-pagination"
+              (click)="cambiarPagina(paginacion()!.current_page + 1)"
+            >
+              {{ paginacion()!.current_page + 1 }}
+            </button>
+          }
+
+          @if (paginacion()!.current_page < paginacion()!.last_page - 1) {
+            @if (paginacion()!.current_page < paginacion()!.last_page - 2) {
+              <span class="pagination-dots">...</span>
+            }
+            <button 
+              class="btn-pagination"
+              (click)="cambiarPagina(paginacion()!.last_page)"
+            >
+              {{ paginacion()!.last_page }}
+            </button>
+          }
+
+          <button 
+            class="btn-pagination"
+            [disabled]="paginacion()!.current_page === paginacion()!.last_page"
+            (click)="cambiarPagina(paginacion()!.current_page + 1)"
+          >
+            ❯
+          </button>
+        </div>
+      </div>
+    }
+  }
+
+  <!-- Estado Vacío -->
+  @if (!cargando() && productos().length === 0) {
+    <div class="empty-state">
+      <div class="empty-icon">📦</div>
+      <h3>No hay productos</h3>
+      <p>Comienza agregando tu primer producto</p>
+      <button class="btn-primary" (click)="abrirModalCrear()">
+        + Crear Producto
+      </button>
+    </div>
+  }
+
+  <!-- Modal de Formulario -->
+  @if (mostrarModal()) {
+    <app-formulario-producto
+      [producto]="productoEditar()"
+      (cerrar)="cerrarModal()"
+      (guardar)="guardarProducto()"
+    />
+  }
+
+</div>

@@ -1,0 +1,163 @@
+<div class="ventas-container">
+  <!-- Header -->
+  <div class="ventas-header">
+    <h1 class="titulo">💰 Historial de Ventas</h1>
+    <div class="acciones-header">
+      <button class="btn-toggle" (click)="toggleEstadisticas()">
+        📊 {{ mostrarEstadisticas() ? 'Ocultar' : 'Mostrar' }} Estadísticas
+      </button>
+      <button class="btn-toggle" (click)="toggleFiltros()">
+        🔍 {{ mostrarFiltros() ? 'Ocultar' : 'Mostrar' }} Filtros
+      </button>
+      <button class="btn-exportar" (click)="exportarExcel()">
+        📥 Exportar Excel
+      </button>
+      <button class="btn-refrescar" (click)="refrescar()">
+        🔄 Refrescar
+      </button>
+    </div>
+  </div>
+
+  <!-- Estadísticas -->
+  @if (mostrarEstadisticas()) {
+    <app-estadisticas-ventas [estadisticas]="estadisticas()" />
+  }
+
+  <!-- Filtros -->
+  @if (mostrarFiltros()) {
+    <app-filtros-ventas (filtrosAplicados)="aplicarFiltros($event)" />
+  }
+
+  <!-- Indicador de carga -->
+  @if (cargando()) {
+    <div class="cargando">
+      <div class="spinner"></div>
+      <p>Cargando ventas...</p>
+    </div>
+  }
+
+  <!-- Lista de ventas -->
+  @if (!cargando() && ventas().length > 0) {
+    <div class="ventas-tabla-container">
+      <table class="ventas-tabla">
+        <thead>
+          <tr>
+            <th>Número</th>
+            <th>Fecha</th>
+            <th>Cliente</th>
+            <th>Canal</th>
+            <th>Método Pago</th>
+            <th>Total</th>
+            <th>Estado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (venta of ventas(); track venta.venta_id) {
+            <tr class="fila-venta">
+              <td>
+                <span class="numero-venta">{{ venta.numero_venta }}</span>
+              </td>
+              <td>{{ formatearFecha(venta.fecha_venta) }}</td>
+              <td>
+                @if (venta.cliente) {
+                  <div class="info-cliente">
+                    <span class="cliente-nombre">{{ venta.cliente.nombre_clie }}</span>
+                    <span class="cliente-telefono">{{ venta.cliente.telefono }}</span>
+                  </div>
+                } @else {
+                  <span class="sin-cliente">Sin cliente</span>
+                }
+              </td>
+              <td>
+                <span class="canal-badge">
+                  {{ obtenerIconoCanal(venta.canal_venta || 'Tienda física') }}
+                  {{ venta.canal_venta || 'Tienda física' }}
+                </span>
+              </td>
+              <td>
+                <span class="metodo-badge">
+                  {{ obtenerIconoPago(venta.metodo_pago) }}
+                  {{ venta.metodo_pago }}
+                </span>
+              </td>
+              <td>
+                <span class="total-venta">{{ formatearMoneda(venta.total_venta) }}</span>
+              </td>
+              <td>
+                <app-insignia-estado [estado]="venta.estado_venta" />
+              </td>
+              <td>
+                <div class="acciones-celda">
+                  <button
+                    class="btn-accion btn-ver"
+                    (click)="verDetalle(venta)"
+                    title="Ver detalle"
+                  >
+                    👁️
+                  </button>
+                  <button
+                    class="btn-accion btn-pdf"
+                    (click)="generarComprobante(venta)"
+                    title="Generar PDF"
+                  >
+                    📄
+                  </button>
+                  @if (venta.estado_venta === 'Pendiente') {
+                    <button
+                      class="btn-accion btn-completar"
+                      (click)="cambiarEstado(venta, 'Completada')"
+                      title="Marcar como completada"
+                    >
+                      ✓
+                    </button>
+                    <button
+                      class="btn-accion btn-cancelar"
+                      (click)="cambiarEstado(venta, 'Cancelada')"
+                      title="Cancelar venta"
+                    >
+                      ✗
+                    </button>
+                  }
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Paginación -->
+    @if (totalPaginas() > 1) {
+      <div class="paginacion">
+        <button
+          class="btn-pagina"
+          [disabled]="paginaActual() === 1"
+          (click)="cambiarPagina(paginaActual() - 1)"
+        >
+          ← Anterior
+        </button>
+        <span class="info-pagina">
+          Página {{ paginaActual() }} de {{ totalPaginas() }}
+          ({{ totalRegistros() }} ventas)
+        </span>
+        <button
+          class="btn-pagina"
+          [disabled]="paginaActual() === totalPaginas()"
+          (click)="cambiarPagina(paginaActual() + 1)"
+        >
+          Siguiente →
+        </button>
+      </div>
+    }
+  }
+
+  <!-- Sin resultados -->
+  @if (!cargando() && ventas().length === 0) {
+    <div class="sin-ventas">
+      <p class="icono-vacio">🛒</p>
+      <p class="texto-vacio">No se encontraron ventas</p>
+      <p class="subtexto-vacio">Intenta ajustar los filtros de búsqueda</p>
+    </div>
+  }
+</div>

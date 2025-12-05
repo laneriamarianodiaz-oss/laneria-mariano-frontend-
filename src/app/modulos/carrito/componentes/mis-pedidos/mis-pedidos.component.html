@@ -1,0 +1,112 @@
+<div class="mis-pedidos">
+  <div class="contenedor">
+    <h1 class="titulo">📦 Mis Pedidos</h1>
+
+    <!-- Loading -->
+    <div class="cargando" *ngIf="cargando">
+      <div class="spinner"></div>
+      <p>Cargando tus pedidos...</p>
+    </div>
+
+    <!-- Error -->
+    <div class="error" *ngIf="error && !cargando">
+      <p>❌ {{ error }}</p>
+      <button (click)="cargarPedidos()" class="btn-reintentar">Reintentar</button>
+    </div>
+
+    <!-- Sin pedidos -->
+    <div class="sin-pedidos" *ngIf="!cargando && !error && pedidos.length === 0">
+      <div class="icono">📦</div>
+      <h2>Aún no tienes pedidos</h2>
+      <p>Cuando realices tu primera compra, aparecerá aquí</p>
+      <a routerLink="/catalogo" class="btn-catalogo">Ver Catálogo</a>
+    </div>
+
+    <!-- Lista de pedidos -->
+    <div class="lista-pedidos" *ngIf="!cargando && pedidos.length > 0">
+      <div class="pedido-card" *ngFor="let pedido of pedidos">
+        
+        <!-- Header del pedido -->
+        <div class="pedido-header">
+          <div class="info-principal">
+            <h3>{{ pedido.numero_venta || 'Pedido #' + (pedido.venta_id || pedido.id) }}</h3>
+            <p class="fecha">{{ pedido.fecha_pedido || pedido.fecha_venta | date:'dd/MM/yyyy HH:mm' }}</p>
+          </div>
+          <div class="estado-badge" [class]="'estado-' + (pedido.estado || pedido.estado_venta).toLowerCase().replace(' ', '-')">
+            {{ obtenerEstadoTexto(pedido.estado_venta || pedido.estado) }}
+          </div>
+        </div>
+
+        <!-- Productos -->
+        <div class="pedido-productos">
+          <div class="producto-item" *ngFor="let item of pedido.items">
+            <img 
+              [src]="item.producto?.imagen_url || 'assets/imagenes/default.jpg'" 
+              [alt]="item.producto?.nombre_producto || 'Producto'"
+              class="producto-img"
+              onerror="this.src='assets/imagenes/default.jpg'">
+            <div class="producto-info">
+              <p class="nombre">{{ item.producto?.nombre_producto || 'Producto' }}</p>
+              <p class="cantidad">Cantidad: {{ item.cantidad }}</p>
+              <p class="precio">S/ {{ (item.precio_unitario || 0).toFixed(2) }}</p>
+            </div>
+            <div class="subtotal">
+              S/ {{ ((item.cantidad || 0) * (item.precio_unitario || 0)).toFixed(2) }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Info adicional -->
+        <div class="pedido-info">
+          <div class="info-item" *ngIf="pedido.direccion_envio">
+            <span class="label">📍 Dirección:</span>
+            <span class="valor">{{ pedido.direccion_envio }}</span>
+          </div>
+          <div class="info-item" *ngIf="pedido.telefono_contacto">
+            <span class="label">📞 Teléfono:</span>
+            <span class="valor">{{ pedido.telefono_contacto }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">💳 Método de pago:</span>
+            <span class="valor">{{ pedido.metodo_pago }}</span>
+          </div>
+          <div class="info-item" *ngIf="pedido.canal_venta">
+            <span class="label">🛒 Canal:</span>
+            <span class="valor">{{ pedido.canal_venta }}</span>
+          </div>
+          <div class="info-item" *ngIf="pedido.codigo_operacion">
+            <span class="label">🔢 Código operación:</span>
+            <span class="valor">{{ pedido.codigo_operacion }}</span>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="pedido-footer">
+          <div class="total">
+            <span>Total:</span>
+            <span class="monto">S/ {{ ((pedido.total || pedido.total_venta) || 0).toFixed(2) }}</span>
+          </div>
+          <div class="acciones">
+            <button class="btn-detalle" (click)="verDetalle(pedido)">
+              Ver Detalles
+            </button>
+            <button 
+              *ngIf="puedeCancelar(pedido.estado_venta || pedido.estado)"
+              class="btn-cancelar" 
+              (click)="cancelarPedido(pedido, $event)">
+              Cancelar
+            </button>
+          </div>
+        </div>
+        
+      </div> <!-- ← FIN del pedido-card -->
+    </div> <!-- ← FIN de lista-pedidos -->
+  </div> <!-- ← FIN de contenedor -->
+</div> <!-- ← FIN de mis-pedidos -->
+
+<!-- ⭐ AQUÍ VA EL MODAL - FUERA DE TODO -->
+<app-detalle-pedido
+  [pedido]="pedidoSeleccionado"
+  [mostrar]="mostrarDetalle"
+  (cerrar)="cerrarDetalle()">
+</app-detalle-pedido>

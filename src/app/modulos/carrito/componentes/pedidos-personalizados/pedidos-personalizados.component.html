@@ -1,0 +1,124 @@
+<div class="pedidos-personalizados">
+  <!-- Header -->
+  <div class="header">
+    <button class="btn-volver" (click)="volverInicio()">
+      ← Volver al inicio
+    </button>
+    <h1>🎨 Pedidos Personalizados</h1>
+    <p class="subtitulo">Tu idea, nuestra lana. ¡Hecho a tu medida!</p>
+  </div>
+
+  <!-- Sección Hero -->
+  <section class="seccion-hero">
+    <div class="hero-contenido">
+      <h2>Crea algo único y especial</h2>
+      <p>Trabajamos contigo para crear productos tejidos completamente personalizados. 
+         Elige colores, tamaños, diseños y más.</p>
+      <button class="btn-contactar-principal" (click)="contactarDirecto()">
+        💬 Contáctanos por WhatsApp
+      </button>
+    </div>
+  </section>
+
+  <!-- Tipos de pedidos personalizados -->
+  <section class="seccion-tipos">
+    <h2>¿Qué podemos crear para ti?</h2>
+    <div class="tipos-grid">
+      <div class="tipo-card" *ngFor="let tipo of tiposPedidos" (click)="contactarPorTipo(tipo)">
+        <div class="tipo-imagen">
+          <img [src]="tipo.imagen" [alt]="tipo.titulo">
+          <div class="overlay">
+            <span class="btn-contactar-overlay">💬 Contactar</span>
+          </div>
+        </div>
+        <div class="tipo-info">
+          <h3>{{ tipo.titulo }}</h3>
+          <p>{{ tipo.descripcion }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Productos de muestra -->
+  <section class="seccion-muestra">
+    <h2>Productos que puedes personalizar</h2>
+    <p class="descripcion-muestra">
+      Estos son algunos ejemplos de nuestros productos. Contáctanos para personalizarlos a tu gusto.
+    </p>
+
+    <!-- Loading -->
+    <div class="loading" *ngIf="cargando">
+      <div class="spinner"></div>
+      <p>Cargando productos...</p>
+    </div>
+
+    <!-- Grid de productos -->
+    <div class="productos-grid" *ngIf="!cargando">
+      <div 
+        class="producto-card" 
+        *ngFor="let producto of productosMuestra">
+        <img 
+          [src]="producto.imagen_url || 'assets/productos/default.jpg'" 
+          [alt]="producto.nombre_producto"
+          class="producto-imagen"
+          (click)="verDetalle(producto)">
+        
+        <div class="producto-info">
+          <h4>{{ producto.nombre_producto }}</h4>
+          <p class="descripcion">{{ producto.descripcion }}</p>
+          <p class="precio">S/ {{ (producto.precio_unitario || producto.precio_producto || 0) | number:'1.2-2' }}</p>
+          <p class="nota-precio">*Precio base, puede variar según personalización</p>
+          
+          <!-- Botón contactar en lugar de agregar -->
+          <button class="btn-contactar" (click)="contactarConProducto(producto)">
+            💬 Contactar para personalizar
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sección cómo funciona -->
+  <section class="seccion-proceso">
+    <h2>¿Cómo funciona?</h2>
+    <div class="proceso-grid">
+      <div class="paso">
+        <div class="numero">1</div>
+        <h3>Contáctanos</h3>
+        <p>Envíanos un mensaje por WhatsApp contándonos tu idea</p>
+      </div>
+      <div class="paso">
+        <div class="numero">2</div>
+        <h3>Diseñamos juntos</h3>
+        <p>Te ayudamos a elegir colores, tamaños y diseños</p>
+      </div>
+      <div class="paso">
+        <div class="numero">3</div>
+        <h3>Confirmamos detalles</h3>
+        <p>Te enviamos un presupuesto y tiempo de entrega</p>
+      </div>
+      <div class="paso">
+        <div class="numero">4</div>
+        <h3>¡Listo!</h3>
+        <p>Tejemos tu pedido con amor y te lo entregamos</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call to action final -->
+  <section class="seccion-cta">
+    <div class="cta-contenido">
+      <h2>¿Tienes una idea en mente?</h2>
+      <p>No esperes más, contáctanos y hagamos realidad tu proyecto</p>
+      <button class="btn-contactar-grande" (click)="contactarDirecto()">
+        💬 Iniciar conversación en WhatsApp
+      </button>
+    </div>
+  </section>
+
+  <!-- Modal de Detalle (solo para ver, sin agregar) -->
+  <app-detalle-producto-modal 
+    [producto]="productoSeleccionado"
+    (cerrar)="cerrarModal()">
+  </app-detalle-producto-modal>
+</div>

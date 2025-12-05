@@ -1,0 +1,502 @@
+.metodos-pago-container {
+  width: 100%;
+}
+
+/* ============================
+   HEADER
+   ============================ */
+
+.metodos-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #f3f4f6;
+}
+
+.header-info .metodos-titulo {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 4px 0;
+}
+
+.header-info .metodos-subtitulo {
+  font-size: 13px;
+  color: #6b7280;
+  margin: 0;
+}
+
+.btn-detalle {
+  padding: 8px 16px;
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-detalle:hover {
+  border-color: #8b5cf6;
+  color: #8b5cf6;
+  transform: translateY(-2px);
+}
+
+/* ============================
+   SELECTOR DE VISTA
+   ============================ */
+
+.selector-vista {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 20px;
+}
+
+.btn-vista {
+  padding: 10px 20px;
+  background: white;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #6b7280;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex: 1;
+}
+
+.btn-vista:hover {
+  border-color: #8b5cf6;
+  color: #8b5cf6;
+}
+
+.btn-vista.activo {
+  background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+  border-color: #8b5cf6;
+  color: white;
+}
+
+/* ============================
+   FILTRO DE FECHAS
+   ============================ */
+
+.filtro-fechas {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  margin-bottom: 20px;
+}
+
+.fecha-input {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.fecha-input label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+.input-fecha {
+  padding: 8px 12px;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.3s ease;
+}
+
+.input-fecha:focus {
+  outline: none;
+  border-color: #8b5cf6;
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+}
+
+.btn-aplicar {
+  padding: 8px 20px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-aplicar:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+}
+
+/* ============================
+   CARGANDO
+   ============================ */
+
+.cargando {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 40px 20px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.spinner-small {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #f3f4f6;
+  border-top-color: #8b5cf6;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ============================
+   RESUMEN TOTALES
+   ============================ */
+
+.resumen-totales {
+  display: flex;
+  gap: 20px;
+  padding: 16px;
+  background: #f9fafb;
+  border-radius: 8px;
+  margin-bottom: 24px;
+}
+
+.total-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex: 1;
+}
+
+.total-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.total-valor {
+  font-size: 20px;
+  font-weight: 700;
+  color: #8b5cf6;
+}
+
+/* ============================
+   GRÁFICO CIRCULAR (DONUT)
+   ============================ */
+
+.grafico-circular {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.donut-chart {
+  position: relative;
+  width: 200px;
+  height: 200px;
+}
+
+.donut-segment {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.donut-hole {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 130px;
+  height: 130px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.donut-total {
+  text-align: center;
+}
+
+.donut-label {
+  display: block;
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.donut-valor {
+  display: block;
+  font-size: 16px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+/* ============================
+   LISTA DE ITEMS
+   ============================ */
+
+.lista-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.item-row {
+  display: flex;
+  gap: 12px;
+  padding: 16px;
+  background: #f9fafb;
+  border-radius: 12px;
+  border: 2px solid #e5e7eb;
+  transition: all 0.3s ease;
+}
+
+.item-row:hover {
+  border-color: #8b5cf6;
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.1);
+}
+
+.item-color {
+  width: 6px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.item-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.item-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.item-icono {
+  font-size: 20px;
+}
+
+.item-nombre {
+  font-size: 15px;
+  font-weight: 700;
+  color: #1f2937;
+}
+
+.item-estadisticas {
+  display: flex;
+  gap: 16px;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.stat-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: #6b7280;
+  text-transform: uppercase;
+}
+
+.stat-valor {
+  font-size: 14px;
+  font-weight: 700;
+  color: #374151;
+}
+
+.stat-valor.destaca {
+  color: #10b981;
+  font-size: 15px;
+}
+
+/* Barra de Porcentaje */
+.barra-porcentaje {
+  position: relative;
+  width: 100%;
+  height: 24px;
+  background: #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.barra-fill {
+  height: 100%;
+  transition: width 0.5s ease;
+  border-radius: 12px;
+}
+
+.porcentaje-texto {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  font-size: 11px;
+  font-weight: 700;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* ============================
+   TABLA DETALLE
+   ============================ */
+
+.tabla-detalle {
+  margin-top: 24px;
+}
+
+.tabla-titulo {
+  font-size: 16px;
+  font-weight: 700;
+  color: #1f2937;
+  margin: 0 0 16px 0;
+}
+
+.tabla-scroll {
+  overflow-x: auto;
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.tabla thead {
+  background: #f9fafb;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.tabla th {
+  padding: 12px 16px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tabla tbody tr {
+  border-bottom: 1px solid #f3f4f6;
+  transition: background 0.2s ease;
+}
+
+.tabla tbody tr:hover {
+  background: #fefcf9;
+}
+
+.tabla td {
+  padding: 12px 16px;
+  font-size: 14px;
+  color: #374151;
+}
+
+.tabla-metodo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tabla-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+}
+
+.valor-destacado {
+  font-weight: 700;
+  color: #10b981;
+  font-size: 15px;
+}
+
+.badge-porcentaje {
+  padding: 4px 10px;
+  background: #e0e7ff;
+  color: #4f46e5;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 12px;
+}
+
+/* ============================
+   SIN DATOS
+   ============================ */
+
+.sin-datos {
+  text-align: center;
+  padding: 40px 20px;
+  color: #6b7280;
+}
+
+.sin-datos-icono {
+  font-size: 48px;
+  display: block;
+  margin-bottom: 12px;
+}
+
+.sin-datos p {
+  font-size: 14px;
+  margin: 0;
+}
+
+/* ============================
+   RESPONSIVE
+   ============================ */
+
+@media (max-width: 768px) {
+  .metodos-header {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .selector-vista {
+    flex-direction: column;
+  }
+
+  .filtro-fechas {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-aplicar {
+    width: 100%;
+  }
+
+  .resumen-totales {
+    flex-direction: column;
+  }
+
+  .item-estadisticas {
+    flex-direction: column;
+  }
+}

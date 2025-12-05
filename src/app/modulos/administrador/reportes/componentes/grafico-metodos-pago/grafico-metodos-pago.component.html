@@ -1,0 +1,179 @@
+<div class="metodos-pago-container">
+  <!-- HEADER -->
+  <div class="metodos-header">
+    <div class="header-info">
+      <h3 class="metodos-titulo">💳 Análisis de Ventas</h3>
+      <p class="metodos-subtitulo">Distribución por métodos de pago y canales</p>
+    </div>
+
+    <button class="btn-detalle" (click)="toggleDetalle()">
+      <span *ngIf="!mostrarDetalle()">📊 Ver Detalle</span>
+      <span *ngIf="mostrarDetalle()">📉 Ocultar Detalle</span>
+    </button>
+  </div>
+
+  <!-- SELECTOR DE VISTA -->
+  <div class="selector-vista">
+    <button
+      class="btn-vista"
+      [class.activo]="vistaActiva() === 'metodos'"
+      (click)="cambiarVista('metodos')"
+    >
+      💳 Métodos de Pago
+    </button>
+    <button
+      class="btn-vista"
+      [class.activo]="vistaActiva() === 'canales'"
+      (click)="cambiarVista('canales')"
+    >
+      📊 Canales de Venta
+    </button>
+  </div>
+
+  <!-- FILTRO DE FECHAS -->
+  <div class="filtro-fechas">
+    <div class="fecha-input">
+      <label>Desde:</label>
+      <input
+        type="date"
+        [(ngModel)]="fechaInicio"
+        class="input-fecha"
+      />
+    </div>
+    <div class="fecha-input">
+      <label>Hasta:</label>
+      <input
+        type="date"
+        [(ngModel)]="fechaFin"
+        class="input-fecha"
+      />
+    </div>
+    <button class="btn-aplicar" (click)="aplicarFiltro()">
+      ✓ Aplicar
+    </button>
+  </div>
+
+  <!-- INDICADOR DE CARGA -->
+  <div *ngIf="cargando()" class="cargando">
+    <div class="spinner-small"></div>
+    <span>Cargando datos...</span>
+  </div>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <div *ngIf="!cargando() && obtenerDatosVista().length > 0" class="contenido-principal">
+    
+    <!-- RESUMEN -->
+    <div class="resumen-totales">
+      <div class="total-item">
+        <span class="total-label">Total Ventas:</span>
+        <span class="total-valor">{{ formatearMoneda(obtenerTotalVentas()) }}</span>
+      </div>
+      <div class="total-item">
+        <span class="total-label">Cantidad:</span>
+        <span class="total-valor">{{ obtenerTotalCantidad() }}</span>
+      </div>
+    </div>
+
+    <!-- GRÁFICO CIRCULAR (DONUT) -->
+    <div class="grafico-circular">
+      <div class="donut-chart">
+        <div
+          class="donut-segment"
+          *ngFor="let item of obtenerDatosVista(); let i = index"
+          [style.background]="calcularAngulo(i)"
+        ></div>
+        <div class="donut-hole">
+          <div class="donut-total">
+            <span class="donut-label">Total</span>
+            <span class="donut-valor">{{ formatearMoneda(obtenerTotalVentas()) }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LISTA DE ITEMS -->
+    <div class="lista-items">
+      <div
+        class="item-row"
+        *ngFor="let item of obtenerDatosVista(); let i = index"
+      >
+        <!-- Indicador de color -->
+        <div
+          class="item-color"
+          [style.background-color]="obtenerColor(i)"
+        ></div>
+
+        <!-- Info del item -->
+        <div class="item-info">
+          <div class="item-header">
+            <span class="item-icono">{{ obtenerIcono(item) }}</span>
+            <span class="item-nombre">{{ obtenerNombre(item) }}</span>
+          </div>
+
+          <div class="item-estadisticas">
+            <div class="stat">
+              <span class="stat-label">Ventas:</span>
+              <span class="stat-valor">{{ item.cantidad_ventas }}</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">Total:</span>
+              <span class="stat-valor destaca">{{ formatearMoneda(item.total_ventas) }}</span>
+            </div>
+          </div>
+
+          <!-- Barra de porcentaje -->
+          <div class="barra-porcentaje">
+            <div
+              class="barra-fill"
+              [style.width.%]="item.porcentaje"
+              [style.background-color]="obtenerColor(i)"
+            ></div>
+            <span class="porcentaje-texto">{{ item.porcentaje.toFixed(1) }}%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TABLA DETALLADA -->
+    <div *ngIf="mostrarDetalle()" class="tabla-detalle">
+      <h4 class="tabla-titulo">📋 Detalle Completo</h4>
+      <div class="tabla-scroll">
+        <table class="tabla">
+          <thead>
+            <tr>
+              <th>{{ vistaActiva() === 'metodos' ? 'Método de Pago' : 'Canal de Venta' }}</th>
+              <th>Cantidad Ventas</th>
+              <th>Total Ventas</th>
+              <th>Porcentaje</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let item of obtenerDatosVista(); let i = index">
+              <td>
+                <div class="tabla-metodo">
+                  <span
+                    class="tabla-color"
+                    [style.background-color]="obtenerColor(i)"
+                  ></span>
+                  <span>{{ obtenerNombre(item) }}</span>
+                </div>
+              </td>
+              <td>{{ item.cantidad_ventas }}</td>
+              <td class="valor-destacado">{{ formatearMoneda(item.total_ventas) }}</td>
+              <td>
+                <span class="badge-porcentaje">{{ item.porcentaje.toFixed(1) }}%</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SIN DATOS -->
+  <div *ngIf="!cargando() && obtenerDatosVista().length === 0" class="sin-datos">
+    <span class="sin-datos-icono">💳</span>
+    <p>No hay datos disponibles en el período seleccionado</p>
+  </div>
+</div>

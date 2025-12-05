@@ -1,0 +1,61 @@
+<div class="seguimiento-pedido">
+  
+  <!-- Barra de progreso general -->
+  <div class="progreso-general">
+    <div class="progreso-header">
+      <h3>Estado del Pedido</h3>
+      <span class="progreso-porcentaje" *ngIf="!estaCancelado">{{ progresoPorcentaje }}%</span>
+      <span class="estado-cancelado" *ngIf="estaCancelado">❌ Cancelado</span>
+    </div>
+    <div class="progreso-barra-container" *ngIf="!estaCancelado">
+      <div class="progreso-barra-fill" [style.width.%]="progresoPorcentaje"></div>
+    </div>
+  </div>
+
+  <!-- Alerta de cancelación -->
+  <div class="alerta-cancelado" *ngIf="estaCancelado">
+    <div class="icono">❌</div>
+    <div class="contenido">
+      <h4>Pedido Cancelado</h4>
+      <p *ngIf="observaciones">{{ observaciones }}</p>
+      <p *ngIf="!observaciones">Este pedido ha sido cancelado.</p>
+    </div>
+  </div>
+
+  <!-- Línea de tiempo -->
+  <div class="timeline" *ngIf="!estaCancelado">
+    <div 
+      class="timeline-item" 
+      *ngFor="let paso of pasosSeguimiento; let i = index"
+      [class.completado]="paso.completado"
+      [class.activo]="paso.activo"
+      [class.pendiente]="!paso.completado && !paso.activo">
+      
+      <!-- Icono -->
+      <div class="timeline-icono">
+        <span class="icono">{{ paso.icono }}</span>
+        <div class="check" *ngIf="paso.completado">✓</div>
+      </div>
+
+      <!-- Línea conectora -->
+      <div class="timeline-linea" *ngIf="i < pasosSeguimiento.length - 1"></div>
+
+      <!-- Contenido -->
+      <div class="timeline-contenido">
+        <h4>{{ paso.titulo }}</h4>
+        <p>{{ paso.descripcion }}</p>
+        <span class="fecha" *ngIf="paso.activo && paso.fecha">
+          {{ formatearFecha(paso.fecha) }}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mensaje de ayuda -->
+  <div class="mensaje-ayuda" *ngIf="!estaCancelado">
+    <p>
+      <strong>Nota:</strong> Recibirás notificaciones por WhatsApp cuando tu pedido cambie de estado.
+    </p>
+  </div>
+
+</div>

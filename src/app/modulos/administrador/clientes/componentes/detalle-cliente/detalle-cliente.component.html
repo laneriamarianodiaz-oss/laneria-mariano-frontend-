@@ -1,0 +1,240 @@
+<div class="detalle-container">
+  <!-- Header -->
+  <div class="detalle-header">
+    <button class="btn-volver" (click)="volver()">
+      ← Volver a la lista
+    </button>
+    <h1 class="titulo">👤 Detalle del Cliente</h1>
+  </div>
+
+  <!-- Indicador de carga -->
+  @if (cargando()) {
+    <div class="cargando">
+      <div class="spinner"></div>
+      <p>Cargando información del cliente...</p>
+    </div>
+  }
+
+  <!-- Contenido -->
+  @if (!cargando() && cliente()) {
+    <div class="contenido-grid">
+      <!-- Columna Izquierda: Información del Cliente -->
+      <div class="columna-izquierda">
+        <!-- Tarjeta de Información Personal -->
+        <div class="tarjeta">
+          <div class="tarjeta-header">
+            <h2 class="tarjeta-titulo">📋 Información Personal</h2>
+            <div class="acciones-tarjeta">
+              <button class="btn-accion btn-editar" (click)="editarCliente()">
+                ✏️
+              </button>
+              <button class="btn-accion btn-eliminar" (click)="eliminarCliente()">
+                🗑️
+              </button>
+            </div>
+          </div>
+
+          <div class="info-grid">
+            <!-- ID -->
+            <div class="info-item">
+              <span class="info-label">ID Cliente:</span>
+              <span class="info-valor cliente-id">
+                #{{ cliente()!.cliente_id }}
+              </span>
+            </div>
+
+            <!-- Nombre -->
+            <div class="info-item">
+              <span class="info-label">Nombre Completo:</span>
+              <span class="info-valor nombre-destacado">
+                {{ cliente()!.nombre_clie }}
+              </span>
+            </div>
+
+            <!-- Teléfono -->
+            <div class="info-item">
+              <span class="info-label">📱 Teléfono:</span>
+              <span class="info-valor">{{ cliente()!.telefono }}</span>
+            </div>
+
+            <!-- Email -->
+            <div class="info-item">
+              <span class="info-label">✉️ Email:</span>
+              <span class="info-valor">
+                {{ cliente()!.email || 'No registrado' }}
+              </span>
+            </div>
+
+            <!-- Contacto Adicional -->
+            @if (cliente()!.contacto_clie) {
+              <div class="info-item">
+                <span class="info-label">👥 Contacto Adicional:</span>
+                <span class="info-valor">{{ cliente()!.contacto_clie }}</span>
+              </div>
+            }
+
+            <!-- Dirección -->
+            @if (cliente()!.direccion) {
+              <div class="info-item full-width">
+                <span class="info-label">📍 Dirección:</span>
+                <span class="info-valor">{{ cliente()!.direccion }}</span>
+              </div>
+            }
+
+            <!-- Preferencias -->
+            @if (cliente()!.preferencias_clie) {
+              <div class="info-item full-width">
+                <span class="info-label">⭐ Preferencias:</span>
+                <span class="info-valor">{{ cliente()!.preferencias_clie }}</span>
+              </div>
+            }
+
+            <!-- Fecha de Registro -->
+            <div class="info-item">
+              <span class="info-label">📅 Registrado:</span>
+              <span class="info-valor">
+                {{ formatearFecha(cliente()!.fecha_registro) }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tarjeta de Estadísticas -->
+        <div class="tarjeta">
+          <div class="tarjeta-header">
+            <h2 class="tarjeta-titulo">📊 Estadísticas de Compras</h2>
+          </div>
+
+          <div class="estadisticas-grid">
+            <!-- Total en Compras -->
+            <div class="estadistica-item">
+              <div class="estadistica-icono" style="background: #DBEAFE;">
+                💰
+              </div>
+              <div class="estadistica-info">
+                <span class="estadistica-label">Total en Compras</span>
+                <span class="estadistica-valor">
+                  {{ formatearMoneda(cliente()!.total_compras || 0) }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Cantidad de Compras -->
+            <div class="estadistica-item">
+              <div class="estadistica-icono" style="background: #D1FAE5;">
+                🛍️
+              </div>
+              <div class="estadistica-info">
+                <span class="estadistica-label">Cantidad de Compras</span>
+                <span class="estadistica-valor">
+                  {{ cliente()!.cantidad_compras || 0 }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Última Compra -->
+            <div class="estadistica-item full-width">
+              <div class="estadistica-icono" style="background: #FEF3C7;">
+                🕒
+              </div>
+              <div class="estadistica-info">
+                <span class="estadistica-label">Última Compra</span>
+                <span class="estadistica-valor">
+                  {{ cliente()!.ultima_compra ? formatearFecha(cliente()!.ultima_compra) : 'Sin compras' }}
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Columna Derecha: Historial de Compras -->
+      <div class="columna-derecha">
+        <div class="tarjeta">
+          <div class="tarjeta-header">
+            <h2 class="tarjeta-titulo">🛒 Historial de Compras</h2>
+            <span class="badge-contador">
+              {{ historial().length }} compras
+            </span>
+          </div>
+
+          <!-- Cargando historial -->
+          @if (cargandoHistorial()) {
+            <div class="cargando-historial">
+              <div class="spinner-small"></div>
+              <p>Cargando historial...</p>
+            </div>
+          }
+
+          <!-- Lista de compras -->
+          @if (!cargandoHistorial() && historial().length > 0) {
+            <div class="historial-lista">
+              @for (compra of historial(); track compra.venta_id) {
+                <div class="historial-item">
+                  <!-- Header de la compra -->
+                  <div class="compra-header">
+                    <div class="compra-info">
+                      <span class="numero-venta">
+                        Venta #{{ compra.numero_venta }}
+                      </span>
+                      <span class="fecha-venta">
+                        {{ formatearFecha(compra.fecha_venta) }}
+                      </span>
+                    </div>
+                    <div class="compra-estado">
+                      <span 
+                        class="badge-estado"
+                        [class.estado-completada]="compra.estado_venta === 'Completada'"
+                        [class.estado-pendiente]="compra.estado_venta === 'Pendiente'"
+                        [class.estado-cancelada]="compra.estado_venta === 'Cancelada'"
+                      >
+                        {{ compra.estado_venta }}
+                      </span>
+                      <span class="total-compra">
+                        {{ formatearMoneda(compra.total_venta) }}
+                      </span>
+                    </div>
+                  </div>
+
+                  <!-- Productos de la compra -->
+                  <div class="productos-compra">
+                    @for (producto of compra.productos; track $index) {
+                      <div class="producto-item">
+                        <span class="producto-nombre">
+                          {{ producto.nombre }}
+                        </span>
+                        <span class="producto-detalles">
+                          {{ producto.cantidad }}x {{ formatearMoneda(producto.precio_unitario) }}
+                        </span>
+                      </div>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          }
+
+          <!-- Sin compras -->
+          @if (!cargandoHistorial() && historial().length === 0) {
+            <div class="sin-historial">
+              <div class="icono-vacio">🛍️</div>
+              <p>Este cliente aún no tiene compras registradas</p>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Cliente no encontrado -->
+  @if (!cargando() && !cliente()) {
+    <div class="error-container">
+      <div class="icono-error">❌</div>
+      <h3>Cliente no encontrado</h3>
+      <p>El cliente que busca no existe o fue eliminado.</p>
+      <button class="btn-volver-error" (click)="volver()">
+        ← Volver a la lista
+      </button>
+    </div>
+  }
+</div>

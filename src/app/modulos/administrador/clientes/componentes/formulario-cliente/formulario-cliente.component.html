@@ -1,0 +1,167 @@
+<div class="formulario-container">
+  <!-- Header -->
+  <div class="formulario-header">
+    <button class="btn-volver" (click)="volver()">
+      ← Volver a la lista
+    </button>
+    <h1 class="titulo">
+      {{ modoEdicion() ? '✏️ Editar Cliente' : '➕ Nuevo Cliente' }}
+    </h1>
+  </div>
+
+  <!-- Indicador de carga -->
+  @if (cargando()) {
+    <div class="cargando">
+      <div class="spinner"></div>
+      <p>Cargando datos del cliente...</p>
+    </div>
+  }
+
+  <!-- Formulario -->
+  @if (!cargando()) {
+    <div class="formulario-card">
+      <form (ngSubmit)="guardar()">
+        <!-- Información Personal -->
+        <div class="seccion">
+          <h3 class="seccion-titulo">👤 Información Personal</h3>
+          
+          <div class="form-grid">
+            <!-- Nombre -->
+            <div class="form-group">
+              <label class="form-label">
+                Nombre Completo <span class="obligatorio">*</span>
+              </label>
+              <input
+                type="text"
+                class="form-input"
+                [class.error]="errores()['nombre']"
+                placeholder="Ej: Juan Pérez García"
+                [(ngModel)]="nombre"
+                name="nombre"
+                required
+              />
+              @if (errores()['nombre']) {
+                <span class="mensaje-error">{{ errores()['nombre'] }}</span>
+              }
+            </div>
+
+            <!-- Teléfono -->
+            <div class="form-group">
+              <label class="form-label">
+                Teléfono <span class="obligatorio">*</span>
+              </label>
+              <input
+                type="tel"
+                class="form-input"
+                [class.error]="errores()['telefono']"
+                placeholder="Ej: 987654321"
+                [(ngModel)]="telefono"
+                name="telefono"
+                maxlength="9"
+                required
+              />
+              @if (errores()['telefono']) {
+                <span class="mensaje-error">{{ errores()['telefono'] }}</span>
+              }
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+              <label class="form-label">Email (Opcional)</label>
+              <input
+                type="email"
+                class="form-input"
+                [class.error]="errores()['email']"
+                placeholder="Ej: cliente@ejemplo.com"
+                [(ngModel)]="email"
+                name="email"
+              />
+              @if (errores()['email']) {
+                <span class="mensaje-error">{{ errores()['email'] }}</span>
+              }
+            </div>
+
+            <!-- Contacto Adicional -->
+            <div class="form-group">
+              <label class="form-label">Contacto Adicional (Opcional)</label>
+              <input
+                type="text"
+                class="form-input"
+                placeholder="Ej: Referencia, persona de contacto"
+                [(ngModel)]="contacto"
+                name="contacto"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Dirección -->
+        <div class="seccion">
+          <h3 class="seccion-titulo">📍 Dirección</h3>
+          
+          <div class="form-group">
+            <label class="form-label">Dirección Completa (Opcional)</label>
+            <textarea
+              class="form-textarea"
+              placeholder="Ej: Av. Los Andes 123, Urb. San Juan, Andahuaylas"
+              [(ngModel)]="direccion"
+              name="direccion"
+              rows="3"
+            ></textarea>
+          </div>
+        </div>
+
+        <!-- Preferencias -->
+        <div class="seccion">
+          <h3 class="seccion-titulo">⭐ Preferencias del Cliente</h3>
+          
+          <div class="form-group">
+            <label class="form-label">Preferencias (Opcional)</label>
+            <textarea
+              class="form-textarea"
+              placeholder="Ej: Prefiere lana Perlita Domino en colores claros, talla M"
+              [(ngModel)]="preferencias"
+              name="preferencias"
+              rows="3"
+            ></textarea>
+            <span class="form-ayuda">
+              💡 Puede incluir colores, tallas o tipos de productos preferidos
+            </span>
+          </div>
+        </div>
+
+        <!-- Botones de acción -->
+        <div class="form-actions">
+          <button
+            type="button"
+            class="btn-limpiar"
+            (click)="limpiar()"
+            [disabled]="guardando()"
+          >
+            🗑️ Limpiar
+          </button>
+          <button
+            type="button"
+            class="btn-cancelar"
+            (click)="volver()"
+            [disabled]="guardando()"
+          >
+            ✗ Cancelar
+          </button>
+          <button
+            type="submit"
+            class="btn-guardar"
+            [disabled]="guardando()"
+          >
+            @if (guardando()) {
+              <span class="spinner-small"></span>
+              Guardando...
+            } @else {
+              ✓ {{ modoEdicion() ? 'Actualizar' : 'Crear' }} Cliente
+            }
+          </button>
+        </div>
+      </form>
+    </div>
+  }
+</div>

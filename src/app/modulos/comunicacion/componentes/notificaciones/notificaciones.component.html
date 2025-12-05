@@ -1,0 +1,49 @@
+<div class="notificaciones-container">
+  <div class="notificaciones-contenido">
+    <h1>Notificaciones</h1>
+
+    <div class="notificaciones-acciones">
+      <button class="btn-marcar-todas" (click)="marcarTodasLeidas()">
+        Marcar todas como leídas
+      </button>
+    </div>
+
+    <!-- Lista de notificaciones -->
+    <div class="notificaciones-lista" *ngIf="notificaciones.length > 0">
+      <div class="notificacion-card" 
+           *ngFor="let notif of notificaciones"
+           [class.no-leida]="!notif.leida"
+           [class]="'tipo-' + notif.tipo">
+        
+        <div class="notificacion-icono">
+          <span *ngIf="notif.tipo === 'exito'">✓</span>
+          <span *ngIf="notif.tipo === 'info'">ℹ</span>
+          <span *ngIf="notif.tipo === 'advertencia'">⚠</span>
+          <span *ngIf="notif.tipo === 'error'">✕</span>
+        </div>
+
+        <div class="notificacion-contenido">
+          <h3>{{ notif.titulo }}</h3>
+          <p>{{ notif.mensaje }}</p>
+          <span class="fecha">{{ notif.fecha_creacion | date:'dd/MM/yyyy HH:mm' }}</span>
+        </div>
+
+        <div class="notificacion-acciones">
+          <button class="btn-leer" 
+                  *ngIf="!notif.leida"
+                  (click)="marcarLeida(notif)">
+            Marcar como leída
+          </button>
+          <button class="btn-eliminar" (click)="eliminar(notif)">
+            🗑️
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sin notificaciones -->
+    <div class="sin-notificaciones" *ngIf="notificaciones.length === 0">
+      <p>No tienes notificaciones</p>
+    </div>
+  </div>
+</div>

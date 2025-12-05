@@ -1,0 +1,178 @@
+<div class="tablero-container">
+  <!-- HEADER -->
+  <div class="tablero-header">
+    <div class="header-content">
+      <div class="titulo-seccion">
+        <h1 class="titulo">📊 Tablero de Reportes</h1>
+        <p class="subtitulo">Panel de control y análisis de datos</p>
+      </div>
+
+      <div class="header-acciones">
+        <button 
+          class="btn-toggle-graficos" 
+          (click)="toggleGraficos()"
+          title="Mostrar/Ocultar gráficos"
+        >
+          <span *ngIf="mostrarGraficos()">📊 Ocultar Gráficos</span>
+          <span *ngIf="!mostrarGraficos()">📈 Mostrar Gráficos</span>
+        </button>
+
+        <button class="btn-exportar-excel" (click)="exportarExcel()">
+          📥 Excel
+        </button>
+
+        <button class="btn-exportar-pdf" (click)="exportarPDF()">
+          📄 PDF
+        </button>
+
+        <button class="btn-refrescar" (click)="refrescar()" [disabled]="cargando()">
+          <span *ngIf="!cargando()">🔄 Refrescar</span>
+          <span *ngIf="cargando()" class="spinner-small"></span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Selector de Período -->
+    <div class="selector-periodo">
+      <button 
+        class="periodo-btn"
+        [class.activo]="periodoSeleccionado() === 'hoy'"
+        (click)="cambiarPeriodo('hoy')"
+      >
+        📅 Hoy
+      </button>
+      <button 
+        class="periodo-btn"
+        [class.activo]="periodoSeleccionado() === 'semana'"
+        (click)="cambiarPeriodo('semana')"
+      >
+        📊 Semana
+      </button>
+      <button 
+        class="periodo-btn"
+        [class.activo]="periodoSeleccionado() === 'mes'"
+        (click)="cambiarPeriodo('mes')"
+      >
+        📈 Mes
+      </button>
+      <button 
+        class="periodo-btn"
+        [class.activo]="periodoSeleccionado() === 'ano'"
+        (click)="cambiarPeriodo('ano')"
+      >
+        📊 Año
+      </button>
+    </div>
+
+    <div class="fecha-actualizacion" *ngIf="fechaActualizacion()">
+      <span>⏰ Última actualización: {{ fechaActualizacion() }}</span>
+    </div>
+  </div>
+
+  <!-- INDICADOR DE CARGA -->
+  <div *ngIf="cargando()" class="cargando-container">
+    <div class="spinner"></div>
+    <p>Cargando datos del tablero...</p>
+  </div>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <div *ngIf="!cargando() && estadisticas()" class="tablero-content">
+    
+    <!-- MÉTRICAS PRINCIPALES -->
+    <div class="metricas-principales">
+      <div class="tarjeta-metrica tarjeta-ventas">
+        <div class="metrica-header">
+          <span class="metrica-icono">💰</span>
+          <span class="metrica-badge">{{ obtenerEtiquetaPeriodo() }}</span>
+        </div>
+        <p class="metrica-label">Total de Ventas</p>
+        <p class="metrica-valor">{{ formatearMoneda(obtenerValorPeriodo()) }}</p>
+        <div class="metrica-footer">
+          <span class="metrica-detalle">Ticket promedio: {{ formatearMoneda(estadisticas()!.ticket_promedio) }}</span>
+        </div>
+      </div>
+
+      <div class="tarjeta-metrica tarjeta-clientes" (click)="verClientes()">
+        <div class="metrica-header">
+          <span class="metrica-icono">👥</span>
+          <span class="metrica-badge">{{ estadisticas()!.total_clientes }}</span>
+        </div>
+        <p class="metrica-label">Total Clientes</p>
+        <p class="metrica-descripcion">Clientes registrados en el sistema</p>
+        <button class="btn-ver-detalle">Ver detalles →</button>
+      </div>
+
+      <div class="tarjeta-metrica tarjeta-productos" (click)="verProductos()">
+        <div class="metrica-header">
+          <span class="metrica-icono">🧶</span>
+          <span class="metrica-badge">{{ estadisticas()!.total_productos }}</span>
+        </div>
+        <p class="metrica-label">Total Productos</p>
+        <p class="metrica-descripcion">Productos en catálogo</p>
+        <button class="btn-ver-detalle">Ver inventario →</button>
+      </div>
+
+      <div 
+        class="tarjeta-metrica tarjeta-alerta" 
+        (click)="verProductosStockBajo()"
+        *ngIf="estadisticas()!.productos_stock_bajo > 0"
+      >
+        <div class="metrica-header">
+          <span class="metrica-icono">⚠️</span>
+          <span class="metrica-badge badge-alerta">{{ estadisticas()!.productos_stock_bajo }}</span>
+        </div>
+        <p class="metrica-label">Stock Bajo</p>
+        <p class="metrica-descripcion">Productos que necesitan reposición</p>
+        <button class="btn-ver-detalle btn-alerta">Revisar ahora →</button>
+      </div>
+
+      <div 
+        class="tarjeta-metrica tarjeta-pendiente" 
+        (click)="verPedidosPendientes()"
+        *ngIf="estadisticas()!.pedidos_pendientes > 0"
+      >
+        <div class="metrica-header">
+          <span class="metrica-icono">⏳</span>
+          <span class="metrica-badge badge-pendiente">{{ estadisticas()!.pedidos_pendientes }}</span>
+        </div>
+        <p class="metrica-label">Pedidos Pendientes</p>
+        <p class="metrica-descripcion">Pedidos por procesar</p>
+        <button class="btn-ver-detalle btn-pendiente">Gestionar →</button>
+      </div>
+    </div>
+
+    <!-- GRÁFICOS Y ANÁLISIS -->
+    <div class="seccion-graficos" *ngIf="mostrarGraficos()">
+      <h2 class="seccion-titulo">📊 Análisis Visual</h2>
+
+      <!-- Gráfico de Ventas -->
+      <div class="grafico-card">
+        <app-grafico-ventas></app-grafico-ventas>
+      </div>
+
+      <!-- Grid de Gráficos -->
+      <div class="grid-graficos">
+        <!-- Productos Más Vendidos -->
+        <div class="grafico-card">
+          <app-productos-vendidos></app-productos-vendidos>
+        </div>
+
+        <!-- Métodos de Pago -->
+        <div class="grafico-card">
+          <app-grafico-metodos-pago></app-grafico-metodos-pago>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- SIN DATOS -->
+  <div *ngIf="!cargando() && !estadisticas()" class="sin-datos">
+    <div class="sin-datos-icono">📊</div>
+    <h3>No hay datos disponibles</h3>
+    <p>No se pudieron cargar las estadísticas del tablero.</p>
+    <button class="btn-reintentar" (click)="refrescar()">
+      🔄 Reintentar
+    </button>
+  </div>
+</div>

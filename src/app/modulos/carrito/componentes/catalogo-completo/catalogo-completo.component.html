@@ -1,0 +1,68 @@
+<div class="catalogo-completo">
+
+  <!-- HEADER CON IMAGEN DE CATEGORÍA -->
+  <div class="header"
+       [ngStyle]="{
+        'background-image': 'url(/categorias/' + imagenesCategorias[categoriaSeleccionada] + ')'
+       }">
+
+    <button class="btn-volver" (click)="volverInicio()"> ← Volver </button>
+
+    <h1>
+      {{
+        categoriaSeleccionada === 'Todas'
+          ? 'Catálogo Completo'
+          : categoriaSeleccionada
+      }}
+    </h1>
+
+  </div>
+
+
+  <section class="seccion-productos">
+
+    <div class="info-resultados">
+      <p class="contador">{{ productosFiltrados.length }} productos encontrados</p>
+    </div>
+
+    <div class="loading" *ngIf="cargando">
+      <div class="spinner"></div>
+      <p>Cargando productos...</p>
+    </div>
+
+    <div class="productos-grid" *ngIf="!cargando">
+      <div class="producto-card"
+           *ngFor="let producto of productosFiltrados"
+           (click)="verDetalle(producto)">
+
+        <img class="producto-imagen"
+             [src]="producto.imagen_url || '/productos/default.jpg'">
+
+        <div class="producto-info">
+          <h4>{{ producto.nombre_producto }}</h4>
+          <p class="descripcion">{{ producto.descripcion }}</p>
+          <p class="precio">S/ {{ (producto.precio_unitario || producto.precio_producto || 0) | number:'1.2-2' }}</p>
+          <span class="stock">En stock: {{ producto.stock_disponible }} unidades</span>
+
+          <button class="btn-agregar"
+                  (click)="agregarAlCarrito(producto, $event)">
+            Agregar al carrito
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sin-resultados" *ngIf="!cargando && productosFiltrados.length === 0">
+      <p>😕 No se encontraron productos</p>
+      <button class="btn-limpiar" (click)="volverInicio()">Volver al catálogo</button>
+    </div>
+
+  </section>
+
+  <app-detalle-producto-modal
+    [producto]="productoSeleccionado"
+    (cerrar)="cerrarModal()"
+    (agregarCarrito)="agregarAlCarrito($event)">
+  </app-detalle-producto-modal>
+
+</div>

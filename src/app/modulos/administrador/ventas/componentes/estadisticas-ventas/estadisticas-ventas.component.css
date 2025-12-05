@@ -1,0 +1,292 @@
+/* ===========================
+   CONTENEDOR DE ESTADÍSTICAS
+   =========================== */
+.estadisticas-container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.titulo-seccion {
+  font-size: 20px;
+  font-weight: 700;
+  color: #1F2937;
+  margin: 0 0 24px 0;
+}
+
+.subtitulo {
+  font-size: 16px;
+  font-weight: 700;
+  color: #374151;
+  margin: 0 0 16px 0;
+}
+
+/* ===========================
+   TARJETAS DE RESUMEN
+   =========================== */
+.tarjetas-resumen {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 16px;
+  margin-bottom: 32px;
+}
+
+.tarjeta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  border-radius: 12px;
+  transition: all 0.3s;
+}
+
+.tarjeta:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.tarjeta-hoy {
+  background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+}
+
+.tarjeta-semana {
+  background: linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%);
+}
+
+.tarjeta-mes {
+  background: linear-gradient(135deg, #E0E7FF 0%, #C7D2FE 100%);
+}
+
+.tarjeta-promedio {
+  background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
+}
+
+.tarjeta-icono {
+  font-size: 36px;
+  flex-shrink: 0;
+}
+
+.tarjeta-contenido {
+  flex: 1;
+}
+
+.tarjeta-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #6B7280;
+  margin: 0 0 4px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.tarjeta-valor {
+  font-size: 24px;
+  font-weight: 700;
+  color: #1F2937;
+  margin: 0 0 4px 0;
+}
+
+.tarjeta-cantidad {
+  font-size: 13px;
+  color: #6B7280;
+  margin: 0;
+}
+
+/* ===========================
+   SECCIÓN DE ESTADÍSTICAS
+   =========================== */
+.seccion-estadisticas {
+  background: #F9FAFB;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.seccion-estadisticas:last-child {
+  margin-bottom: 0;
+}
+
+/* ===========================
+   ESTADOS DE VENTAS
+   =========================== */
+.estados-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+}
+
+.estado-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px;
+  background: white;
+  border-radius: 8px;
+  border-left: 4px solid;
+  transition: all 0.2s;
+}
+
+.estado-item:hover {
+  transform: scale(1.05);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.estado-item.pendiente {
+  border-left-color: #F59E0B;
+}
+
+.estado-item.completada {
+  border-left-color: #10B981;
+}
+
+.estado-item.cancelada {
+  border-left-color: #EF4444;
+}
+
+.estado-icono {
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.estado-numero {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1F2937;
+  margin-bottom: 4px;
+}
+
+.estado-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #6B7280;
+  text-transform: uppercase;
+}
+
+/* ===========================
+   LISTA DE MÉTODOS DE PAGO
+   =========================== */
+.lista-metodos {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.metodo-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: white;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.metodo-item:hover {
+  background: #F3F4F6;
+  transform: translateX(4px);
+}
+
+.metodo-nombre {
+  font-weight: 600;
+  color: #374151;
+}
+
+.metodo-total {
+  font-weight: 700;
+  color: #8B5CF6;
+}
+
+/* ===========================
+   LISTA DE PRODUCTOS
+   =========================== */
+.lista-productos {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.producto-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: white;
+  border-radius: 8px;
+  transition: all 0.2s;
+}
+
+.producto-item:hover {
+  background: #F3F4F6;
+  transform: translateX(4px);
+}
+
+.producto-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.producto-nombre {
+  font-weight: 600;
+  color: #374151;
+}
+
+.producto-cantidad {
+  font-size: 13px;
+  color: #6B7280;
+}
+
+.producto-total {
+  font-weight: 700;
+  color: #8B5CF6;
+  font-size: 16px;
+}
+
+/* ===========================
+   SIN DATOS
+   =========================== */
+.sin-datos {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  background: white;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.icono-vacio {
+  font-size: 64px;
+  margin-bottom: 16px;
+  opacity: 0.3;
+}
+
+.texto-vacio {
+  font-size: 16px;
+  color: #9CA3AF;
+  margin: 0;
+}
+
+/* ===========================
+   RESPONSIVE
+   =========================== */
+@media (max-width: 768px) {
+  .tarjetas-resumen {
+    grid-template-columns: 1fr;
+  }
+
+  .estados-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .tarjeta-valor {
+    font-size: 20px;
+  }
+
+  .estado-numero {
+    font-size: 24px;
+  }
+}

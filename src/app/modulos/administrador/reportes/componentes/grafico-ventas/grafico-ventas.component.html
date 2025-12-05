@@ -1,0 +1,155 @@
+<div class="grafico-ventas-container">
+  <!-- HEADER -->
+  <div class="grafico-header">
+    <div class="header-info">
+      <h3 class="grafico-titulo">📈 Evolución de Ventas</h3>
+      <p class="grafico-subtitulo">Análisis de ventas por período</p>
+    </div>
+
+    <button class="btn-detalle" (click)="toggleDetalle()">
+      <span *ngIf="!mostrarDetalle()">📊 Ver Detalle</span>
+      <span *ngIf="mostrarDetalle()">📉 Ocultar Detalle</span>
+    </button>
+  </div>
+
+  <!-- FILTROS -->
+  <div class="filtros-periodo">
+    <div class="selector-agrupacion">
+      <button
+        class="btn-agrupacion"
+        [class.activo]="periodoSeleccionado() === 'dia'"
+        (click)="cambiarPeriodo('dia')"
+      >
+        📅 Por Día
+      </button>
+      <button
+        class="btn-agrupacion"
+        [class.activo]="periodoSeleccionado() === 'semana'"
+        (click)="cambiarPeriodo('semana')"
+      >
+        📊 Por Semana
+      </button>
+      <button
+        class="btn-agrupacion"
+        [class.activo]="periodoSeleccionado() === 'mes'"
+        (click)="cambiarPeriodo('mes')"
+      >
+        📈 Por Mes
+      </button>
+    </div>
+
+    <div class="filtro-fechas">
+      <div class="fecha-input">
+        <label>Desde:</label>
+        <input
+          type="date"
+          [(ngModel)]="fechaInicio"
+          class="input-fecha"
+        />
+      </div>
+      <div class="fecha-input">
+        <label>Hasta:</label>
+        <input
+          type="date"
+          [(ngModel)]="fechaFin"
+          class="input-fecha"
+        />
+      </div>
+      <button class="btn-aplicar" (click)="aplicarFiltro()">
+        ✓ Aplicar
+      </button>
+    </div>
+  </div>
+
+  <!-- INDICADOR DE CARGA -->
+  <div *ngIf="cargando()" class="cargando">
+    <div class="spinner-small"></div>
+    <span>Cargando datos...</span>
+  </div>
+
+  <!-- RESUMEN -->
+  <div *ngIf="!cargando() && ventasPorPeriodo()" class="resumen-ventas">
+    <div class="resumen-item">
+      <span class="resumen-label">Total Ventas:</span>
+      <span class="resumen-valor">{{ formatearMoneda(ventasPorPeriodo()!.total_ventas) }}</span>
+    </div>
+    <div class="resumen-item">
+      <span class="resumen-label">Cantidad Pedidos:</span>
+      <span class="resumen-valor">{{ ventasPorPeriodo()!.cantidad_pedidos }}</span>
+    </div>
+    <div class="resumen-item">
+      <span class="resumen-label">Ticket Promedio:</span>
+      <span class="resumen-valor">{{ formatearMoneda(ventasPorPeriodo()!.ticket_promedio) }}</span>
+    </div>
+  </div>
+
+  <!-- GRÁFICO DE BARRAS -->
+  <div *ngIf="!cargando() && ventasPorPeriodo()" class="grafico-barras">
+    <div class="barras-container">
+      <div
+        class="barra-wrapper"
+        *ngFor="let venta of ventasPorPeriodo()!.ventas_por_dia"
+      >
+        <div class="barra-info">
+          <span class="barra-valor">{{ formatearMoneda(venta.total_ventas) }}</span>
+        </div>
+        <div
+          class="barra"
+          [style.height.%]="obtenerAlturaBarra(venta.total_ventas)"
+          [style.background-color]="obtenerColorBarra(venta.total_ventas)"
+          [title]="'Ventas: ' + formatearMoneda(venta.total_ventas)"
+        ></div>
+        <div class="barra-etiqueta">
+          <span>{{ formatearFecha(venta.fecha) }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Leyenda -->
+    <div class="leyenda">
+      <div class="leyenda-item">
+        <span class="leyenda-color" style="background: #10b981;"></span>
+        <span>Alto (≥ 150% promedio)</span>
+      </div>
+      <div class="leyenda-item">
+        <span class="leyenda-color" style="background: #8b5cf6;"></span>
+        <span>Normal (≥ promedio)</span>
+      </div>
+      <div class="leyenda-item">
+        <span class="leyenda-color" style="background: #f59e0b;"></span>
+        <span>Bajo (< promedio)</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- TABLA DETALLADA -->
+  <div *ngIf="!cargando() && mostrarDetalle() && ventasPorPeriodo()" class="tabla-detalle">
+    <h4 class="tabla-titulo">📋 Detalle de Ventas</h4>
+    <div class="tabla-scroll">
+      <table class="tabla">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Total Ventas</th>
+            <th>Cantidad Pedidos</th>
+            <th>Ticket Promedio</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let venta of ventasPorPeriodo()!.ventas_por_dia">
+            <td>{{ formatearFecha(venta.fecha) }}</td>
+            <td class="valor-destacado">{{ formatearMoneda(venta.total_ventas) }}</td>
+            <td>{{ venta.cantidad_pedidos }}</td>
+            <td>{{ formatearMoneda(venta.ticket_promedio) }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SIN DATOS -->
+  <div *ngIf="!cargando() && !ventasPorPeriodo()" class="sin-datos">
+    <span class="sin-datos-icono">📊</span>
+    <p>No hay datos de ventas en el período seleccionado</p>
+  </div>
+</div>

@@ -1,0 +1,48 @@
+<div class="fondo-overlay">
+  <div class="modal-login">
+    <button class="btn-cerrar" (click)="cerrar()">X</button>
+    
+    <div class="logo-circular">
+      <img src="logo.jpg" alt="Lanería Mariano Díaz">
+    </div>
+
+    <h2>Iniciar sesión para comprar</h2>
+    <!-- ← NUEVO: Mostrar errores -->
+<div *ngIf="error" class="alerta-error">
+  {{ error }}
+</div>
+
+    <form [formGroup]="formularioLogin" (ngSubmit)="iniciarSesion()">
+      <div class="campo">
+        <label>Correo electrónico</label>
+        <input 
+          type="email" 
+          formControlName="email"
+          placeholder=""
+        >
+      </div>
+
+      <div class="campo">
+        <label>Contraseña</label>
+        <input 
+          type="password" 
+          formControlName="password"
+          placeholder=""
+        >
+      </div>
+
+      <p class="texto-recuperar">
+        ¿Olvidaste tu contraseña? No te preocupes, recupera tu contraseña aquí. 
+        <a routerLink="/autenticacion/recuperar-clave">Recuperar contraseña</a>
+      </p>
+
+      <button type="submit" class="btn-ingresar" [disabled]="formularioLogin.invalid || cargando">
+        {{ cargando ? 'Ingresando...' : 'Ingresar' }}
+      </button>
+
+      <p class="texto-registro">
+        ¿Aun no tienes cuenta? <a routerLink="/autenticacion/registro">Regístrate</a>
+      </p>
+    </form>
+  </div>
+</div>

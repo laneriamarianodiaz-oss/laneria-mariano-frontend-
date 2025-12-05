@@ -1,0 +1,64 @@
+<div class="modal-overlay" (click)="cerrar()">
+  <div class="modal-contenido" (click)="$event.stopPropagation()">
+    <button class="btn-cerrar" (click)="cerrar()">×</button>
+    
+    <div class="logo-container">
+      <img src="assets/logo.png" alt="Lanería Mariano Díaz" />
+    </div>
+
+    <h2>Verifica tu email</h2>
+    
+    <p class="texto-info">
+      Hemos enviado un código de 6 dígitos a:<br>
+      <strong>{{ email }}</strong>
+    </p>
+
+    <!-- Alertas -->
+    <div *ngIf="error" class="alerta-error">
+      {{ error }}
+    </div>
+    
+    <div *ngIf="exito" class="alerta-exito">
+      {{ exito }}
+    </div>
+
+    <form [formGroup]="formularioVerificacion" (ngSubmit)="verificar()">
+      <div class="form-group">
+        <label>Código de verificación</label>
+        <input 
+          type="text" 
+          formControlName="code" 
+          placeholder="123456" 
+          maxlength="6"
+          class="input-code"
+        />
+        <small *ngIf="formularioVerificacion.get('code')?.invalid && formularioVerificacion.get('code')?.touched" class="error">
+          Ingresa los 6 dígitos
+        </small>
+      </div>
+
+      <button 
+        type="submit" 
+        class="btn-verificar" 
+        [disabled]="cargando || formularioVerificacion.invalid"
+      >
+        {{ cargando ? 'Verificando...' : 'Verificar email' }}
+      </button>
+    </form>
+
+    <div class="acciones-adicionales">
+      <button 
+        type="button" 
+        class="btn-reenviar" 
+        (click)="reenviarCodigo()" 
+        [disabled]="enviandoCodigo"
+      >
+        {{ enviandoCodigo ? 'Enviando...' : 'Reenviar código' }}
+      </button>
+    </div>
+
+    <p class="texto-ayuda">
+      ¿No recibiste el código? Revisa tu carpeta de spam o reenvía el código.
+    </p>
+  </div>
+</div>

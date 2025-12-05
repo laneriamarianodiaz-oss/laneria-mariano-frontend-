@@ -1,0 +1,88 @@
+<div class="dashboard-container">
+  
+  <!-- Header -->
+  <div class="dashboard-header">
+    <div class="header-left">
+      <div class="title-with-icon">
+        <img src="sub/tablero_control.png" class="title-icon" alt="icon" />
+        <h1 class="page-title">Tablero de Control</h1>
+      </div>
+      <p class="page-subtitle">Resumen general de tu negocio</p>
+    </div>
+
+    <div class="header-right">
+      <button class="btn-refresh" (click)="recargar()" [disabled]="cargando()">
+        <img src="sub/actualizar.png" class="icon-refresh" alt="Actualizar" />
+        <span>Actualizar</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  @if (cargando()) {
+    <div class="loading-container">
+      <div class="spinner"></div>
+      <p>Cargando datos...</p>
+    </div>
+  }
+
+  <!-- Error -->
+  @if (error() && !cargando()) {
+    <div class="alert alert-danger">
+      <img src="sub/error.png" class="alert-icon-img" alt="Error" />
+      <div class="alert-content">
+        <h4>Error</h4>
+        <p>{{ error() }}</p>
+        <button class="btn-retry" (click)="recargar()">Reintentar</button>
+      </div>
+    </div>
+  }
+
+  <!-- Contenido -->
+  @if (datos() && !cargando()) {
+
+    <!-- Tarjetas de Estadísticas -->
+    <app-tarjetas-estadisticas 
+      [estadisticas]="datos()!.estadisticas"
+    />
+
+    <!-- Gráfico de Ventas -->
+    <app-grafico-ventas 
+      [ventas]="datos()!.ventasSemana"
+    />
+
+    <!-- Grid de 2 Columnas -->
+    <div class="dashboard-grid">
+
+      <!-- Alertas de Stock -->
+      <app-alertas-stock 
+        [productos]="datos()!.alertasStock"
+      />
+
+      <!-- Top Productos -->
+      <div class="panel">
+        <div class="panel-header">
+          <div class="header-with-icon">
+            <img src="sub/copa.png" class="panel-icon" alt="Top" />
+            <h3>Top 5 Productos Más Vendidos</h3>
+          </div>
+        </div>
+        <div class="panel-body">
+          @for (producto of datos()!.topProductos; track producto.id) {
+            <div class="top-producto-item">
+              <span class="producto-nombre">{{ $index + 1 }}. {{ producto.nombre }}</span>
+              <span class="producto-cantidad">{{ producto.cantidadVendida }} vendidas</span>
+            </div>
+          }
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Ventas Recientes -->
+    <app-ventas-recientes 
+      [ventas]="datos()!.ventasRecientes"
+    />
+  }
+
+</div>

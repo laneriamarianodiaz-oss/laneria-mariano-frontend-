@@ -1,0 +1,261 @@
+<div class="modal-overlay" (click)="cerrarModal()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    
+    <!-- Header -->
+    <div class="modal-header">
+      <h2>{{ producto ? 'Editar Producto' : 'Registrar Nuevo Producto' }}</h2>
+      <button class="btn-close" (click)="cerrarModal()" [disabled]="guardando()">
+        ✕
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="modal-body">
+      
+      <form class="producto-form">
+        
+        <!-- Fila 1: Código y Nombre -->
+        <div class="form-row">
+          <div class="form-group">
+            <label>Código de lana <span class="required">*</span></label>
+            <input 
+              type="text" 
+              class="form-input"
+              placeholder="Ej: PDO-001"
+              [value]="formulario().codigo_lana"
+              (input)="actualizarCampo('codigo_lana', $any($event.target).value)"
+            >
+          </div>
+
+          <div class="form-group">
+            <label>Nombre de producto <span class="required">*</span></label>
+            <input 
+              type="text" 
+              class="form-input"
+              placeholder="Ej: Chompa Andina"
+              [value]="formulario().nombre"
+              (input)="actualizarCampo('nombre', $any($event.target).value)"
+            >
+          </div>
+        </div>
+
+        <!-- Fila 2: Tipo y Categoría -->
+        <div class="form-row">
+          <div class="form-group">
+            <label>Tipo de lana <span class="required">*</span></label>
+            <select 
+              class="form-select"
+              [value]="formulario().tipo_lana"
+              (change)="actualizarCampo('tipo_lana', $any($event.target).value)"
+            >
+              <option value="">Seleccionar...</option>
+              @for (tipo of tiposLana; track tipo) {
+                <option [value]="tipo">{{ tipo }}</option>
+              }
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Categoría <span class="required">*</span></label>
+            <select 
+              class="form-select"
+              [value]="formulario().categoria"
+              (change)="actualizarCampo('categoria', $any($event.target).value)"
+            >
+              <option value="">Seleccionar...</option>
+              @for (cat of categorias; track cat) {
+                <option [value]="cat">{{ cat }}</option>
+              }
+            </select>
+          </div>
+        </div>
+
+        <!-- Fila 3: Color y Talla -->
+        <div class="form-row">
+          <div class="form-group">
+            <label>Color <span class="required">*</span></label>
+            <input 
+              type="text" 
+              class="form-input"
+              placeholder="Ej: Rojo, Azul, Verde..."
+              [value]="formulario().color"
+              (input)="actualizarCampo('color', $any($event.target).value)"
+            >
+          </div>
+
+          <div class="form-group">
+            <label>Talla/Tamaño (opcional)</label>
+            <input 
+              type="text" 
+              class="form-input"
+              placeholder="Ej: M, 100g, 25cm..."
+              [value]="formulario().talla_tamano"
+              (input)="actualizarCampo('talla_tamano', $any($event.target).value)"
+            >
+          </div>
+        </div>
+
+        <!-- Fila 4: Precio y Stock -->
+        <div class="form-row">
+          <div class="form-group">
+            <label>Precio Unitario (S/) <span class="required">*</span></label>
+            <input 
+              type="number" 
+              class="form-input"
+              placeholder="0.00"
+              step="0.01"
+              min="0"
+              [value]="formulario().precio_unitario"
+              (input)="actualizarCampo('precio_unitario', parseFloat($any($event.target).value) || 0)"
+            >
+          </div>
+
+          <div class="form-group">
+            <label>Stock inicial <span class="required">*</span></label>
+            <input 
+              type="number" 
+              class="form-input"
+              placeholder="0"
+              min="0"
+              [value]="formulario().stock"
+              (input)="actualizarCampo('stock', parseInt($any($event.target).value) || 0)"
+            >
+          </div>
+        </div>
+
+        <!-- Fila 5: Stock Mínimo y Proveedor -->
+        <div class="form-row">
+          <div class="form-group">
+            <label>Stock mínimo <span class="required">*</span></label>
+            <input 
+              type="number" 
+              class="form-input"
+              placeholder="0"
+              min="0"
+              [value]="formulario().stock_minimo"
+              (input)="actualizarCampo('stock_minimo', parseInt($any($event.target).value) || 0)"
+            >
+          </div>
+
+          <div class="form-group">
+            <label>Proveedor</label>
+            <select 
+              class="form-select"
+              [value]="formulario().proveedor_id || ''"
+              (change)="actualizarCampo('proveedor_id', $any($event.target).value ? parseInt($any($event.target).value) : undefined)"
+            >
+              <option value="">Seleccionar...</option>
+              @for (prov of proveedores(); track prov.id) {
+                <option [value]="prov.id">{{ prov.nombre }}</option>
+              }
+            </select>
+          </div>
+        </div>
+
+        <!-- Estado -->
+        <div class="form-group">
+          <label>Estado</label>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input 
+                type="radio" 
+                name="estado" 
+                value="activo"
+                [checked]="formulario().estado === 'activo'"
+                (change)="actualizarCampo('estado', 'activo')"
+              >
+              <span>Activo</span>
+            </label>
+            <label class="radio-label">
+              <input 
+                type="radio" 
+                name="estado" 
+                value="inactivo"
+                [checked]="formulario().estado === 'inactivo'"
+                (change)="actualizarCampo('estado', 'inactivo')"
+              >
+              <span>Inactivo</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Descripción -->
+        <div class="form-group">
+          <label>Descripción</label>
+          <textarea 
+            class="form-textarea"
+            placeholder="Descripción detallada del producto (máx 200 caracteres)"
+            maxlength="200"
+            rows="3"
+            [value]="formulario().descripcion"
+            (input)="actualizarCampo('descripcion', $any($event.target).value)"
+          ></textarea>
+        </div>
+
+        <!-- Imágenes -->
+        <div class="form-group">
+          <label>Imágenes del producto (máx 5)</label>
+          <div class="upload-area">
+            <input 
+              type="file" 
+              id="imagenes-input"
+              accept="image/*"
+              multiple
+              (change)="onImagenesSeleccionadas($event)"
+              style="display: none;"
+            >
+            <label for="imagenes-input" class="upload-label">
+              <div class="upload-icon">📷</div>
+              <div class="upload-text">Arrastra imágenes aquí o haz click para seleccionar</div>
+              <div class="upload-hint">JPG o PNG, máximo 2MB cada una</div>
+            </label>
+          </div>
+
+          <!-- Preview de imágenes -->
+          @if (imagenesPreview().length > 0) {
+            <div class="imagenes-preview">
+              @for (preview of imagenesPreview(); track $index) {
+                <div class="preview-item">
+                  <img [src]="preview" alt="Preview">
+                  <button 
+                    type="button"
+                    class="btn-remove-image"
+                    (click)="eliminarImagen($index)"
+                  >
+                    ✕
+                  </button>
+                </div>
+              }
+            </div>
+          }
+        </div>
+
+      </form>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer">
+      <button 
+        class="btn-secondary" 
+        (click)="cerrarModal()"
+        [disabled]="guardando()"
+      >
+        Cancelar
+      </button>
+      <button 
+        class="btn-primary" 
+        (click)="guardarProducto()"
+        [disabled]="guardando()"
+      >
+        @if (guardando()) {
+          <span class="spinner-small"></span>
+          <span>Guardando...</span>
+        } @else {
+          <span>{{ producto ? 'Actualizar' : 'Guardar' }} producto</span>
+        }
+      </button>
+    </div>
+
+  </div>
+</div>

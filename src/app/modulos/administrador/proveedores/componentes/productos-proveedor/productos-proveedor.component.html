@@ -1,0 +1,191 @@
+<div class="productos-proveedor-container">
+  <!-- Header -->
+  <div class="productos-header">
+    <button class="btn-volver" (click)="volver()">
+      ← Volver a proveedores
+    </button>
+    <h1 class="titulo">📦 Productos del Proveedor</h1>
+  </div>
+
+  <!-- Indicador de carga -->
+  @if (cargando()) {
+    <div class="cargando">
+      <div class="spinner"></div>
+      <p>Cargando información del proveedor...</p>
+    </div>
+  }
+
+  <!-- Contenido -->
+  @if (!cargando() && proveedor()) {
+    <!-- Información del Proveedor -->
+    <div class="info-proveedor-card">
+      <div class="info-header">
+        <div class="info-principal">
+          <h2 class="proveedor-nombre">{{ proveedor()!.nombre }}</h2>
+          <span class="proveedor-id">#{{ proveedor()!.proveedor_id }}</span>
+        </div>
+        <div class="acciones-header">
+          <button class="btn-accion btn-refrescar" (click)="refrescar()">
+            🔄 Refrescar
+          </button>
+          <button class="btn-accion btn-editar" (click)="editarProveedor()">
+            ✏️ Editar
+          </button>
+          <button class="btn-accion btn-eliminar" (click)="eliminarProveedor()">
+            🗑️ Eliminar
+          </button>
+        </div>
+      </div>
+
+      <div class="info-grid">
+        <!-- Contacto -->
+        @if (proveedor()!.contacto) {
+          <div class="info-item">
+            <span class="info-label">👤 Contacto:</span>
+            <span class="info-valor">{{ proveedor()!.contacto }}</span>
+          </div>
+        }
+
+        <!-- Teléfono -->
+        @if (proveedor()!.telefono) {
+          <div class="info-item">
+            <span class="info-label">📱 Teléfono:</span>
+            <span class="info-valor">{{ proveedor()!.telefono }}</span>
+          </div>
+        }
+
+        <!-- Email -->
+        @if (proveedor()!.email) {
+          <div class="info-item">
+            <span class="info-label">✉️ Email:</span>
+            <span class="info-valor">{{ proveedor()!.email }}</span>
+          </div>
+        }
+
+        <!-- Dirección -->
+        @if (proveedor()!.direccion) {
+          <div class="info-item info-full">
+            <span class="info-label">📍 Dirección:</span>
+            <span class="info-valor">{{ proveedor()!.direccion }}</span>
+          </div>
+        }
+
+        <!-- Fecha de Registro -->
+        <div class="info-item">
+          <span class="info-label">📅 Registrado:</span>
+          <span class="info-valor">{{ formatearFecha(proveedor()!.fecha_registro) }}</span>
+        </div>
+
+        <!-- Total de Productos -->
+        <div class="info-item">
+          <span class="info-label">📦 Total de Productos:</span>
+          <span class="info-valor badge-total">{{ productos().length }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Lista de Productos -->
+    <div class="productos-card">
+      <div class="productos-card-header">
+        <h3 class="productos-titulo">
+          🧶 Productos Suministrados
+          <span class="badge-contador">{{ productos().length }}</span>
+        </h3>
+      </div>
+
+      <!-- Cargando productos -->
+      @if (cargandoProductos()) {
+        <div class="cargando-productos">
+          <div class="spinner-small"></div>
+          <p>Cargando productos...</p>
+        </div>
+      }
+
+      <!-- Tabla de productos -->
+      @if (!cargandoProductos() && productos().length > 0) {
+        <div class="tabla-container">
+          <table class="tabla-productos">
+            <thead>
+              <tr>
+                <th>Código</th>
+                <th>Nombre</th>
+                <th>Tipo de Lana</th>
+                <th>Stock Actual</th>
+                <th>Precio</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (producto of productos(); track producto.producto_id) {
+                <tr>
+                  <td>
+                    <span class="producto-codigo">
+                      {{ producto.codigo_lana }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="producto-nombre">
+                      {{ producto.nombre }}
+                    </span>
+                  </td>
+                  <td>
+                    <span class="producto-tipo">
+                      {{ producto.tipo_lana }}
+                    </span>
+                  </td>
+                  <td>
+                    <span 
+                      class="producto-stock"
+                      [class.stock-bajo]="producto.stock_actual <= 10"
+                      [class.stock-alto]="producto.stock_actual > 10"
+                    >
+                      {{ producto.stock_actual }} unid.
+                    </span>
+                  </td>
+                  <td>
+                    <span class="producto-precio">
+                      {{ formatearMoneda(producto.precio) }}
+                    </span>
+                  </td>
+                  <td>
+                    <button
+                      class="btn-ver-producto"
+                      (click)="verProducto(producto.producto_id)"
+                      title="Ver producto"
+                    >
+                      👁️ Ver
+                    </button>
+                  </td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      }
+
+      <!-- Sin productos -->
+      @if (!cargandoProductos() && productos().length === 0) {
+        <div class="sin-productos">
+          <div class="icono-vacio">📦</div>
+          <h4>Sin productos registrados</h4>
+          <p>
+            Este proveedor aún no tiene productos asignados.<br>
+            Puede asignar productos desde el módulo de Productos.
+          </p>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Proveedor no encontrado -->
+  @if (!cargando() && !proveedor()) {
+    <div class="error-container">
+      <div class="icono-error">❌</div>
+      <h3>Proveedor no encontrado</h3>
+      <p>El proveedor que busca no existe o fue eliminado.</p>
+      <button class="btn-volver-error" (click)="volver()">
+        ← Volver a la lista
+      </button>
+    </div>
+  }
+</div>

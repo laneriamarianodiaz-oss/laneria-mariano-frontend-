@@ -1,0 +1,37 @@
+<div class="panel">
+  <div class="panel-header">
+    <h3>⚠️ Alertas de Stock Bajo ({{ productos.length }})</h3>
+  </div>
+  
+  <div class="panel-body">
+    @if (productos.length > 0) {
+      @for (producto of productos; track producto.id) {
+        <div class="alert-item">
+          <div class="alert-info">
+            <span class="producto-nombre">{{ producto.nombre }}</span>
+            <span class="producto-codigo">{{ producto.codigo }}</span>
+          </div>
+          <div class="alert-stock">
+            <span 
+              class="badge" 
+              [class.badge-danger]="producto.estado === 'critico'"
+              [class.badge-warning]="producto.estado === 'bajo'"
+            >
+              {{ producto.stock }} unid.
+            </span>
+          </div>
+        </div>
+      }
+      
+      <div class="panel-footer">
+        <button class="btn-link" (click)="verInventario()">
+          Ver todos en Inventario →
+        </button>
+      </div>
+    } @else {
+      <div class="empty-state">
+        <p>✅ No hay productos con stock bajo</p>
+      </div>
+    }
+  </div>
+</div>

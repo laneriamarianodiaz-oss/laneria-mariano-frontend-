@@ -1,0 +1,152 @@
+<div class="pos-container">
+  
+  <!-- HEADER -->
+  <div class="pos-header">
+    <h1 class="titulo">💰 Punto de Venta</h1>
+
+    <!-- Navegación entre vistas -->
+    <div class="nav-vistas">
+      <button
+        class="btn-vista"
+        [class.activo]="vistaActiva() === 'pos'"
+        (click)="cambiarVista('pos')"
+      >
+        🛒 Venta Directa
+      </button>
+
+      <button
+        class="btn-vista"
+        [class.activo]="vistaActiva() === 'pedidos'"
+        (click)="cambiarVista('pedidos')"
+      >
+        📦 Pedidos Online
+        @if (cantidadPendientes() > 0) {
+          <span class="badge-notif">{{ cantidadPendientes() }}</span>
+        }
+      </button>
+    </div>
+
+    <!-- Acciones -->
+    <div class="acciones-header">
+      @if (vistaActiva() === 'pos') {
+        <button
+          class="btn-vaciar"
+          (click)="vaciarCarrito()"
+          [disabled]="carrito().items.length === 0"
+        >
+          🗑️ Vaciar Carrito
+        </button>
+
+        <button class="btn-nueva-venta" (click)="nuevaVenta()">
+          ✨ Nueva Venta
+        </button>
+      }
+    </div>
+  </div>
+
+  <!-- Alerta éxito -->
+  @if (ventaExitosa()) {
+    <div class="alerta-exito">
+      <div class="icono-exito">✓</div>
+      <div class="mensaje-exito">
+        <h3>¡Venta procesada exitosamente!</h3>
+        <p>Número de venta: {{ numeroVenta() }}</p>
+      </div>
+    </div>
+  }
+
+  <!-- Vista POS -->
+  @if (vistaActiva() === 'pos') {
+
+    <div class="pos-contenido">
+
+      <!-- COLUMNA IZQUIERDA -->
+      <div class="columna-izquierda">
+        <app-busqueda-productos
+          (productoSeleccionado)="onProductoSeleccionado($event)"
+        ></app-busqueda-productos>
+
+        <app-items-carrito></app-items-carrito>
+      </div>
+
+      <!-- COLUMNA DERECHA -->
+      <div class="columna-derecha">
+
+        <!-- ⭐ TARJETA CLIENTE ACTUALIZADA -->
+        <div class="tarjeta-cliente">
+
+          <div class="header-cliente">
+            <h3 class="titulo-seccion">👤 Cliente</h3>
+          </div>
+
+          @if (clienteSeleccionado()) {
+            <div class="info-cliente">
+              <div class="datos-cliente">
+                <!-- NOMBRE COMPLETO -->
+                <p class="nombre-cliente">
+                  <strong>{{ clienteSeleccionado()!.nombre_cliente || clienteSeleccionado()!.nombre_clie }}</strong>
+                </p>
+                
+                <!-- DNI -->
+                @if (clienteSeleccionado()!.dni) {
+                  <p class="dni-cliente">
+                    🪪 DNI: {{ clienteSeleccionado()!.dni }}
+                  </p>
+                }
+                
+                <!-- TELÉFONO -->
+                <p class="telefono-cliente">
+                  📞 {{ clienteSeleccionado()!.telefono }}
+                </p>
+
+                <!-- EMAIL -->
+                @if (clienteSeleccionado()!.email) {
+                  <p class="email-cliente">
+                    ✉️ {{ clienteSeleccionado()!.email }}
+                  </p>
+                }
+                
+                <!-- DIRECCIÓN -->
+                @if (clienteSeleccionado()!.direccion) {
+                  <p class="direccion-cliente">
+                    📍 {{ clienteSeleccionado()!.direccion }}
+                  </p>
+                }
+              </div>
+
+              <button class="btn-cambiar-cliente" (click)="mostrarCliente()">
+                Cambiar
+              </button>
+            </div>
+          } @else {
+            <div class="sin-cliente">
+              <p class="texto-sin-cliente">No hay cliente seleccionado</p>
+              <button class="btn-seleccionar-cliente" (click)="mostrarCliente()">
+                ➕ Seleccionar Cliente
+              </button>
+            </div>
+          }
+        </div>
+
+        <!-- Resumen de pago -->
+        <app-resumen-pago></app-resumen-pago>
+
+      </div>
+    </div>
+  }
+
+  <!-- Vista Pedidos Online -->
+  @if (vistaActiva() === 'pedidos') {
+    <app-pedidos-pendientes></app-pedidos-pendientes>
+  }
+
+  <!-- Modal Cliente -->
+  @if (mostrarFormularioCliente()) {
+    <div class="modal-overlay" (click)="cerrarFormularioCliente()">
+      <div class="modal-contenido" (click)="$event.stopPropagation()">
+        <app-formulario-cliente (cerrar)="cerrarFormularioCliente()"></app-formulario-cliente>
+      </div>
+    </div>
+  }
+
+</div>

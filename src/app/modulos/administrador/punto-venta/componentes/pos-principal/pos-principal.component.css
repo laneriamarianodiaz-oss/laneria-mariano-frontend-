@@ -1,0 +1,145 @@
+.pos-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 80vw;
+  overflow: hidden;
+}
+
+.pos-header {
+  padding: 15px 20px;
+  background: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ddd;
+  flex-shrink: 0;
+}
+
+.nav-vistas {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-vista {
+  padding: 8px 15px;
+  border-radius: 8px;
+  background: #e3e7ff;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-vista.activo {
+  background: #4a57ff;
+  color: white;
+}
+
+.acciones-header {
+  display: flex;
+  gap: 10px;
+}
+
+.btn-vaciar,
+.btn-nueva-venta {
+  padding: 8px 15px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+}
+
+.pos-contenido {
+  flex: 1;
+  display: flex;
+  gap: 15px;
+  padding: 15px;
+  overflow: hidden;
+}
+
+.columna-izquierda {
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  overflow: visible;
+}
+
+.columna-derecha {
+  flex: 1.2;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  overflow-y: auto;
+  padding-right: 4px;
+  scrollbar-width: none;
+}
+
+.columna-derecha::-webkit-scrollbar {
+  display: none;
+}
+
+.tarjeta-cliente {
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.header-cliente {
+  margin-bottom: 10px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 6px;
+}
+
+.info-cliente {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-cambiar-cliente,
+.btn-seleccionar-cliente {
+  padding: 7px 12px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  background: #4a57ff;
+  color: white;
+}
+
+.sin-cliente {
+  text-align: center;
+}
+
+.resumen {
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.alerta-exito {
+  margin: 15px 20px;
+  padding: 10px 15px;
+  background: #d6ffe1;
+  border-left: 6px solid #35c46c;
+  border-radius: 8px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-contenido {
+  background: white;
+  width: 420px;
+  padding: 20px;
+  border-radius: 12px;
+}

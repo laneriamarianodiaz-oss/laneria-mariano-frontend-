@@ -1,0 +1,168 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-contenido {
+  background-color: #f8e8f5;
+  padding: 2rem;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 450px;
+  position: relative;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.btn-cerrar {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #9b59b6;
+}
+
+.logo-container {
+  text-align: center;
+  margin-bottom: 1rem;
+
+  img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+  }
+}
+
+h2 {
+  text-align: center;
+  color: #9b59b6;
+  margin-bottom: 0.5rem;
+}
+
+.texto-info {
+  text-align: center;
+  color: #666;
+  margin-bottom: 1.5rem;
+  font-size: 0.95rem;
+
+  strong {
+    color: #9b59b6;
+  }
+}
+
+.alerta-error,
+.alerta-exito {
+  padding: 0.75rem;
+  border-radius: 6px;
+  margin-bottom: 1rem;
+  text-align: center;
+  font-size: 0.9rem;
+}
+
+.alerta-error {
+  background-color: #ffe5e5;
+  color: #d32f2f;
+  border: 1px solid #ffcccc;
+}
+
+.alerta-exito {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #c8e6c9;
+}
+
+.form-group {
+  margin-bottom: 1.5rem;
+
+  label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #333;
+    font-weight: 500;
+  }
+
+  .input-code {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1.2rem;
+    text-align: center;
+    letter-spacing: 0.3rem;
+    font-family: monospace;
+
+    &:focus {
+      outline: none;
+      border-color: #9b59b6;
+    }
+  }
+
+  .error {
+    color: #d32f2f;
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+    display: block;
+  }
+}
+
+.btn-verificar {
+  width: 100%;
+  padding: 0.9rem;
+  background-color: #9b59b6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-bottom: 1rem;
+
+  &:hover:not(:disabled) {
+    background-color: #8e44ad;
+  }
+
+  &:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+}
+
+.acciones-adicionales {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.btn-reenviar {
+  background: transparent;
+  border: none;
+  color: #9b59b6;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 0.95rem;
+
+  &:hover:not(:disabled) {
+    color: #8e44ad;
+  }
+
+  &:disabled {
+    color: #ccc;
+    cursor: not-allowed;
+  }
+}
+
+.texto-ayuda {
+  text-align: center;
+  color: #999;
+  font-size: 0.85rem;
+  margin-top: 1rem;
+}

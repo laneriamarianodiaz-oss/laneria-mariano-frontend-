@@ -1,0 +1,200 @@
+<div class="finalizar-compra">
+  <div class="contenedor">
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+      <span>inicio > Finalizar compra</span>
+    </div>
+
+    <!-- Banner de envío gratis -->
+    <div class="banner-envio">
+      <span>Envío gratis especial para ti</span>
+      <span class="badge-oferta">Oferta exclusiva</span>
+    </div>
+
+    <div class="layout-checkout">
+      <!-- COLUMNA IZQUIERDA -->
+      <div class="columna-principal">
+        
+        <!-- Dirección de envío -->
+        <div class="seccion">
+          <div class="seccion-header">
+            <h3>Dirección de envío</h3>
+            <button type="button" class="btn-link" (click)="cambiarDireccion()">
+              {{ mostrarFormularioDireccion ? 'Cancelar' : 'Cambiar direccion >' }}
+            </button>
+          </div>
+
+          <div class="datos-envio" *ngIf="!mostrarFormularioDireccion">
+            <p class="nombre">{{ nombreUsuario }}</p>
+            <p class="telefono">📞 {{ telefono }}</p>
+            <p class="direccion">📍 {{ direccionEnvio }}</p>
+          </div>
+
+          <div class="formulario" *ngIf="mostrarFormularioDireccion">
+            <div class="form-group">
+              <input 
+                type="text" 
+                [(ngModel)]="direccionEnvio" 
+                placeholder="Dirección de envío"
+                class="input-field">
+            </div>
+            <div class="form-group">
+              <input 
+                type="tel" 
+                [(ngModel)]="telefono" 
+                placeholder="Teléfono de contacto"
+                class="input-field">
+            </div>
+          </div>
+        </div>
+
+        <!-- Productos en envío -->
+        <div class="seccion">
+          <div class="seccion-header">
+            <h3>Envío gratis ({{ cantidadItems }})</h3>
+          </div>
+
+          <div class="lista-productos">
+            <div class="producto-item" *ngFor="let item of items">
+              <img [src]="item.producto.imagen_url || 'assets/imagenes/default.jpg'" 
+                   [alt]="item.producto.nombre_producto">
+              <div class="producto-info">
+                <p class="producto-nombre">{{ item.producto.nombre_producto }}</p>
+                <p class="producto-cantidad">Cantidad: {{ item.cantidad }}</p>
+              </div>
+              S/ {{ ((item.producto.precio_producto || item.producto.precio_unitario || 0) * item.cantidad).toFixed(2) }}
+            </div>
+          </div>
+        </div>
+
+        <!-- Método de pago Yape -->
+        <div class="seccion seccion-yape">
+          <div class="seccion-header">
+            <h3>💳 Método de Pago - Yape</h3>
+          </div>
+
+          <div class="contenido-yape">
+            <!-- Instrucciones -->
+            <div class="instrucciones">
+              <div class="header-yape">
+                <img src="pago/yape.png" alt="Yape" class="logo-yape">
+                <div>
+                  <h4>Paga con Yape</h4>
+                  <p>Rápido, fácil y seguro</p>
+                </div>
+              </div>
+
+              <div class="pasos">
+                <p><strong>Sigue estos pasos:</strong></p>
+                <ol>
+                  <li>Escanea el código QR desde tu app Yape</li>
+                  <li>Realiza el pago de <strong>S/ {{ totalArticulos.toFixed(2) }}</strong></li>
+                  <li>Toma captura del comprobante</li>
+                  <li>Sube la captura y el código de operación abajo</li>
+                </ol>
+              </div>
+            </div>
+
+            <!-- QR Code -->
+            <div class="qr-container">
+              <div class="qr-box">
+                <img src="pago/qr.jpeg" alt="QR Yape" class="qr-image">
+                <p class="qr-monto">S/ {{ totalArticulos.toFixed(2) }}</p>
+              </div>
+            </div>
+
+            <!-- ✅ FORMULARIO DE COMPROBANTE CORREGIDO -->
+            <div class="form-comprobante">
+              <div class="form-group">
+                <label>Comprobante de pago *</label>
+                
+                <!-- ✅ Mostrar área de upload si NO hay preview -->
+                <div class="upload-area" *ngIf="!previsualizacionComprobante">
+                  <input 
+                    type="file" 
+                    id="comprobante" 
+                    accept="image/jpeg,image/jpg,image/png"
+                    (change)="onFileSelected($event)"
+                    hidden>
+                  <label for="comprobante" class="upload-label">
+                    <span class="upload-icon">📸</span>
+                    <span class="upload-text">Haz clic para subir el comprobante</span>
+                    <span class="upload-hint">JPG, PNG (máx. 5MB)</span>
+                  </label>
+                </div>
+
+                <!-- ✅ Mostrar preview si hay imagen seleccionada -->
+                <div class="preview-box" *ngIf="previsualizacionComprobante">
+                  <img [src]="previsualizacionComprobante" alt="Comprobante">
+                  <button type="button" class="btn-remove" (click)="eliminarComprobante()">
+                    <span>×</span>
+                  </button>
+                </div>
+                
+                <!-- ✅ Mostrar nombre del archivo -->
+                <p class="file-name" *ngIf="comprobanteFile">
+                  ✅ Archivo: {{ comprobanteFile.name }}
+                </p>
+              </div>
+
+              <div class="form-group">
+                <label>Código de operación *</label>
+                <input 
+                  type="text" 
+                  [(ngModel)]="codigoOperacion"
+                  placeholder="Ingresa el código de tu comprobante"
+                  class="input-field"
+                  maxlength="50">
+                <small class="hint">Ejemplo: 001234567890</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COLUMNA DERECHA - RESUMEN -->
+      <div class="columna-resumen">
+        <div class="resumen-card">
+          <h3>Resumen de tu pedido</h3>
+
+          <div class="resumen-linea">
+            <span>Total de articulos:</span>
+            <span>S/ {{ totalArticulos.toFixed(2) }}</span>
+          </div>
+
+          <div class="resumen-linea">
+            <span>Estimación total:</span>
+            <span>S/ {{ totalArticulos.toFixed(2) }}</span>
+          </div>
+
+          <div class="resumen-envio">
+            <span>Envío:</span>
+            <span class="gratis">Gratis!</span>
+          </div>
+
+          <div class="resumen-total">
+            <span>Total pedido:</span>
+            <span>S/{{ totalArticulos.toFixed(2) }}</span>
+          </div>
+
+          <!-- ✅ BOTÓN CORREGIDO - usa comprobanteFile en lugar de archivoComprobante -->
+          <button 
+            type="button"
+            class="btn-finalizar" 
+            (click)="finalizarCompra()"
+            [disabled]="cargando || items.length === 0 || !codigoOperacion || !comprobanteFile">
+            <span *ngIf="!cargando">Finalizar compra ({{ cantidadItems }})</span>
+            <span *ngIf="cargando">
+              <span class="spinner">⏳</span> Procesando...
+            </span>
+          </button>
+          
+          <!-- ✅ MENSAJE DE AYUDA -->
+          <p class="help-text" *ngIf="!comprobanteFile || !codigoOperacion">
+            ⚠️ Por favor completa el comprobante y código de operación
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,127 @@
+<div class="productos-vendidos-container">
+  <!-- HEADER -->
+  <div class="productos-header">
+    <div class="header-info">
+      <h3 class="productos-titulo">🏆 Productos Más Vendidos</h3>
+      <p class="productos-subtitulo">Ranking de productos por cantidad vendida</p>
+    </div>
+
+    <div class="selector-top">
+      <button
+        class="btn-top"
+        [class.activo]="topSeleccionado() === 5"
+        (click)="cambiarTop(5)"
+      >
+        Top 5
+      </button>
+      <button
+        class="btn-top"
+        [class.activo]="topSeleccionado() === 10"
+        (click)="cambiarTop(10)"
+      >
+        Top 10
+      </button>
+      <button
+        class="btn-top"
+        [class.activo]="topSeleccionado() === 20"
+        (click)="cambiarTop(20)"
+      >
+        Top 20
+      </button>
+    </div>
+  </div>
+
+  <!-- FILTRO DE FECHAS -->
+  <div class="filtro-fechas">
+    <div class="fecha-input">
+      <label>Desde:</label>
+      <input
+        type="date"
+        [(ngModel)]="fechaInicio"
+        class="input-fecha"
+      />
+    </div>
+    <div class="fecha-input">
+      <label>Hasta:</label>
+      <input
+        type="date"
+        [(ngModel)]="fechaFin"
+        class="input-fecha"
+      />
+    </div>
+    <button class="btn-aplicar" (click)="aplicarFiltro()">
+      ✓ Aplicar
+    </button>
+  </div>
+
+  <!-- INDICADOR DE CARGA -->
+  <div *ngIf="cargando()" class="cargando">
+    <div class="spinner-small"></div>
+    <span>Cargando productos...</span>
+  </div>
+
+  <!-- LISTA DE PRODUCTOS -->
+  <div *ngIf="!cargando() && productosMasVendidos().length > 0" class="productos-lista">
+    <div
+      class="producto-item"
+      *ngFor="let producto of obtenerProductosMostrar(); let i = index"
+    >
+      <!-- Ranking -->
+      <div class="producto-ranking">
+        <span class="ranking-numero">{{ obtenerMedalla(i) }}</span>
+      </div>
+
+      <!-- Info del Producto -->
+      <div class="producto-info">
+        <div class="producto-detalles">
+          <span class="producto-codigo">{{ producto.codigo_lana }}</span>
+          <h4 class="producto-nombre">{{ producto.nombre }}</h4>
+          <p class="producto-tipo">{{ producto.tipo_lana }}</p>
+        </div>
+
+        <div class="producto-estadisticas">
+          <div class="stat-item">
+            <span class="stat-label">Cantidad:</span>
+            <span class="stat-valor">{{ producto.cantidad_vendida }} unid.</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Ingresos:</span>
+            <span class="stat-valor destaca">{{ formatearMoneda(producto.total_ingresos) }}</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">Precio Prom:</span>
+            <span class="stat-valor">{{ formatearMoneda(producto.precio_promedio) }}</span>
+          </div>
+        </div>
+
+        <!-- Barra de Progreso -->
+        <div class="barra-progreso">
+          <div
+            class="barra-fill"
+            [style.width.%]="obtenerPorcentajeBarra(producto.cantidad_vendida)"
+          ></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Botón Ver Más -->
+    <button
+      *ngIf="productosMasVendidos().length > 5"
+      class="btn-ver-mas"
+      (click)="toggleMostrarTodos()"
+    >
+      <span *ngIf="!mostrarTodos()">
+        ▼ Ver todos ({{ productosMasVendidos().length }})
+      </span>
+      <span *ngIf="mostrarTodos()">
+        ▲ Ver menos
+      </span>
+    </button>
+  </div>
+
+  <!-- SIN DATOS -->
+  <div *ngIf="!cargando() && productosMasVendidos().length === 0" class="sin-datos">
+    <span class="sin-datos-icono">🏆</span>
+    <p>No hay productos vendidos en el período seleccionado</p>
+  </div>
+</div>

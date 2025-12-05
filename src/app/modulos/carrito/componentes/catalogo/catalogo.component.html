@@ -1,0 +1,88 @@
+<div class="catalogo">
+  <!-- Banner Carrusel -->
+  <div class="banner-carrusel">
+    <button class="flecha flecha-izq" (click)="anteriorSlide()">❮</button>
+    
+    <div class="slides">
+      <div class="slide" *ngFor="let slide of slides; let i = index" [class.activo]="i === slideActual">
+        <img [src]="slide.imagen" [alt]="slide.titulo">
+        <div class="texto-banner">
+          <h1>{{ slide.titulo }}</h1>
+          <p>{{ slide.subtitulo }}</p>
+        </div>
+      </div>
+    </div>
+
+    <button class="flecha flecha-der" (click)="siguienteSlide()">❯</button>
+
+    <div class="indicadores">
+      <span *ngFor="let slide of slides; let i = index" 
+            [class.activo]="i === slideActual"
+            (click)="irASlide(i)">
+      </span>
+    </div>
+  </div>
+
+  <!-- Ofertas -->
+  <section class="seccion">
+    <h2>Ofertas</h2>
+    <div class="ofertas-diagonal">
+      <div class="oferta-item" *ngFor="let oferta of ofertas" (click)="irAOferta(oferta)">
+        <img [src]="oferta.imagen" [alt]="oferta.nombre">
+      </div>
+    </div>
+  </section>
+
+  <!-- Categorías -->
+  <section class="seccion">
+    <p class="subtitulo">Lana suave, inspiración infinita</p>
+    <h2>Categorías</h2>
+    <div class="categorias-grid">
+      <div class="categoria" *ngFor="let cat of categorias" (click)="irACategoria(cat)">
+        <img [src]="cat.imagen" [alt]="cat.nombre">
+        <p>{{ cat.nombre }}</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Nuestros Productos - Fondo Blanco -->
+  <section class="seccion productos-seccion">
+    <h2>Nuestros productos</h2>
+    <div class="productos-grid">
+      <div class="producto-card" *ngFor="let producto of productosDestacados" (click)="verDetalle(producto)">
+        <img [src]="producto.imagenes?.[0] || 'productos/default.jpg'" [alt]="producto.nombre">
+        <h4>{{ producto.nombre_producto }}</h4>
+        <p class="descripcion">{{ producto.descripcion }}</p>
+        <p class="precio">s/ {{ (producto.precio_unitario || producto.precio_producto || 0) | number:'1.2-2' }}</p>
+        <span class="stock">En stock: {{ producto.stock_actual }} unidades</span>
+        <button class="btn-agregar" (click)="agregarAlCarrito(producto, $event)">Agregar</button>
+      </div>
+    </div>
+    <button class="btn-ver-mas" (click)="irACatalogoCompleto()">Ver más</button>
+  </section>
+
+  <!-- Tu idea, nuestra lana - Fondo Gris -->
+<!-- Tu idea, nuestra lana - Fondo Gris -->
+<section class="seccion productos-personalizados">
+  <p class="frase-especial">Tu idea, nuestra lana. ¡Hecho a tu medida!</p>
+  <div class="productos-grid">
+    <div class="producto-card" *ngFor="let producto of productosPersonalizados">
+      <img [src]="producto.imagenes?.[0] || 'productos/default.jpg'" [alt]="producto.nombre_producto" (click)="verDetalle(producto)">
+      <h4>{{ producto.nombre_producto }}</h4>
+      <p class="precio">s/ {{ (producto.precio_unitario || producto.precio_producto || 0) | number:'1.2-2' }}</p>
+      <button class="btn-contactar-personalizado" (click)="irAPedidosPersonalizados()">
+        💬 Contactar
+      </button>
+    </div>
+  </div>
+  <button class="btn-ver-mas" (click)="irAPedidosPersonalizados()">
+    Ver todos los personalizados
+  </button>
+</section>
+  <!-- Modal de Detalle -->
+  <app-detalle-producto-modal 
+    [producto]="productoSeleccionado"
+    (cerrar)="cerrarModal()"
+    (agregarCarrito)="agregarAlCarrito($event)">
+  </app-detalle-producto-modal>
+</div>

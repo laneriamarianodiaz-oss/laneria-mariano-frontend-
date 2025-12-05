@@ -1,0 +1,236 @@
+<div class="detalle-pedido-admin">
+  <div class="contenedor">
+    
+    <!-- Header -->
+    <div class="page-header">
+      <button class="btn-volver" (click)="volver()">
+        ← Volver a Pedidos
+      </button>
+      <h1>Detalle del Pedido #{{ pedido?.numero_venta }}</h1>
+    </div>
+
+    <!-- Loading -->
+    <div class="cargando" *ngIf="cargando">
+      <div class="spinner"></div>
+      <p>Cargando pedido...</p>
+    </div>
+
+    <!-- Error -->
+    <div class="error" *ngIf="error && !cargando">
+      <p>❌ {{ error }}</p>
+      <button (click)="cargarPedido()" class="btn-reintentar">Reintentar</button>
+    </div>
+
+    <!-- Contenido -->
+    <div class="contenido" *ngIf="!cargando && pedido">
+      
+      <div class="grid-container">
+        
+        <!-- Columna Izquierda -->
+        <div class="columna-principal">
+          
+          <!-- Componente de Cambio de Estado -->
+          <div class="card">
+            <h2>🔄 Gestión de Estado</h2>
+            <app-cambiar-estado-pedido
+              [estadoActual]="pedido.estado_venta"
+              [pedidoId]="pedidoId"
+              (estadoCambiado)="onEstadoCambiado($event)">
+            </app-cambiar-estado-pedido>
+          </div>
+
+          <!-- Seguimiento Visual -->
+          <div class="card">
+            <h2>📍 Seguimiento del Pedido</h2>
+            <app-seguimiento-pedido
+              [estadoActual]="pedido.estado_venta"
+              [observaciones]="pedido.observaciones"
+              [fechaPedido]="pedido.fecha_venta">
+            </app-seguimiento-pedido>
+          </div>
+
+          <!-- Productos -->
+<div class="card">
+  <h2>🛍️ Productos ({{ totalProductos }} items)</h2>
+  <div class="productos-lista">
+    <div class="producto-item" *ngFor="let producto of pedido.productos">
+      
+      <!-- Imagen del producto si existe -->
+      <div class="producto-imagen" *ngIf="producto.imagen_url">
+        <img 
+          [src]="producto.imagen_url" 
+          [alt]="producto.nombre_producto"
+          (error)="onImageError($event)">
+      </div>
+      
+      <!-- Icono si no hay imagen -->
+      <div class="producto-icono" *ngIf="!producto.imagen_url">
+        📦
+      </div>
+      
+      <div class="producto-info">
+        <h4>{{ producto.nombre_producto }}</h4>
+        <p class="producto-cantidad">Cantidad: <strong>{{ producto.cantidad }}</strong></p>
+        <p class="producto-unitario">Precio unitario: S/ {{ producto.precio_unitario?.toFixed(2) }}</p>
+      </div>
+      <div class="producto-precio">
+        <strong>S/ {{ producto.subtotal?.toFixed(2) }}</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+        </div>
+
+        <!-- Columna Derecha -->
+        <div class="columna-lateral">
+          
+          <!-- Información del Cliente -->
+          <div class="card">
+            <h2>👤 Información del Cliente</h2>
+            <div class="info-lista">
+              <div class="info-item">
+                <span class="label">Nombre:</span>
+                <span class="valor">{{ pedido.cliente?.nombre_cliente || 'Sin nombre' }}</span>
+              </div>
+              <div class="info-item">
+                <span class="label">Teléfono:</span>
+                <span class="valor">{{ pedido.cliente?.telefono || pedido.telefono_contacto || 'Sin teléfono' }}</span>
+              </div>
+              <div class="info-item">
+                <span class="label">Email:</span>
+                <span class="valor">{{ pedido.cliente?.email || 'Sin email' }}</span>
+              </div>
+              <div class="info-item" *ngIf="pedido.direccion_envio">
+                <span class="label">Dirección:</span>
+                <span class="valor">{{ pedido.direccion_envio }}</span>
+              </div>
+            </div>
+          </div>
+
+<div class="card" *ngIf="pedido.comprobante_pago">
+  <h2>📸 Comprobante de Pago</h2>
+  
+  <div class="comprobante-container">
+    <!-- Imagen del comprobante -->
+    <div class="comprobante-imagen">
+      <img 
+        [src]="pedido.comprobante_pago" 
+        alt="Comprobante de pago"
+        (click)="abrirImagenCompleta(pedido.comprobante_pago)"
+        class="comprobante-img">
+      <p class="zoom-hint">👆 Haz clic para ver en tamaño completo</p>
+    </div>
+    
+    <!-- Código de operación -->
+    <div class="codigo-operacion">
+      <span class="label">Código de operación:</span>
+      <span class="codigo">{{ pedido.codigo_operacion || 'No proporcionado' }}</span>
+      
+      <button 
+        class="btn-copiar"
+        (click)="copiarCodigo(pedido.codigo_operacion)">
+        📋 Copiar código
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- 📸 COMPROBANTE DE PAGO -->
+<div class="card card-comprobante" *ngIf="pedido.comprobante_pago || pedido.codigo_operacion">
+  <h2>📸 Comprobante de Pago</h2>
+  
+  <!-- Imagen del comprobante -->
+  <div class="comprobante-container" *ngIf="pedido.comprobante_pago">
+    <div class="comprobante-imagen">
+      <img 
+        [src]="pedido.comprobante_pago" 
+        alt="Comprobante de pago"
+        (click)="abrirImagenCompleta(pedido.comprobante_pago)"
+        (error)="onComprobanteError($event)"
+        class="img-comprobante">
+      <p class="zoom-hint">👆 Haz clic para ampliar</p>
+    </div>
+  </div>
+  
+  <!-- Mensaje si no hay imagen -->
+  <div class="sin-comprobante" *ngIf="!pedido.comprobante_pago">
+    <p>⚠️ No se ha subido comprobante aún</p>
+  </div>
+  
+  <!-- Código de operación destacado -->
+  <div class="codigo-operacion-destacado" *ngIf="pedido.codigo_operacion">
+    <div class="codigo-header">
+      <span class="label">🔢 Código de operación:</span>
+    </div>
+    <div class="codigo-contenido">
+      <code class="codigo-texto">{{ pedido.codigo_operacion }}</code>
+      <button 
+        type="button"
+        class="btn-copiar-codigo"
+        (click)="copiarCodigo(pedido.codigo_operacion)"
+        title="Copiar código">
+        📋 Copiar
+      </button>
+    </div>
+  </div>
+</div>
+
+          <!-- Información del Pedido -->
+          <div class="card">
+            <h2>📋 Información del Pedido</h2>
+            <div class="info-lista">
+              <div class="info-item">
+                <span class="label">Fecha:</span>
+                <span class="valor">{{ formatearFecha(pedido.fecha_venta) }}</span>
+              </div>
+              <div class="info-item">
+                <span class="label">Canal:</span>
+                <span class="valor">{{ pedido.canal_venta || 'Tienda Online' }}</span>
+              </div>
+              <div class="info-item">
+                <span class="label">Método de pago:</span>
+                <span class="valor">{{ pedido.metodo_pago || 'No especificado' }}</span>
+              </div>
+              <div class="info-item" *ngIf="pedido.codigo_operacion">
+                <span class="label">Código operación:</span>
+                <span class="valor">{{ pedido.codigo_operacion }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Resumen de Pago -->
+          <div class="card resumen-pago">
+            <h2>💰 Resumen de Pago</h2>
+            <div class="resumen-lista">
+              <div class="resumen-item">
+                <span>Subtotal:</span>
+                <span>S/ {{ pedido.subtotal?.toFixed(2) || '0.00' }}</span>
+              </div>
+              <div class="resumen-item" *ngIf="pedido.descuento && pedido.descuento > 0">
+                <span>Descuento:</span>
+                <span class="descuento">- S/ {{ pedido.descuento?.toFixed(2) }}</span>
+              </div>
+              <div class="resumen-item total">
+                <span>TOTAL:</span>
+                <span>S/ {{ pedido.total_venta?.toFixed(2) || '0.00' }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Observaciones -->
+          <div class="card" *ngIf="pedido.observaciones">
+            <h2>📝 Observaciones</h2>
+            <div class="observaciones">
+              <p>{{ pedido.observaciones }}</p>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+</div>

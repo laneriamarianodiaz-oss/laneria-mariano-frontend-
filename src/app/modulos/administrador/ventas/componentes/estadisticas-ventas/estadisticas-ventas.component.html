@@ -1,0 +1,122 @@
+@if (estadisticas) {
+  <div class="estadisticas-container">
+    <h3 class="titulo-seccion">📊 Resumen de Ventas</h3>
+
+    <!-- Tarjetas de resumen -->
+    <div class="tarjetas-resumen">
+      <!-- Ventas de hoy -->
+      <div class="tarjeta tarjeta-hoy">
+        <div class="tarjeta-icono">📅</div>
+        <div class="tarjeta-contenido">
+          <p class="tarjeta-label">Ventas de Hoy</p>
+          <p class="tarjeta-valor">
+            {{ formatearMoneda(estadisticas.ventas_hoy.total) }}
+          </p>
+          <p class="tarjeta-cantidad">
+            {{ estadisticas.ventas_hoy.cantidad }} venta(s)
+          </p>
+        </div>
+      </div>
+
+      <!-- Ventas de la semana -->
+      <div class="tarjeta tarjeta-semana">
+        <div class="tarjeta-icono">📆</div>
+        <div class="tarjeta-contenido">
+          <p class="tarjeta-label">Ventas de la Semana</p>
+          <p class="tarjeta-valor">
+            {{ formatearMoneda(estadisticas.ventas_semana.total) }}
+          </p>
+          <p class="tarjeta-cantidad">
+            {{ estadisticas.ventas_semana.cantidad }} venta(s)
+          </p>
+        </div>
+      </div>
+
+      <!-- Ventas del mes -->
+      <div class="tarjeta tarjeta-mes">
+        <div class="tarjeta-icono">📊</div>
+        <div class="tarjeta-contenido">
+          <p class="tarjeta-label">Ventas del Mes</p>
+          <p class="tarjeta-valor">
+            {{ formatearMoneda(estadisticas.ventas_mes.total) }}
+          </p>
+          <p class="tarjeta-cantidad">
+            {{ estadisticas.ventas_mes.cantidad }} venta(s)
+          </p>
+        </div>
+      </div>
+
+      <!-- Ticket promedio -->
+      <div class="tarjeta tarjeta-promedio">
+        <div class="tarjeta-icono">💰</div>
+        <div class="tarjeta-contenido">
+          <p class="tarjeta-label">Ticket Promedio</p>
+          <p class="tarjeta-valor">
+            {{ formatearMoneda(estadisticas.ticket_promedio) }}
+          </p>
+          <p class="tarjeta-cantidad">Por venta</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ventas por estado -->
+    <div class="seccion-estadisticas">
+      <h4 class="subtitulo">Estados de Ventas</h4>
+      <div class="estados-grid">
+        <div class="estado-item pendiente">
+          <span class="estado-icono">⏳</span>
+          <span class="estado-numero">{{ estadisticas.ventas_por_estado.pendientes }}</span>
+          <span class="estado-label">Pendientes</span>
+        </div>
+        <div class="estado-item completada">
+          <span class="estado-icono">✅</span>
+          <span class="estado-numero">{{ estadisticas.ventas_por_estado.completadas }}</span>
+          <span class="estado-label">Completadas</span>
+        </div>
+        <div class="estado-item cancelada">
+          <span class="estado-icono">❌</span>
+          <span class="estado-numero">{{ estadisticas.ventas_por_estado.canceladas }}</span>
+          <span class="estado-label">Canceladas</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ventas por método de pago -->
+    @if (obtenerMetodosPagoOrdenados().length > 0) {
+      <div class="seccion-estadisticas">
+        <h4 class="subtitulo">💳 Métodos de Pago</h4>
+        <div class="lista-metodos">
+          @for (item of obtenerMetodosPagoOrdenados(); track item.metodo) {
+            <div class="metodo-item">
+              <span class="metodo-nombre">{{ item.metodo }}</span>
+              <span class="metodo-total">{{ formatearMoneda(item.total) }}</span>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Productos más vendidos -->
+    @if (estadisticas.productos_mas_vendidos.length > 0) {
+      <div class="seccion-estadisticas">
+        <h4 class="subtitulo">🏆 Top 5 Productos Más Vendidos</h4>
+        <div class="lista-productos">
+          @for (producto of estadisticas.productos_mas_vendidos.slice(0, 5); track producto.producto_id) {
+            <div class="producto-item">
+              <div class="producto-info">
+                <span class="producto-nombre">{{ producto.nombre }}</span>
+                <span class="producto-cantidad">{{ producto.cantidad_vendida }} unidades</span>
+              </div>
+              <span class="producto-total">{{ formatearMoneda(producto.total_generado) }}</span>
+            </div>
+          }
+        </div>
+      </div>
+    }
+  </div>
+} @else {
+  <div class="sin-datos">
+    <p class="icono-vacio">📊</p>
+    <p class="texto-vacio">No hay estadísticas disponibles</p>
+  </div>
+}

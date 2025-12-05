@@ -1,0 +1,297 @@
+<div class="proveedores-container">
+  <!-- Header -->
+  <div class="proveedores-header">
+    <h1 class="titulo">📦 Gestión de Proveedores</h1>
+    <div class="header-acciones">
+      <button class="btn-toggle" (click)="toggleEstadisticas()">
+        📊 {{ mostrarEstadisticas() ? 'Ocultar' : 'Mostrar' }} Estadísticas
+      </button>
+      <button class="btn-toggle" (click)="toggleFiltros()">
+        🔍 {{ mostrarFiltros() ? 'Ocultar' : 'Mostrar' }} Filtros
+      </button>
+      <button class="btn-exportar" (click)="exportarExcel()">
+        📥 Exportar Excel
+      </button>
+      <button class="btn-refrescar" (click)="refrescar()">
+        🔄 Refrescar
+      </button>
+      <button class="btn-nuevo" (click)="crearProveedor()">
+        ➕ Nuevo Proveedor
+      </button>
+    </div>
+  </div>
+
+  <!-- Estadísticas -->
+  @if (mostrarEstadisticas() && estadisticas()) {
+    <div class="estadisticas-container">
+      <h2 class="seccion-titulo">📊 Estadísticas Generales</h2>
+      
+      <!-- Tarjetas de estadísticas -->
+      <div class="tarjetas-estadisticas">
+        <div class="tarjeta-estadistica">
+          <div class="tarjeta-icono">📦</div>
+          <div class="tarjeta-contenido">
+            <span class="tarjeta-label">Total Proveedores</span>
+            <span class="tarjeta-valor">
+              {{ estadisticas()!.total_proveedores }}
+            </span>
+          </div>
+        </div>
+
+        <div class="tarjeta-estadistica">
+          <div class="tarjeta-icono">🆕</div>
+          <div class="tarjeta-contenido">
+            <span class="tarjeta-label">Nuevos Este Mes</span>
+            <span class="tarjeta-valor">
+              {{ estadisticas()!.proveedores_nuevos_mes }}
+            </span>
+          </div>
+        </div>
+
+        <div class="tarjeta-estadistica">
+          <div class="tarjeta-icono">✅</div>
+          <div class="tarjeta-contenido">
+            <span class="tarjeta-label">Proveedores Activos</span>
+            <span class="tarjeta-valor">
+              {{ estadisticas()!.proveedores_activos }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top 5 Proveedores -->
+      @if (estadisticas()!.top_proveedores.length > 0) {
+        <div class="top-proveedores">
+          <h3 class="top-titulo">🏆 Top 5 Proveedores</h3>
+          <div class="top-lista">
+            @for (proveedor of estadisticas()!.top_proveedores; track proveedor.proveedor_id; let i = $index) {
+              <div class="top-item">
+                <div class="top-info">
+                  <span class="top-posicion">#{{ i + 1 }}</span>
+                  <span class="top-nombre">{{ proveedor.nombre }}</span>
+                </div>
+                <div class="top-stats">
+                  <span class="top-productos">
+                    {{ proveedor.total_productos }} productos
+                  </span>
+                  <div class="productos-nombres">
+                    @for (producto of proveedor.productos_nombres.slice(0, 3); track producto) {
+                      <span class="badge-producto">{{ producto }}</span>
+                    }
+                    @if (proveedor.productos_nombres.length > 3) {
+                      <span class="badge-mas">
+                        +{{ proveedor.productos_nombres.length - 3 }}
+                      </span>
+                    }
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Filtros -->
+  @if (mostrarFiltros()) {
+    <div class="filtros-container">
+      <h2 class="seccion-titulo">🔍 Filtros de Búsqueda</h2>
+      
+      <div class="filtros-body">
+        <!-- Búsqueda -->
+        <div class="filtro-grupo">
+          <label class="filtro-label">Buscar proveedor</label>
+          <input
+            type="text"
+            class="form-input"
+            placeholder="Nombre, contacto o teléfono..."
+            [(ngModel)]="busqueda"
+            (keyup.enter)="aplicarFiltros()"
+          />
+        </div>
+
+        <!-- Fecha desde -->
+        <div class="filtro-grupo">
+          <label class="filtro-label">Registrado desde</label>
+          <input
+            type="date"
+            class="form-input"
+            [(ngModel)]="fechaDesde"
+          />
+        </div>
+
+        <!-- Fecha hasta -->
+        <div class="filtro-grupo">
+          <label class="filtro-label">Registrado hasta</label>
+          <input
+            type="date"
+            class="form-input"
+            [(ngModel)]="fechaHasta"
+          />
+        </div>
+      </div>
+
+      <div class="filtros-acciones">
+        <button class="btn-limpiar" (click)="limpiarFiltros()">
+          🗑️ Limpiar Filtros
+        </button>
+        <button class="btn-aplicar" (click)="aplicarFiltros()">
+          ✓ Aplicar Filtros
+        </button>
+      </div>
+    </div>
+  }
+
+  <!-- Indicador de carga -->
+  @if (cargando()) {
+    <div class="cargando">
+      <div class="spinner"></div>
+      <p>Cargando proveedores...</p>
+    </div>
+  }
+
+  <!-- Tabla de proveedores -->
+  @if (!cargando() && proveedores().length > 0) {
+    <div class="tabla-container">
+      <table class="tabla-proveedores">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Proveedor</th>
+            <th>Contacto</th>
+            <th>Teléfono</th>
+            <th>Email</th>
+            <th>Dirección</th>
+            <th>Productos</th>
+            <th>Registrado</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (proveedor of proveedores(); track proveedor.proveedor_id) {
+            <tr>
+              <td>
+                <span class="proveedor-id">
+                  #{{ proveedor.proveedor_id }}
+                </span>
+              </td>
+              <td>
+                <div class="proveedor-info">
+                  <span class="proveedor-nombre">
+                    {{ proveedor.nombre }}
+                  </span>
+                </div>
+              </td>
+              <td>
+                <span class="proveedor-contacto">
+                  {{ proveedor.contacto || '-' }}
+                </span>
+              </td>
+              <td>
+                @if (proveedor.telefono) {
+                  <span class="proveedor-telefono">
+                    📱 {{ proveedor.telefono }}
+                  </span>
+                } @else {
+                  <span class="texto-vacio">-</span>
+                }
+              </td>
+              <td>
+                @if (proveedor.email) {
+                  <span class="proveedor-email">
+                    ✉️ {{ proveedor.email }}
+                  </span>
+                } @else {
+                  <span class="texto-vacio">-</span>
+                }
+              </td>
+              <td>
+                <span class="proveedor-direccion">
+                  {{ proveedor.direccion || '-' }}
+                </span>
+              </td>
+              <td>
+                <span class="total-productos">
+                  {{ proveedor.total_productos || 0 }}
+                </span>
+              </td>
+              <td>
+                <span class="fecha-registro">
+                  {{ formatearFecha(proveedor.fecha_registro) }}
+                </span>
+              </td>
+              <td>
+                <div class="acciones">
+                  <button
+                    class="btn-accion btn-ver"
+                    (click)="verDetalle(proveedor.proveedor_id)"
+                    title="Ver detalle"
+                  >
+                    👁️
+                  </button>
+                  <button
+                    class="btn-accion btn-editar"
+                    (click)="editarProveedor(proveedor.proveedor_id)"
+                    title="Editar"
+                  >
+                    ✏️
+                  </button>
+                  <button
+                    class="btn-accion btn-eliminar"
+                    (click)="eliminarProveedor(proveedor.proveedor_id, proveedor.nombre)"
+                    title="Eliminar"
+                  >
+                    🗑️
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Paginación -->
+    @if (totalPaginas() > 1) {
+      <div class="paginacion">
+        <button
+          class="btn-pagina"
+          [disabled]="paginaActual() === 1"
+          (click)="cambiarPagina(paginaActual() - 1)"
+        >
+          ← Anterior
+        </button>
+        <span class="info-pagina">
+          Página {{ paginaActual() }} de {{ totalPaginas() }}
+          ({{ totalRegistros() }} proveedores)
+        </span>
+        <button
+          class="btn-pagina"
+          [disabled]="paginaActual() === totalPaginas()"
+          (click)="cambiarPagina(paginaActual() + 1)"
+        >
+          Siguiente →
+        </button>
+      </div>
+    }
+  }
+
+  <!-- Sin resultados -->
+  @if (!cargando() && proveedores().length === 0) {
+    <div class="sin-proveedores">
+      <div class="icono-vacio">📦</div>
+      <h3>No se encontraron proveedores</h3>
+      <p>
+        @if (filtrosActuales().busqueda || filtrosActuales().fecha_desde || filtrosActuales().fecha_hasta) {
+          No hay proveedores que coincidan con los filtros aplicados.
+        } @else {
+          Aún no hay proveedores registrados en el sistema.
+        }
+      </p>
+      <button class="btn-crear-primero" (click)="crearProveedor()">
+        ➕ Crear Primer Proveedor
+      </button>
+    </div>
+  }
+</div>

@@ -1,0 +1,26 @@
+<div class="chart-container">
+  <div class="chart-header">
+    <h3>📈 Ventas - Últimos 7 Días</h3>
+    <div class="chart-legend">
+      <span class="legend-item">
+        <span class="legend-color"></span>
+        Ventas diarias
+      </span>
+    </div>
+  </div>
+
+  <div class="chart-body">
+    <div class="chart-bars">
+      @for (venta of ventas; track venta.fecha) {
+        <div class="chart-bar-container">
+          <div class="chart-bar-value">S/ {{ venta.total }}</div>
+          <div 
+            class="chart-bar" 
+            [style.height.%]="calcularAltura(venta.total)"
+          ></div>
+          <div class="chart-bar-label">{{ venta.fecha }}</div>
+        </div>
+      }
+    </div>
+  </div>
+</div>

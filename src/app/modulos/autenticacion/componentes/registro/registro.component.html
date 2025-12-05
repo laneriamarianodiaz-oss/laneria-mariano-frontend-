@@ -1,0 +1,65 @@
+<div class="modal-overlay" (click)="cerrar()">
+  <div class="modal-contenido" (click)="$event.stopPropagation()">
+    <button class="btn-cerrar" (click)="cerrar()">×</button>
+    
+    <div class="logo-container">
+      <img src="assets/logo.png" alt="Lanería Mariano Díaz" />
+    </div>
+
+    <h2>Regístrate</h2>
+
+    <!-- ← NUEVO: Mostrar errores -->
+    <div *ngIf="error" class="alerta-error">
+      {{ error }}
+    </div>
+
+    <form [formGroup]="formularioRegistro" (ngSubmit)="registrarse()">
+      <div class="form-group">
+        <label>Correo electrónico</label>
+        <input type="email" formControlName="email" placeholder="Ingresa un correo" />
+        <small *ngIf="formularioRegistro.get('email')?.invalid && formularioRegistro.get('email')?.touched" class="error">
+          Correo inválido
+        </small>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Nombre</label>
+          <input type="text" formControlName="nombre" placeholder="Ingresa un nombre" />
+        </div>
+        <div class="form-group">
+          <label>Apellido</label>
+          <input type="text" formControlName="apellido" placeholder="Ingresa apellidos" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>DNI</label>
+          <input type="text" formControlName="dni" placeholder="Ingresa un documento de identidad" maxlength="8" />
+        </div>
+        <div class="form-group">
+          <label>Celular</label>
+          <input type="tel" formControlName="telefono" placeholder="+51 | Ingresa un celular" />
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" formControlName="password" placeholder="Ingresa una contraseña" />
+        <small *ngIf="formularioRegistro.get('password')?.invalid && formularioRegistro.get('password')?.touched" class="error">
+          Mínimo 6 caracteres
+        </small>
+      </div>
+
+      <button type="submit" class="btn-registrarse" [disabled]="cargando || formularioRegistro.invalid">
+        {{ cargando ? 'Registrando...' : 'Registrate' }}
+      </button>
+    </form>
+
+    <p class="texto-login">
+      ¿Ya tienes cuenta? 
+      <a routerLink="/autenticacion/inicio-sesion">Iniciar sesión</a>
+    </p>
+  </div>
+</div>

@@ -1,0 +1,134 @@
+<div class="modal-overlay" (click)="cerrarModal()">
+  <div class="modal-container" (click)="$event.stopPropagation()">
+    
+    <!-- Header -->
+    <div class="modal-header">
+      <div class="header-content">
+        <h2>🔧 Ajustar Stock</h2>
+        <p class="producto-info">
+          <strong>{{ producto.nombre }}</strong> 
+          <span class="separador">•</span> 
+          {{ producto.codigo_lana }}
+        </p>
+      </div>
+      <button class="btn-close" (click)="cerrarModal()" [disabled]="guardando()">
+        ✕
+      </button>
+    </div>
+
+    <!-- Body -->
+    <div class="modal-body">
+      
+      <!-- Stock Actual -->
+      <div class="stock-info">
+        <div class="stock-item">
+          <span class="stock-label">Stock Actual</span>
+          <span class="stock-value actual">{{ producto.stock }} unid.</span>
+        </div>
+        <div class="stock-arrow">→</div>
+        <div class="stock-item">
+          <span class="stock-label">Nuevo Stock</span>
+          <span class="stock-value nuevo">{{ nuevoStock() }} unid.</span>
+        </div>
+      </div>
+
+      <!-- Formulario -->
+      <form class="ajuste-form">
+        
+        <!-- Tipo de Movimiento -->
+        <div class="form-group">
+          <label>Tipo de Movimiento <span class="required">*</span></label>
+          <div class="tipo-movimiento-grid">
+            @for (tipo of tiposMovimiento; track tipo.valor) {
+              <label class="tipo-card" [class.selected]="tipoMovimiento() === tipo.valor">
+                <input 
+                  type="radio" 
+                  name="tipo"
+                  [value]="tipo.valor"
+                  [checked]="tipoMovimiento() === tipo.valor"
+                  (change)="actualizarTipoMovimiento(tipo.valor)"
+                >
+                <div class="tipo-content" [style.background]="tipo.color + '15'">
+                  <span class="tipo-icon" [style.color]="tipo.color">{{ tipo.icono }}</span>
+                  <span class="tipo-texto" [style.color]="tipo.color">{{ tipo.texto }}</span>
+                </div>
+              </label>
+            }
+          </div>
+        </div>
+
+        <!-- Cantidad -->
+        <div class="form-group">
+          <label>
+            @if (tipoMovimiento() === 'ajuste') {
+              Stock Final <span class="required">*</span>
+            } @else {
+              Cantidad <span class="required">*</span>
+            }
+          </label>
+          <input 
+            type="number" 
+            class="form-input"
+            [placeholder]="tipoMovimiento() === 'ajuste' ? 'Ej: 50' : 'Ej: 10'"
+            min="0"
+            [value]="cantidad()"
+            (input)="actualizarCantidad($any($event.target).value)"
+          >
+          @if (tipoMovimiento() === 'salida' && cantidad() > producto.stock) {
+            <span class="error-text">No hay suficiente stock disponible</span>
+          }
+        </div>
+
+        <!-- Motivo -->
+        <div class="form-group">
+          <label>Motivo <span class="required">*</span></label>
+          <textarea 
+            class="form-textarea"
+            placeholder="Describa el motivo del ajuste..."
+            rows="3"
+            [value]="motivo()"
+            (input)="motivo.set($any($event.target).value)"
+          ></textarea>
+        </div>
+
+        <!-- Referencia -->
+        <div class="form-group">
+          <label>Referencia (opcional)</label>
+          <input 
+            type="text" 
+            class="form-input"
+            placeholder="Ej: Factura #1234, Orden de compra, etc."
+            [value]="referencia()"
+            (input)="referencia.set($any($event.target).value)"
+          >
+        </div>
+
+      </form>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="modal-footer">
+      <button 
+        class="btn-secondary" 
+        (click)="cerrarModal()"
+        [disabled]="guardando()"
+      >
+        Cancelar
+      </button>
+      <button 
+        class="btn-primary" 
+        (click)="guardarAjuste()"
+        [disabled]="guardando() || cantidad() <= 0"
+      >
+        @if (guardando()) {
+          <span class="spinner-small"></span>
+          <span>Guardando...</span>
+        } @else {
+          <span>Guardar Ajuste</span>
+        }
+      </button>
+    </div>
+
+  </div>
+</div>

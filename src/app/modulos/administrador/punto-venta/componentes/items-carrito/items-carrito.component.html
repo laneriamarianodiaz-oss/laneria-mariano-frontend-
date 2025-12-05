@@ -1,0 +1,97 @@
+<div class="carrito-container">
+  <div class="carrito-header">
+    <h3 class="titulo">🛒 Carrito de Compras</h3>
+    @if (carrito().cantidad_items > 0) {
+      <span class="badge-items">{{ carrito().cantidad_items }} items</span>
+    }
+  </div>
+
+  <!-- Lista de items -->
+  @if (carrito().items.length === 0) {
+    <div class="carrito-vacio">
+      <div class="icono-vacio">🛒</div>
+      <p class="texto-vacio">El carrito está vacío</p>
+      <p class="subtexto-vacio">Busca productos para agregarlos</p>
+    </div>
+  } @else {
+    <div class="lista-items">
+      @for (item of carrito().items; track $index) {
+        <div class="item-carrito">
+          <!-- Información del producto -->
+          <div class="item-info">
+            <p class="item-nombre">{{ item.producto.nombre }}</p>
+            <p class="item-detalles">
+              {{ item.producto.tipo_lana }}
+              @if (item.producto.color) {
+                • {{ item.producto.color }}
+              }
+              @if (item.producto.talla_tamano) {
+                • Talla {{ item.producto.talla_tamano }}
+              }
+            </p>
+            <p class="item-precio">S/ {{ item.precio_unitario.toFixed(2) }} c/u</p>
+          </div>
+
+          <!-- Controles de cantidad -->
+          <div class="item-controles">
+            <div class="control-cantidad">
+              <button
+                class="btn-cantidad"
+                (click)="decrementarCantidad($index)"
+                [disabled]="item.cantidad <= 1"
+              >
+                −
+              </button>
+              <input
+                type="number"
+                class="input-cantidad"
+                [value]="item.cantidad"
+                (change)="actualizarCantidad($index, $event)"
+                min="1"
+              />
+              <button
+                class="btn-cantidad"
+                (click)="incrementarCantidad($index)"
+              >
+                +
+              </button>
+            </div>
+
+            <div class="item-subtotal">
+              <p class="texto-subtotal">Subtotal</p>
+              <p class="valor-subtotal">S/ {{ item.subtotal.toFixed(2) }}</p>
+            </div>
+
+            <button
+              class="btn-eliminar"
+              (click)="eliminarItem($index)"
+              title="Eliminar"
+            >
+              🗑️
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Totales del carrito -->
+    <div class="carrito-totales">
+      <div class="linea-total">
+        <span class="label-total">Subtotal</span>
+        <span class="valor-total">S/ {{ carrito().subtotal.toFixed(2) }}</span>
+      </div>
+      @if (carrito().descuento_total > 0) {
+        <div class="linea-total descuento">
+          <span class="label-total">Descuento</span>
+          <span class="valor-total">
+            - S/ {{ carrito().descuento_total.toFixed(2) }}
+          </span>
+        </div>
+      }
+      <div class="linea-total total-final">
+        <span class="label-total">Total</span>
+        <span class="valor-total">S/ {{ carrito().total.toFixed(2) }}</span>
+      </div>
+    </div>
+  }
+</div>

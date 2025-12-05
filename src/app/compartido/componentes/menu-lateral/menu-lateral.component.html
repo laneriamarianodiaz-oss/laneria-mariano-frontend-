@@ -1,0 +1,74 @@
+<aside class="sidebar" [class.collapsed]="isCollapsed()">
+
+  <div class="sidebar-header">
+    <div class="logo-container">
+      @if (!isCollapsed()) {
+        <div class="logo">
+          <img src="panel/sistema.png" class="logo-img" />
+          <div class="logo-content">
+            <span class="logo-title">Lanería Mariano Diaz</span>
+            <span class="logo-subtitle">Sistema de Gestión</span>
+          </div>
+        </div>
+      } @else {
+        <img src="panel/sistema.png" class="logo-img-collapsed" />
+      }
+    </div>
+
+    <button class="toggle-btn" (click)="toggleSidebar()" title="Colapsar/Expandir menú">
+      @if (isCollapsed()) {
+        <span>☰</span>
+      } @else {
+        <span>«</span>
+      }
+    </button>
+  </div>
+
+  <nav class="sidebar-nav">
+    @for (item of menuItems(); track item.route) {
+      <a 
+        [routerLink]="item.route"
+        routerLinkActive="active"
+        class="nav-item"
+        [class.has-badge]="item.badge && item.badge > 0"
+        [title]="isCollapsed() ? item.label : ''"
+      >
+        <span class="nav-icon">
+          <img [src]="item.iconUrl" alt="icon" class="icon-img" />
+        </span>
+
+        @if (!isCollapsed()) {
+          <span class="nav-label">{{ item.label }}</span>
+
+          @if (item.badge && item.badge > 0) {
+            <span class="nav-badge">{{ item.badge }}</span>
+          }
+        } @else if (item.badge && item.badge > 0) {
+          <span class="nav-badge-collapsed">{{ item.badge }}</span>
+        }
+
+      </a>
+    }
+  </nav>
+
+  @if (!isCollapsed()) {
+    <div class="sidebar-divider"></div>
+  }
+
+  <div class="sidebar-footer">
+    @if (!isCollapsed()) {
+      <div class="footer-content">
+        <div class="footer-version">
+          <span class="version-label">Versión</span>
+          <span class="version-number">1.0.0</span>
+        </div>
+        <p class="footer-copyright">© 2024 Lanería Mariano</p>
+      </div>
+    } @else {
+      <div class="footer-collapsed">
+        <span class="version-icon">ⓥ</span>
+      </div>
+    }
+  </div>
+
+</aside>

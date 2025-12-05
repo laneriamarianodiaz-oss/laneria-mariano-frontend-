@@ -1,0 +1,27 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+// Eliminar espacios en rutas de admin
+body {
+  margin: 0;
+  padding: 0;
+}
+
+// Asegurar que no haya espacios en app-root
+app-root {
+  display: block;
+  min-height: 100vh;
+}
+
+router-outlet {
+  display: none;
+}
+/* En styles.scss o globals.css */
+
+body {
+  padding-top: 65px; /* Altura del navbar */
+}
+

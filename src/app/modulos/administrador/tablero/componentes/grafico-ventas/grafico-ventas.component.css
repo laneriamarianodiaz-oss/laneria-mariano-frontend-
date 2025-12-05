@@ -1,0 +1,192 @@
+.chart-container {
+  background: white;
+  border-radius: 18px;
+  padding: 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  margin-bottom: 30px;
+  border: 1px solid rgba(142, 68, 173, 0.08);
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.chart-container:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(142, 68, 173, 0.12);
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 35px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid rgba(142, 68, 173, 0.1);
+}
+
+.chart-header h3 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1f2937;
+  letter-spacing: -0.3px;
+}
+
+.chart-legend {
+  display: flex;
+  gap: 24px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.legend-item:hover {
+  color: #8e44ad;
+  transform: translateX(3px);
+}
+
+.legend-color {
+  width: 16px;
+  height: 16px;
+  background: linear-gradient(135deg, #8e44ad 0%, #9b59b6 50%, #a569bd 100%);
+  border-radius: 5px;
+  box-shadow: 0 2px 8px rgba(142, 68, 173, 0.3);
+  transition: all 0.3s ease;
+}
+
+.legend-item:hover .legend-color {
+  transform: scale(1.2) rotate(5deg);
+  box-shadow: 0 4px 12px rgba(142, 68, 173, 0.5);
+}
+
+.chart-body {
+  padding: 25px 10px;
+}
+
+.chart-bars {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  height: 280px;
+  gap: 18px;
+  position: relative;
+}
+
+.chart-bars::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(142, 68, 173, 0.2), transparent);
+}
+
+.chart-bar-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+  position: relative;
+}
+
+.chart-bar-value {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 10px;
+  opacity: 0;
+  transform: translateY(-5px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background: linear-gradient(135deg, #f5f0f8, #ede7f6);
+  padding: 4px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(142, 68, 173, 0.15);
+}
+
+.chart-bar-container:hover .chart-bar-value {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.chart-bar {
+  width: 100%;
+  max-width: 70px;
+  background: linear-gradient(to top, #8e44ad 0%, #9b59b6 50%, #a569bd 100%);
+  border-radius: 12px 12px 0 0;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  min-height: 30px;
+  position: relative;
+  box-shadow: 0 4px 16px rgba(142, 68, 173, 0.25);
+}
+
+.chart-bar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 100%;
+  background: linear-gradient(to top, transparent, rgba(255, 255, 255, 0.3));
+  border-radius: 12px 12px 0 0;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.chart-bar:hover {
+  background: linear-gradient(to top, #6c3483 0%, #8e44ad 50%, #9b59b6 100%);
+  transform: scaleY(1.08);
+  box-shadow: 0 8px 24px rgba(142, 68, 173, 0.4);
+}
+
+.chart-bar:hover::before {
+  opacity: 1;
+}
+
+.chart-bar-label {
+  margin-top: 14px;
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.chart-bar-container:hover .chart-bar-label {
+  color: #8e44ad;
+  transform: scale(1.05);
+}
+
+@media (max-width: 768px) {
+  .chart-container {
+    padding: 24px;
+  }
+
+  .chart-bars {
+    height: 220px;
+    gap: 10px;
+  }
+
+  .chart-bar {
+    max-width: 50px;
+  }
+
+  .chart-bar-value {
+    font-size: 11px;
+    padding: 3px 8px;
+  }
+
+  .chart-legend {
+    gap: 16px;
+  }
+
+  .legend-item {
+    font-size: 13px;
+  }
+}

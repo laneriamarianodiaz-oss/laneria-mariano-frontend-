@@ -1,0 +1,34 @@
+<div class="fondo-overlay">
+  <div class="modal-recuperar">
+    <button class="btn-cerrar" (click)="cerrar()">X</button>
+    
+    <div class="logo-circular">
+      <img src="logo.jpg" alt="Lanería Mariano Díaz">
+    </div>
+
+    <h2>Recuperar contraseña</h2>
+    <p class="descripcion">Ingresa tu correo electrónico y te enviaremos un enlace para restablecer tu contraseña.</p>
+
+    <form [formGroup]="formularioRecuperar" (ngSubmit)="recuperar()">
+      <div class="campo">
+        <label>Correo electrónico</label>
+        <input 
+          type="email" 
+          formControlName="email"
+          placeholder="Ingresa tu correo"
+        >
+        <span class="error" *ngIf="formularioRecuperar.get('email')?.invalid && formularioRecuperar.get('email')?.touched">
+          Correo inválido
+        </span>
+      </div>
+
+      <button type="submit" class="btn-enviar" [disabled]="formularioRecuperar.invalid || cargando">
+        {{ cargando ? 'Enviando...' : 'Enviar enlace' }}
+      </button>
+
+      <p class="texto-volver">
+        <a routerLink="/autenticacion/inicio-sesion">Volver a iniciar sesión</a>
+      </p>
+    </form>
+  </div>
+</div>

@@ -1,0 +1,429 @@
+<div class="clientes-container">
+  <!-- Header -->
+  <div class="clientes-header">
+    <div class="header-content">
+      <h1 class="titulo">👥 Gestión de Clientes</h1>
+      <div class="acciones-header">
+        <button class="btn-toggle" (click)="toggleEstadisticas()">
+          📊 {{ mostrarEstadisticas ? 'Ocultar' : 'Mostrar' }} Estadísticas
+        </button>
+        <button class="btn-toggle" (click)="toggleFiltros()">
+          🔍 {{ mostrarFiltros ? 'Ocultar' : 'Mostrar' }} Filtros
+        </button>
+        <button class="btn-exportar" (click)="exportarExcel()">
+          📥 Exportar Excel
+        </button>
+        <button class="btn-refrescar" (click)="refrescar()">
+          🔄 Refrescar
+        </button>
+        <button class="btn-nuevo" (click)="crearCliente()">
+          ➕ Nuevo Cliente
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Estadísticas -->
+  @if (mostrarEstadisticas && estadisticas()) {
+    <div class="estadisticas-container">
+      <div class="tarjetas-estadisticas">
+        <div class="tarjeta-estadistica">
+          <div class="tarjeta-icono">👥</div>
+          <div class="tarjeta-info">
+            <div class="tarjeta-label">Total Clientes</div>
+            <div class="tarjeta-valor">{{ estadisticas()!.total_clientes }}</div>
+          </div>
+        </div>
+
+        <div class="tarjeta-estadistica">
+          <div class="tarjeta-icono">🆕</div>
+          <div class="tarjeta-info">
+            <div class="tarjeta-label">Nuevos Este Mes</div>
+            <div class="tarjeta-valor">{{ estadisticas()!.clientes_nuevos_mes }}</div>
+          </div>
+        </div>
+
+        <div class="tarjeta-estadistica">
+          <div class="tarjeta-icono">✅</div>
+          <div class="tarjeta-info">
+            <div class="tarjeta-label">Clientes Activos</div>
+            <div class="tarjeta-valor">{{ estadisticas()!.clientes_activos }}</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Top Clientes -->
+      @if (estadisticas()!.top_clientes && estadisticas()!.top_clientes.length > 0) {
+        <div class="top-clientes">
+          <h3 class="top-titulo">🏆 Top 5 Clientes</h3>
+          <div class="top-lista">
+            @for (cliente of estadisticas()!.top_clientes; track cliente.cliente_id) {
+              <div class="top-item">
+                <div class="top-info">
+                  <span class="top-nombre">{{ cliente.nombre_clie }}</span>
+                  <span class="top-compras">{{ cliente.cantidad_compras }} compras</span>
+                </div>
+                <div class="top-total">{{ formatearMoneda(cliente.total_compras) }}</div>
+              </div>
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Filtros -->
+  @if (mostrarFiltros) {
+    <div class="filtros-container">
+      <div class="filtros-header">
+        <h3 class="filtros-titulo">🔍 Filtros de Búsqueda</h3>
+        <button class="btn-limpiar-filtros" (click)="limpiarFiltros()">
+          🗑️ Limpiar
+        </button>
+      </div>
+
+      <div class="filtros-body">
+        <div class="form-group">
+          <label class="form-label">Buscar cliente</label>
+          <input
+            type="text"
+            class="form-input"
+            placeholder="Nombre, teléfono o email..."
+            [(ngModel)]="busqueda"
+            (keyup.enter)="aplicarFiltros()"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Fecha desde</label>
+          <input
+            type="date"
+            class="form-input"
+            [(ngModel)]="fechaDesde"
+          />
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Fecha hasta</label>
+          <input
+            type="date"
+            class="form-input"
+            [(ngModel)]="fechaHasta"
+          />
+        </div>
+
+        <div class="form-group">
+          <button class="btn-aplicar" (click)="aplicarFiltros()">
+            ✓ Aplicar Filtros
+          </button>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Indicador de carga -->
+  @if (cargando()) {
+    <div class="cargando">
+      <div class="spinner"></div>
+      <p>Cargando clientes...</p>
+    </div>
+  }
+
+  <!-- Tabla de clientes -->
+  @if (!cargando() && clientes().length > 0) {
+    <div class="tabla-container">
+      <table class="tabla-clientes">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>CLIENTE</th>
+            <th>TELÉFONO</th>
+            <th>EMAIL</th>
+            <th>DIRECCIÓN</th>
+            <th>TOTAL COMPRAS</th>
+            <th>CANT. COMPRAS</th>
+            <th>ÚLTIMA COMPRA</th>
+            <th>ACCIONES</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (cliente of clientes(); track cliente.cliente_id) {
+            <tr>
+              <!-- ID -->
+              <td class="cliente-id">{{ cliente.cliente_id }}</td>
+              
+              <!-- NOMBRE -->
+              <td>
+                <div class="cliente-info">
+                  <span class="cliente-nombre">{{ cliente.nombre_clie || 'Sin nombre' }}</span>
+                  @if (cliente.contacto_clie) {
+                    <span class="cliente-contacto">{{ cliente.contacto_clie }}</span>
+                  }
+                </div>
+              </td>
+              
+              <!-- TELÉFONO -->
+              <td>
+                <span class="telefono">📱 {{ cliente.telefono || '-' }}</span>
+              </td>
+              
+              <!-- EMAIL -->
+              <td>
+                @if (cliente.email) {
+                  <span class="email">✉️ {{ cliente.email }}</span>
+                } @else {
+                  <span class="sin-dato">-</span>
+                }
+              </td>
+              
+              <!-- DIRECCIÓN -->
+              <td>
+                @if (cliente.direccion) {
+                  <span class="direccion" [title]="cliente.direccion">{{ cliente.direccion }}</span>
+                } @else {
+                  <span class="sin-dato">-</span>
+                }
+              </td>
+              
+              <!-- TOTAL COMPRAS -->
+              <td>
+                @if (cliente.total_compras && cliente.total_compras > 0) {
+                  <span class="total-compras">{{ formatearMoneda(cliente.total_compras) }}</span>
+                } @else {
+                  <span class="sin-dato">S/ 0.00</span>
+                }
+              </td>
+              
+              <!-- CANTIDAD COMPRAS -->
+              <td class="cantidad-compras">
+                {{ cliente.cantidad_compras || 0 }}
+              </td>
+              
+              <!-- ÚLTIMA COMPRA -->
+              <td>
+                @if (cliente.ultima_compra) {
+                  <span class="fecha">{{ formatearFecha(cliente.ultima_compra) }}</span>
+                } @else {
+                  <span class="sin-dato">Sin compras</span>
+                }
+              </td>
+              
+              <!-- ACCIONES - SOLO VER HISTORIAL -->
+              <td>
+                <div class="acciones-celda">
+                  <button
+                    class="btn-accion btn-ver"
+                    (click)="verDetalle(cliente.cliente_id)"
+                    title="Ver historial de compras"
+                  >
+                    👁️ Ver Historial
+                  </button>
+                </div>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Paginación -->
+    @if (totalPaginas() > 1) {
+      <div class="paginacion">
+        <button
+          class="btn-pagina"
+          (click)="cambiarPagina(paginaActual() - 1)"
+          [disabled]="paginaActual() === 1"
+        >
+          ← Anterior
+        </button>
+        <span class="info-pagina">
+          Página {{ paginaActual() }} de {{ totalPaginas() }} 
+          ({{ totalRegistros() }} clientes)
+        </span>
+        <button
+          class="btn-pagina"
+          (click)="cambiarPagina(paginaActual() + 1)"
+          [disabled]="paginaActual() === totalPaginas()"
+        >
+          Siguiente →
+        </button>
+      </div>
+    }
+  }
+
+  <!-- Sin resultados -->
+  @if (!cargando() && clientes().length === 0) {
+    <div class="sin-clientes">
+      <p class="icono-vacio">👥</p>
+      <p class="texto-vacio">No se encontraron clientes</p>
+      <p class="subtexto-vacio">Intenta ajustar los filtros o crea un nuevo cliente</p>
+      <button class="btn-crear-primero" (click)="crearCliente()">
+        ➕ Crear Primer Cliente
+      </button>
+    </div>
+  }
+
+  <!-- MODAL HISTORIAL DE COMPRAS -->
+@if (mostrarModalHistorial && clienteSeleccionado) {
+  <div class="modal-overlay" (click)="cerrarModalHistorial()">
+    <div class="modal-contenido" (click)="$event.stopPropagation()">
+      
+      <!-- Header del Modal -->
+      <div class="modal-header">
+        <div class="header-left">
+          <div class="icono-cliente">👤</div>
+          <div class="header-info">
+            <h2>{{ clienteSeleccionado.nombre_clie }}</h2>
+            <p class="cliente-telefono">📱 {{ clienteSeleccionado.telefono }}</p>
+          </div>
+        </div>
+        <button class="btn-cerrar-modal" (click)="cerrarModalHistorial()" title="Cerrar">✕</button>
+      </div>
+
+      <!-- Estadísticas Rápidas del Cliente -->
+      <div class="estadisticas-cliente">
+        <div class="stat-card stat-total">
+          <div class="stat-icon">💰</div>
+          <div class="stat-content">
+            <span class="stat-label">Total Gastado</span>
+            <span class="stat-value">{{ formatearMoneda(clienteSeleccionado.total_compras || 0) }}</span>
+          </div>
+        </div>
+
+        <div class="stat-card stat-cantidad">
+          <div class="stat-icon">🛍️</div>
+          <div class="stat-content">
+            <span class="stat-label">Total Compras</span>
+            <span class="stat-value">{{ clienteSeleccionado.cantidad_compras || 0 }}</span>
+          </div>
+        </div>
+
+        <div class="stat-card stat-promedio">
+          <div class="stat-icon">📊</div>
+          <div class="stat-content">
+            <span class="stat-label">Ticket Promedio</span>
+            <span class="stat-value">
+              {{ formatearMoneda(calcularTicketPromedio()) }}
+            </span>
+          </div>
+        </div>
+
+        <div class="stat-card stat-ultima">
+          <div class="stat-icon">📅</div>
+          <div class="stat-content">
+            <span class="stat-label">Última Compra</span>
+            <span class="stat-value fecha">
+              {{ clienteSeleccionado.ultima_compra ? formatearFechaCorta(clienteSeleccionado.ultima_compra) : 'N/A' }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Datos Adicionales del Cliente -->
+      <div class="datos-cliente-expandidos">
+        <div class="dato-item">
+          <span class="dato-label">✉️ Email:</span>
+          <span class="dato-valor">{{ clienteSeleccionado.email || 'No registrado' }}</span>
+        </div>
+        <div class="dato-item">
+          <span class="dato-label">📍 Dirección:</span>
+          <span class="dato-valor">{{ clienteSeleccionado.direccion || 'No registrada' }}</span>
+        </div>
+        @if (clienteSeleccionado.preferencias_clie) {
+          <div class="dato-item full-width">
+            <span class="dato-label">⭐ Preferencias:</span>
+            <span class="dato-valor">{{ clienteSeleccionado.preferencias_clie }}</span>
+          </div>
+        }
+      </div>
+
+      <!-- Historial de Compras -->
+      <div class="modal-body">
+        <div class="historial-header">
+          <h3>📋 Historial de Compras</h3>
+          @if (!cargandoHistorial && historialCompras().length > 0) {
+            <span class="total-registros">{{ historialCompras().length }} compra(s)</span>
+          }
+        </div>
+
+        @if (cargandoHistorial) {
+          <div class="cargando-historial">
+            <div class="spinner-profesional"></div>
+            <p>Cargando historial de compras...</p>
+          </div>
+        } @else if (historialCompras().length === 0) {
+          <div class="sin-historial">
+            <div class="sin-historial-icon">📭</div>
+            <p class="sin-historial-titulo">Sin compras registradas</p>
+            <p class="sin-historial-texto">Este cliente aún no ha realizado ninguna compra</p>
+          </div>
+        } @else {
+          <div class="lista-compras">
+            @for (compra of historialCompras(); track compra.venta_id) {
+              <div class="compra-card">
+                <!-- Header de la Compra -->
+                <div class="compra-header">
+                  <div class="compra-numero-fecha">
+                    <span class="numero-venta">{{ compra.numero_venta }}</span>
+                    <span class="separador">•</span>
+                    <span class="fecha-venta">{{ formatearFechaCompleta(compra.fecha_venta) }}</span>
+                  </div>
+                  <div class="compra-estado-precio">
+                    <span class="badge-estado" [ngClass]="getEstadoClase(compra.estado_venta)">
+                      {{ getEstadoTexto(compra.estado_venta) }}
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Productos de la Compra -->
+                <div class="compra-productos">
+                  <div class="productos-header">
+                    <span class="productos-titulo">Productos</span>
+                    <span class="productos-cantidad">{{ compra.productos.length }} ítem(s)</span>
+                  </div>
+                  
+                  @for (producto of compra.productos; track producto.producto_id) {
+                    <div class="producto-fila">
+                      <div class="producto-info">
+                        <span class="producto-cantidad-badge">{{ producto.cantidad }}x</span>
+                        <span class="producto-nombre">{{ producto.nombre }}</span>
+                      </div>
+                      <div class="producto-precios">
+                        <span class="precio-unitario">{{ formatearMoneda(producto.precio_unitario) }} c/u</span>
+                        <span class="precio-subtotal">{{ formatearMoneda(producto.subtotal) }}</span>
+                      </div>
+                    </div>
+                  }
+                </div>
+
+                <!-- Footer de la Compra -->
+                <div class="compra-footer">
+                  <div class="metodo-pago">
+                    <span class="metodo-icono">{{ getMetodoPagoIcono(compra.metodo_pago) }}</span>
+                    <span class="metodo-texto">{{ compra.metodo_pago }}</span>
+                  </div>
+                  <div class="total-venta">
+                    <span class="total-label">Total:</span>
+                    <span class="total-monto">{{ formatearMoneda(compra.total) }}</span>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+
+      <!-- Footer del Modal -->
+      <div class="modal-footer">
+        <button class="btn-exportar-historial" (click)="exportarHistorial()">
+          📄 Exportar PDF
+        </button>
+        <button class="btn-cerrar-footer" (click)="cerrarModalHistorial()">
+          Cerrar
+        </button>
+      </div>
+
+    </div>
+  </div>
+}
+</div>

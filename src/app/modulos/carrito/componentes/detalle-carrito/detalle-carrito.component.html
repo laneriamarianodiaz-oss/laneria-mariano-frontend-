@@ -1,0 +1,97 @@
+<div class="carrito-container">
+  <div class="carrito-contenido">
+    <h1>Inicio > carrito</h1>
+
+    <div class="carrito-layout">
+      <!-- COLUMNA IZQUIERDA - Productos -->
+      <div class="columna-productos">
+        <div class="carrito-header">
+          <div class="seleccionar-todo">
+            <input 
+              type="checkbox" 
+              [checked]="todoSeleccionado()"
+              (change)="seleccionarTodo($event)">
+            <span>Seleccionar todo ({{ cantidadItems }})</span>
+          </div>
+          <a (click)="limpiarCarrito()" class="link-limpiar">Limpiar carrito</a>
+        </div>
+
+        <!-- Lista de productos -->
+        <div class="productos-lista" *ngIf="items.length > 0">
+          <div class="producto-card" *ngFor="let item of items">
+            <div class="producto-item">
+              <input 
+                type="checkbox" 
+                [checked]="item.seleccionado" 
+                (change)="toggleSeleccion(item)">
+              
+              <!-- ✅ IMAGEN CORREGIDA -->
+              <img 
+                [src]="item.producto.imagen_url || 'assets/productos/default.jpg'" 
+                [alt]="item.producto.nombre_producto || item.producto.nombre || 'Producto'"
+                onerror="this.src='assets/productos/default.jpg'">
+              
+              <div class="producto-info">
+                <!-- ✅ NOMBRE CORREGIDO -->
+                <h3>{{ item.producto.nombre_producto || item.producto.nombre || 'Producto sin nombre' }}</h3>
+                <p>{{ item.producto.descripcion || '' }}</p>
+              </div>
+
+              <div class="producto-precio">
+                <p>Precio: S/ {{ (item.producto.precio_unitario || item.producto.precio_producto || 0) | number:'1.2-2' }}</p>
+              </div>
+
+              <div class="producto-cantidad">
+                <button (click)="disminuirCantidad(item)">-</button>
+                <input type="number" [value]="item.cantidad" readonly>
+                <button (click)="aumentarCantidad(item)">+</button>
+              </div>
+
+              <button class="btn-eliminar" (click)="eliminarItem(item)">
+                <img src="iconos/eliminar.png" alt="Eliminar">
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Carrito vacío -->
+        <div class="carrito-vacio" *ngIf="items.length === 0">
+          <p>Tu carrito está vacío</p>
+          <button routerLink="/catalogo" class="btn-seguir-comprando">Seguir comprando</button>
+        </div>
+      </div>
+
+      <!-- COLUMNA DERECHA - Resumen -->
+      <div class="columna-resumen" *ngIf="items.length > 0">
+        <div class="resumen">
+          <h3>Resumen de tu pedido</h3>
+          
+          <div class="productos-resumen">
+            <!-- ✅ IMÁGENES CORREGIDAS -->
+            <img *ngFor="let item of items.slice(0, 4)" 
+                 [src]="item.producto.imagen_url || 'assets/productos/default.jpg'" 
+                 [alt]="item.producto.nombre_producto || 'Producto'"
+                 onerror="this.src='assets/productos/default.jpg'">
+          </div>
+
+          <div class="resumen-linea">
+            <span>Total de artículos:</span>
+            <span>S/ {{ totalArticulos.toFixed(2) }}</span>
+          </div>
+          <div class="resumen-linea">
+            <span>Envío:</span>
+            <span>Gratis!</span>
+          </div>
+          <div class="resumen-linea total">
+            <span>Estimación total:</span>
+            <span>S/ {{ totalArticulos.toFixed(2) }}</span>
+          </div>
+          
+          <button class="btn-comprar" routerLink="/carrito/finalizar">
+            Comprar ({{ cantidadItemsSeleccionados }})
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

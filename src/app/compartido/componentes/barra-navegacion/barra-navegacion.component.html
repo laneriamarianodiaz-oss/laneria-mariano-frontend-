@@ -1,0 +1,59 @@
+<nav class="navbar">
+    <div class="navbar-contenido">
+      <!-- Logo y nombre -->
+      <div class="logo-seccion" routerLink="/">
+        <img src="logo.jpg" alt="Logo" class="logo">
+        <span class="nombre-tienda">Lanería Mariano Diaz</span>
+      </div>
+
+      <!-- Barra de búsqueda -->
+      <div class="busqueda">
+        <input 
+          type="text" 
+          placeholder="Buscar productos..."
+          [(ngModel)]="textoBusqueda"
+          (keyup.enter)="buscarProductos()"
+        >
+        <button class="btn-buscar" (click)="buscarProductos()">
+          <img src="iconos/buscar.png" alt="Buscar">
+        </button>
+      </div>
+
+<!-- Botones derecha -->
+    <div class="acciones">
+      <!-- Usuario NO logueado -->
+      <button 
+        *ngIf="!usuarioLogueado" 
+        class="btn-iniciar-sesion"
+        routerLink="/autenticacion/inicio-sesion"
+      >
+        Iniciar sesión
+      </button>
+
+      <!-- Usuario logueado -->
+      <div *ngIf="usuarioLogueado" class="usuario-menu">
+        <button class="btn-usuario" (click)="toggleMenu()">
+          <div class="avatar-circulo">{{ obtenerIniciales() }}</div>
+          <span class="nombre">{{ nombreUsuario }}</span>
+          <span class="flecha">▼</span>
+        </button>
+
+        <!-- Menú desplegable -->
+        <div class="menu-desplegable" *ngIf="menuAbierto">
+          <a routerLink="/carrito/mis-pedidos" (click)="cerrarMenu()">
+            📦 Mis pedidos
+          </a>
+          <a (click)="cerrarSesion()" class="cerrar-sesion">
+            🚪 Cerrar sesión
+          </a>
+        </div>
+      </div>
+
+      <!-- Carrito -->
+      <button class="btn-carrito" routerLink="/carrito/detalle">
+        <img src="iconos/carrito.png" alt="Carrito" class="icono-carrito">
+        <span class="contador-carrito" *ngIf="cantidadCarrito > 0">({{ cantidadCarrito }})</span>
+      </button>
+    </div>
+    </div>
+  </nav>
