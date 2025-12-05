@@ -15,5 +15,3 @@ export const ambiente = {
   userKey: 'user_data',
   tokenExpiration: 86400000
 };
-
- //http://laneria-mariano-backend-production.up.railway.app/api

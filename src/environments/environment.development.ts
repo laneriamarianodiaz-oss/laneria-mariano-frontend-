@@ -1,9 +1,9 @@
 export const environment = {
-  production: false,
+  production: true, // ← Cambiar a true
   
-  // Configuración de API
-  apiUrl: 'laneria-mariano-backend-production.up.railway.app/api/v1',
-  apiUrlBase: 'laneria-mariano-backend-production.up.railway.app',
+  // Configuración de API - ¡AGREGAR https://!
+  apiUrl: 'https://laneria-mariano-backend-production.up.railway.app/api/v1',
+  apiUrlBase: 'https://laneria-mariano-backend-production.up.railway.app',
   apiVersion: 'v1',
   
   // Información de la aplicación
@@ -23,6 +23,6 @@ export const environment = {
   tokenExpiration: 86400000,
   
   // Desarrollo
-  enableDebugMode: true,
-  logLevel: 'debug'
+  enableDebugMode: false, // ← Cambiar a false en producción
+  logLevel: 'error' // ← Cambiar a 'error' en producción
 };
