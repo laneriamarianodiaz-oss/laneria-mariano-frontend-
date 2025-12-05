@@ -2,8 +2,8 @@ export const ambiente = {
   production: false,
   
   // Configuración de API
-  apiUrl: 'laneria-mariano-backend-production.up.railway.app/api/v1',
-  apiUrlBase: 'laneria-mariano-backend-production.up.railway.app',
+  apiUrl: 'https://laneria-mariano-backend-production.up.railway.app/api/v1',
+  apiUrlBase: 'https://laneria-mariano-backend-production.up.railway.app',
   apiVersion: 'v1',
   
   // Información de la aplicación
