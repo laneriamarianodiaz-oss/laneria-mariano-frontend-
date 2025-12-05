@@ -1,7 +1,7 @@
 
 export const ambiente = {
   production: true,
-  apiUrl: 'http://laneria-mariano-backend-production.up.railway.app/api', // ✅ URL del backend en producción
+  apiUrl: 'https://laneria-mariano-backend-production.up.railway.app/api', // ✅ URL del backend en producción
   //apiUrlBase: 'https://tu-dominio.com'
   apiVersion: 'v1',
   appName: 'Lanería Mariano Díaz',

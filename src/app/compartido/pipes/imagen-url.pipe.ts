@@ -19,7 +19,7 @@ export class ImagenUrlPipe implements PipeTransform {
     }
 
     // Extraer URL base del apiUrl
-    const apiUrl = environment.apiUrl || 'http://127.0.0.1:8000/api/v1';
+    const apiUrl = environment.apiUrl || 'laneria-mariano-backend-production.up.railway.app/api/v1';
     const baseUrl = apiUrl.replace('/api/v1', '').replace('/api', '');
     
     // Si la URL ya tiene /productos/, usarla tal cual

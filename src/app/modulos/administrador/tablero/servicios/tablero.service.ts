@@ -19,7 +19,7 @@ interface EstadisticasTablero {
 export class TableroService {
   
   private http = inject(HttpClient);
-  private apiUrl = environment.apiUrl; // http://127.0.0.1:8000/api/v1
+  private apiUrl = environment.apiUrl; // laneria-mariano-backend-production.up.railway.app/api/v1
 
   obtenerEstadisticas(): Observable<EstadisticasTablero> {
     // ✅ CORRECTO: Agregamos la barra "/" al inicio

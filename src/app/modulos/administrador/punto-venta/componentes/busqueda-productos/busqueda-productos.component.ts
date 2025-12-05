@@ -20,7 +20,7 @@ interface RespuestaBusqueda {
 })
 export class BusquedaProductosComponent {
   private readonly http = inject(HttpClient);
-  private readonly API_URL = 'http://laneria-mariano-backend-production.up.railway.app/api/v1';
+  private readonly API_URL = 'https://laneria-mariano-backend-production.up.railway.app/api/v1';
 
   // Output
   readonly productoSeleccionado = output<Producto>();
