@@ -1,7 +1,6 @@
 export const environment = {
   production: true, // ← Cambiar a true
-  
-  // Configuración de API - ¡AGREGAR https://!
+ 
   apiUrl: 'https://laneria-mariano-backend-production.up.railway.app/api/v1',
   apiUrlBase: 'https://laneria-mariano-backend-production.up.railway.app',
   apiVersion: 'v1',
