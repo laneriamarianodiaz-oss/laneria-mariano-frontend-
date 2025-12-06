@@ -1,27 +1,32 @@
+// src/environments/environment.development.ts
+// Para DESARROLLO LOCAL (ng serve)
+
 export const environment = {
-  production: true, // ← Cambiar a true
- 
-  apiUrl: 'https://laneria-mariano-backend-production.up.railway.app/api/v1',
-  apiUrlBase: 'https://laneria-mariano-backend-production.up.railway.app',
+  production: false,
+  
+  // 🔧 CAMBIA ESTAS URLs según donde corra tu backend:
+  
+  // Opción A: Backend en Railway (usa esto si no tienes backend local)
+  //apiUrl: 'https://laneria-mariano-backend-production.up.railway.app/api/v1',
+  //apiUrlBase: 'https://laneria-mariano-backend-production.up.railway.app',
+  
+  // Opción B: Backend local (descomenta si corres Laravel local)
+  apiUrl: 'http://localhost:8000/api/v1',
+  apiUrlBase: 'http://localhost:8000',
+  
   apiVersion: 'v1',
-  
-  // Información de la aplicación
-  appName: 'Lanería Mariano Díaz',
-  appVersion: '1.0.0',
-  
-  // Timeouts
+  appName: 'Lanería Mariano Díaz - DEV',
+  appVersion: '1.0.0-dev',
   timeout: 30000,
   maxRetries: 3,
   
-  // Recursos
   imagenPlaceholder: '/assets/imagenes/placeholder.png',
   
-  // Autenticación
   tokenKey: 'lmd_auth_token',
   userKey: 'lmd_user_data',
   tokenExpiration: 86400000,
   
-  // Desarrollo
-  enableDebugMode: false, // ← Cambiar a false en producción
-  logLevel: 'error' // ← Cambiar a 'error' en producción
+  // Debug activado en desarrollo
+  enableDebugMode: true,
+  logLevel: 'debug' as 'debug' | 'info' | 'warn' | 'error'
 };
