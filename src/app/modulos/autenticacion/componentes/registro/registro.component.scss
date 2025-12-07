@@ -1,105 +1,112 @@
 .fondo-overlay {
   position: fixed;
-  top: 70px; // Deja espacio para el navbar
+  top: 70px;
   left: 0;
   width: 100%;
-  height: calc(100vh - 70px); // Altura menos el navbar
+  height: calc(100vh - 70px);
   background: rgba(216, 216, 216, 0.95);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 50; // Menor que el navbar
+  z-index: 50;
 }
+
 .modal-registro {
   background: white;
   border-radius: 20px;
-  padding: 30px 40px;
+  padding: 40px;
   width: 90%;
   max-width: 450px;
   position: relative;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
   max-height: 90vh;
   overflow-y: auto;
 }
 
+// Botón cerrar
 .btn-cerrar {
   position: absolute;
-  top: 15px;
+  top: 20px;
   right: 20px;
   background: none;
   border: none;
   font-size: 24px;
   cursor: pointer;
   color: #333;
-  padding: 0;
-  width: auto;
-  
+
   &:hover {
     color: #7d508d;
   }
 }
 
-.encabezado {
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  margin-bottom: 25px;
+// Logo redondo
+.logo-circular {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 20px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: #7d508d;
 
-  .logo-pequeño {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    overflow: hidden;
-    background: #7d508d;
-    flex-shrink: 0;
-    
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-  }
-
-  h2 {
-    color: #333;
-    font-size: 22px;
-    font-weight: 500;
-    margin: 0;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 }
 
+h2 {
+  text-align: center;
+  color: #333;
+  font-size: 20px;
+  margin-bottom: 30px;
+  font-weight: 500;
+}
+
+// Campos individuales
 .campo {
-  margin-bottom: 18px;
+  margin-bottom: 25px;
 
   label {
     display: block;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
     color: #333;
     font-size: 14px;
   }
 
   input {
     width: 100%;
-    padding: 8px 0;
+    padding: 10px 0;
     border: none;
     border-bottom: 1px solid #ddd;
     font-size: 14px;
-    box-sizing: border-box;
-
-    &::placeholder {
-      color: #ccc;
-    }
 
     &:focus {
       outline: none;
       border-bottom-color: #7d508d;
     }
   }
+
+  small.error {
+    color: #c0392b;
+    font-size: 12px;
+  }
 }
 
+// Filas de dos columnas
+.fila {
+  display: flex;
+  gap: 20px;
+
+  .campo {
+    flex: 1;
+  }
+}
+
+// Botón principal
 .btn-registrar {
   width: 100%;
-  padding: 12px;
+  padding: 14px;
   background: #7d508d;
   color: white;
   border: none;
@@ -107,7 +114,7 @@
   font-size: 16px;
   cursor: pointer;
   font-weight: 500;
-  margin: 20px 0 15px;
+  margin-bottom: 15px;
 
   &:hover:not(:disabled) {
     background: #6f4e8a;
@@ -119,10 +126,11 @@
   }
 }
 
+// Texto inferior
 .texto-login {
   text-align: center;
-  font-size: 14px;
   color: #333;
+  font-size: 14px;
 
   a {
     color: #7d508d;
@@ -132,4 +140,15 @@
       text-decoration: underline;
     }
   }
+}
+
+// Error general
+.alerta-error {
+  background: #ffdddd;
+  color: #a94442;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 14px;
+  margin-bottom: 20px;
+  text-align: center;
 }
