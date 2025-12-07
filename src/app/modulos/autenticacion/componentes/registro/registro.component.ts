@@ -28,7 +28,15 @@ export class RegistroComponent {
       telefono: ['', [Validators.required, Validators.minLength(9)]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       password_confirmation: ['', [Validators.required]]
+    }, {
+      validators: this.passwordsCoinciden
     });
+  }
+
+  passwordsCoinciden(group: FormGroup) {
+    const password = group.get('password')?.value;
+    const confirmacion = group.get('password_confirmation')?.value;
+    return password === confirmacion ? null : { passwordsMismatch: true };
   }
 
   registrarse(): void {
@@ -48,20 +56,26 @@ export class RegistroComponent {
         next: (respuesta) => {
           console.log('✅ Registro exitoso', respuesta);
           
-          // Guardar token automáticamente
-          if (respuesta.data && respuesta.data.token) {
-            localStorage.setItem('token', respuesta.data.token);
-            localStorage.setItem('usuario', JSON.stringify(respuesta.data.user));
-            
-            // Redirigir según el rol
-            if (respuesta.data.user.rol === 'administrador') {
-              this.router.navigate(['/administrador']);
-            } else {
-              this.router.navigate(['/catalogo']);
-            }
+          if (respuesta.success && respuesta.data && respuesta.data.token) {
+            // Pequeña pausa para asegurar que el token se guardó
+            setTimeout(() => {
+              // Redirigir según el rol
+              const rol = respuesta.data.user.rol;
+              
+              if (rol === 'administrador') {
+                this.router.navigate(['/administrador']).then(() => {
+                  window.location.reload(); // Refrescar para actualizar el estado
+                });
+              } else {
+                this.router.navigate(['/catalogo']).then(() => {
+                  window.location.reload(); // Refrescar para actualizar el estado
+                });
+              }
+            }, 300);
+          } else {
+            this.error = 'Error al procesar el registro';
+            this.cargando = false;
           }
-          
-          this.cargando = false;
         },
         error: (error) => {
           console.error('❌ Error al registrarse', error);
@@ -70,9 +84,8 @@ export class RegistroComponent {
           if (error.error?.message) {
             this.error = error.error.message;
           } else if (error.error?.errors) {
-            // Si hay errores de validación
             const errores = Object.values(error.error.errors).flat();
-            this.error = errores.join(', ');
+            this.error = (errores as string[]).join(', ');
           } else {
             this.error = 'Error al registrarse. Intenta de nuevo.';
           }
@@ -81,7 +94,12 @@ export class RegistroComponent {
         }
       });
     } else {
-      this.error = 'Por favor completa todos los campos correctamente';
+      // Mostrar qué campo está mal
+      if (this.formularioRegistro.errors?.['passwordsMismatch']) {
+        this.error = 'Las contraseñas no coinciden';
+      } else {
+        this.error = 'Por favor completa todos los campos correctamente';
+      }
     }
   }
 
