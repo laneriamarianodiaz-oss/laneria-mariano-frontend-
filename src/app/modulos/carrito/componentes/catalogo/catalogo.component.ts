@@ -23,7 +23,7 @@ export class CatalogoComponent implements OnInit, OnDestroy {
 
   slides = [
     { imagen: 'banner/banner2.jpg', titulo: '', subtitulo: '' },
-    { imagen: 'banner/banner2.png', titulo: '', subtitulo: '' },
+    { imagen: 'banner/banner3.jpg', titulo: '', subtitulo: '' },
     { imagen: 'banner/banner1.jpg', titulo: '', subtitulo: '' }
   ];
 
