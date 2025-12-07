@@ -49,8 +49,8 @@ export class RegistroComponent {
           console.log('Registro exitoso', respuesta);
           
           // ← NUEVO: Redirigir a verificación de email
-          this.router.navigate(['/autenticacion/verificar-email']);
-          this.cargando = false;
+          //this.router.navigate(['/autenticacion/verificar-email']); POR EL MOMENTO LO QUITAMOS
+          //this.cargando = false;
         },
         error: (error) => {
           console.error('Error al registrarse', error);
