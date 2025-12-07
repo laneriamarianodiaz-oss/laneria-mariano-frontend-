@@ -45,12 +45,12 @@ export class InicioSesionComponent {
           console.log('Respuesta login:', respuesta);
           
           // ← NUEVO: Detectar si requiere verificación
-          //if (respuesta.requires_verification) {
-          ///  console.log('Email no verificado, redirigiendo a verificación');
-          // this.router.navigate(['/autenticacion/verificar-email']);
-          // this.cargando = false;
-           // return;
-          //}
+          if (respuesta.requires_verification) {
+            console.log('Email no verificado, redirigiendo a verificación');
+            this.router.navigate(['/autenticacion/verificar-email']);
+            this.cargando = false;
+            return;
+          }
 
           // Login exitoso
           console.log('Login exitoso', respuesta);
