@@ -25,9 +25,9 @@ export class RegistroComponent {
       email: ['', [Validators.required, Validators.email]],
       nombre: ['', [Validators.required, Validators.minLength(2)]],
       apellido: ['', [Validators.required, Validators.minLength(2)]],
-      dni: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(8)]],
       telefono: ['', [Validators.required, Validators.minLength(9)]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      password_confirmation: ['', [Validators.required]]
     });
   }
 
@@ -40,20 +40,31 @@ export class RegistroComponent {
         name: `${this.formularioRegistro.value.nombre} ${this.formularioRegistro.value.apellido}`,
         email: this.formularioRegistro.value.email,
         password: this.formularioRegistro.value.password,
-        telefono: this.formularioRegistro.value.telefono,
-        rol: 'cliente'
+        password_confirmation: this.formularioRegistro.value.password,
+        telefono: this.formularioRegistro.value.telefono
       };
 
       this.authService.registrarse(datos).subscribe({
         next: (respuesta) => {
-          console.log('Registro exitoso', respuesta);
+          console.log('✅ Registro exitoso', respuesta);
           
-          // ← NUEVO: Redirigir a verificación de email
-          this.router.navigate(['/autenticacion/verificar-email']);
+          // Guardar token automáticamente
+          if (respuesta.data && respuesta.data.token) {
+            localStorage.setItem('token', respuesta.data.token);
+            localStorage.setItem('usuario', JSON.stringify(respuesta.data.user));
+            
+            // Redirigir según el rol
+            if (respuesta.data.user.rol === 'administrador') {
+              this.router.navigate(['/administrador']);
+            } else {
+              this.router.navigate(['/catalogo']);
+            }
+          }
+          
           this.cargando = false;
         },
         error: (error) => {
-          console.error('Error al registrarse', error);
+          console.error('❌ Error al registrarse', error);
           
           // Mostrar error específico
           if (error.error?.message) {
@@ -69,6 +80,8 @@ export class RegistroComponent {
           this.cargando = false;
         }
       });
+    } else {
+      this.error = 'Por favor completa todos los campos correctamente';
     }
   }
 

@@ -36,16 +36,9 @@
         </div>
       </div>
 
-      <div class="fila">
-        <div class="campo">
-          <label>DNI</label>
-          <input type="text" maxlength="8" formControlName="dni" placeholder="Ingresa un documento de identidad">
-        </div>
-
-        <div class="campo">
-          <label>Celular</label>
-          <input type="tel" formControlName="telefono" placeholder="+51 | Ingresa un celular">
-        </div>
+      <div class="campo">
+        <label>Celular</label>
+        <input type="tel" formControlName="telefono" placeholder="+51 | Ingresa un celular">
       </div>
 
       <div class="campo">
@@ -53,6 +46,14 @@
         <input type="password" formControlName="password" placeholder="Ingresa una contraseña">
         <small *ngIf="formularioRegistro.get('password')?.invalid && formularioRegistro.get('password')?.touched" class="error">
           Mínimo 6 caracteres
+        </small>
+      </div>
+
+      <div class="campo">
+        <label>Confirmar contraseña</label>
+        <input type="password" formControlName="password_confirmation" placeholder="Confirma tu contraseña">
+        <small *ngIf="formularioRegistro.get('password_confirmation')?.value !== formularioRegistro.get('password')?.value && formularioRegistro.get('password_confirmation')?.touched" class="error">
+          Las contraseñas no coinciden
         </small>
       </div>
 
