@@ -78,6 +78,14 @@
             <span class="label">🔢 Código operación:</span>
             <span class="valor">{{ pedido.codigo_operacion }}</span>
           </div>
+          
+          <!-- ⭐ NUEVO: Mostrar si ya tiene comprobante -->
+          <div class="info-item comprobante-subido" *ngIf="pedido.comprobante_pago">
+            <span class="label">✅ Comprobante:</span>
+            <button class="btn-ver-comprobante" (click)="verComprobante(pedido)">
+              📄 Ver Comprobante
+            </button>
+          </div>
         </div>
 
         <!-- Footer -->
@@ -90,6 +98,23 @@
             <button class="btn-detalle" (click)="verDetalle(pedido)">
               Ver Detalles
             </button>
+            
+            <!-- ⭐ NUEVO: Botón subir comprobante -->
+            <button 
+              *ngIf="puedeSubirComprobante(pedido) && subiendoComprobante !== (pedido.venta_id || pedido.id)"
+              class="btn-subir-comprobante" 
+              (click)="seleccionarComprobante(pedido)">
+              📤 Subir Comprobante
+            </button>
+
+            <!-- ⭐ NUEVO: Indicador de subida -->
+            <button 
+              *ngIf="subiendoComprobante === (pedido.venta_id || pedido.id)"
+              class="btn-subiendo" 
+              disabled>
+              <span class="spinner-small"></span> Subiendo...
+            </button>
+            
             <button 
               *ngIf="puedeCancelar(pedido.estado_venta || pedido.estado)"
               class="btn-cancelar" 

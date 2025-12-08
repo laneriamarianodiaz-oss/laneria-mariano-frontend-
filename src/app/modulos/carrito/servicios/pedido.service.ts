@@ -51,6 +51,29 @@ export class PedidoService {
   }
 
   /**
+   * ⭐ NUEVO: Subir comprobante de pago (CLIENTE)
+   * Usa FormData para enviar archivo al backend que sube a Cloudinary
+   */
+  subirComprobante(id: number, archivo: File, codigoOperacion?: string): Observable<any> {
+    const formData = new FormData();
+    formData.append('comprobante', archivo);
+    
+    if (codigoOperacion) {
+      formData.append('codigo_operacion', codigoOperacion);
+    }
+
+    console.log('📤 Subiendo comprobante al backend:', {
+      pedido_id: id,
+      archivo: archivo.name,
+      tamaño: archivo.size,
+      tipo: archivo.type,
+      codigo_operacion: codigoOperacion
+    });
+
+    return this.http.post<any>(`${this.urlApi}/pedidos/${id}/comprobante`, formData);
+  }
+
+  /**
    * Crear pedido desde carrito
    */
   crearPedido(pedido: any): Observable<any> {

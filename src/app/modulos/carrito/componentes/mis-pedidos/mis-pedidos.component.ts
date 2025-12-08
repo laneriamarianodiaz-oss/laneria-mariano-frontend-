@@ -25,6 +25,12 @@ export class MisPedidosComponent implements OnInit {
   pedidoSeleccionado: Pedido | null = null;
   mostrarDetalle: boolean = false;
 
+  // ⭐ NUEVO: Variables para subir comprobante
+  subiendoComprobante: number | null = null; // ID del pedido que está subiendo
+  archivoSeleccionado: File | null = null;
+  previewComprobante: string | null = null;
+  pedidoParaComprobante: Pedido | null = null;
+
   constructor(
     public pedidoService: PedidoService,
     private router: Router
@@ -62,7 +68,7 @@ export class MisPedidosComponent implements OnInit {
             metodo_pago: venta.metodo_pago,
             canal_venta: venta.canal_venta,
             codigo_operacion: venta.codigo_operacion,
-            comprobante_pago: venta.comprobante_pago,
+            comprobante_pago: venta.comprobante_pago, // ⭐ URL de Cloudinary
             observaciones: venta.observaciones,
             cliente: venta.cliente,
             cliente_id: venta.cliente_id,
@@ -222,6 +228,121 @@ export class MisPedidosComponent implements OnInit {
   puedeCancelar(estado: string | undefined): boolean {
     if (!estado) return false;
     return ['Pendiente', 'Confirmado', 'pendiente', 'confirmado'].includes(estado);
+  }
+
+  /**
+   * ⭐ NUEVO: Verificar si puede subir comprobante
+   */
+  puedeSubirComprobante(pedido: Pedido): boolean {
+    const estado = pedido.estado_venta || pedido.estado;
+    // Solo si está pendiente Y no tiene comprobante
+    return estado === 'Pendiente' && !pedido.comprobante_pago;
+  }
+
+  /**
+   * ⭐ NUEVO: Abrir selector de archivo
+   */
+  seleccionarComprobante(pedido: Pedido): void {
+    this.pedidoParaComprobante = pedido;
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = 'image/*,.pdf';
+    input.onchange = (event: any) => {
+      const file = event.target.files[0];
+      if (file) {
+        this.onArchivoSeleccionado(file);
+      }
+    };
+    input.click();
+  }
+
+  /**
+   * ⭐ NUEVO: Cuando se selecciona un archivo
+   */
+  onArchivoSeleccionado(file: File): void {
+    // Validar tipo
+    const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'application/pdf'];
+    if (!tiposPermitidos.includes(file.type)) {
+      alert('❌ Formato no permitido. Solo JPG, PNG, GIF, WEBP o PDF');
+      return;
+    }
+
+    // Validar tamaño (10MB como el backend)
+    if (file.size > 10 * 1024 * 1024) {
+      alert('❌ El archivo supera el tamaño máximo de 10MB');
+      return;
+    }
+
+    this.archivoSeleccionado = file;
+
+    // Crear preview si es imagen
+    if (file.type.startsWith('image/')) {
+      const reader = new FileReader();
+      reader.onload = (e: any) => {
+        this.previewComprobante = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    } else {
+      this.previewComprobante = 'pdf';
+    }
+
+    // Preguntar código de operación
+    const codigoOperacion = prompt('Código de operación (opcional):');
+    
+    // Confirmar subida
+    if (confirm(`¿Subir comprobante para el pedido ${this.pedidoParaComprobante?.numero_venta}?`)) {
+      this.subirComprobante(codigoOperacion || undefined);
+    } else {
+      this.archivoSeleccionado = null;
+      this.previewComprobante = null;
+    }
+  }
+
+  /**
+   * ⭐ NUEVO: Subir comprobante al backend
+   */
+  subirComprobante(codigoOperacion?: string): void {
+    if (!this.archivoSeleccionado || !this.pedidoParaComprobante) {
+      return;
+    }
+
+    const pedidoId = this.pedidoParaComprobante.venta_id || this.pedidoParaComprobante.id;
+    if (!pedidoId) {
+      alert('Error: No se pudo identificar el pedido');
+      return;
+    }
+
+    this.subiendoComprobante = pedidoId;
+
+    this.pedidoService.subirComprobante(pedidoId, this.archivoSeleccionado, codigoOperacion).subscribe({
+      next: (respuesta) => {
+        console.log('✅ Comprobante subido:', respuesta);
+        alert('✅ Comprobante subido correctamente. Tu pedido será revisado pronto.');
+        
+        // Limpiar
+        this.archivoSeleccionado = null;
+        this.previewComprobante = null;
+        this.pedidoParaComprobante = null;
+        this.subiendoComprobante = null;
+        
+        // Recargar pedidos
+        this.cargarPedidos();
+      },
+      error: (error) => {
+        console.error('❌ Error al subir comprobante:', error);
+        alert('❌ Error al subir comprobante: ' + (error.error?.message || error.message));
+        this.subiendoComprobante = null;
+      }
+    });
+  }
+
+  /**
+   * ⭐ NUEVO: Ver comprobante en nueva pestaña
+   */
+  verComprobante(pedido: Pedido): void {
+    if (pedido.comprobante_pago) {
+      window.open(pedido.comprobante_pago, '_blank');
+    }
   }
 
   /**
