@@ -308,4 +308,43 @@
       font-size: 1.3rem;
     }
   }
+
+  /* Responsive */
+@media (max-width: 768px) {
+  .timeline-item {
+    gap: 15px;
+
+    .timeline-icono {
+      width: 50px;
+      height: 50px;
+      font-size: 1.5rem;
+    }
+
+    .timeline-linea {
+      left: 25px;
+      top: 50px;
+    }
+
+    .timeline-contenido {
+      h4 {
+        font-size: 1rem;
+      }
+
+      p {
+        font-size: 0.9rem;
+      }
+    }
+  }
+
+  .progreso-header {
+    h3 {
+      font-size: 1.1rem;
+    }
+
+    .progreso-porcentaje {
+      font-size: 1.3rem;
+    }
+  }
+}
+
 }

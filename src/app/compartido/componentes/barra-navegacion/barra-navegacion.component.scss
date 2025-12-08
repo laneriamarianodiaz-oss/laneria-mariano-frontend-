@@ -125,7 +125,8 @@
     background: #f0f0f0;
   }
 }
-// Menú de usuario
+
+/* Menú de usuario */
 .usuario-menu {
   position: relative;
 
@@ -211,5 +212,105 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* ============================================================
+   📱 RESPONSIVE PARA TODOS LOS MÓVILES
+   ============================================================ */
+@media (max-width: 480px) {
+
+  .navbar {
+    padding: 10px 15px;
+  }
+
+  .navbar-contenido {
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  /* LOGO */
+  .logo-seccion {
+    min-width: unset;
+    gap: 8px;
+
+    .logo {
+      width: 35px;
+      height: 35px;
+    }
+
+    .nombre-tienda {
+      font-size: 18px;
+    }
+  }
+
+  /* BARRA DE BÚSQUEDA */
+  .busqueda {
+    order: 3;
+    width: 100%;
+    max-width: 100%;
+    border-radius: 20px;
+
+    input {
+      font-size: 13px;
+      padding: 7px 14px;
+    }
+
+    .btn-buscar img {
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  /* ACCIONES */
+  .acciones {
+    width: 100%;
+    order: 2;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .btn-iniciar-sesion,
+  .btn-usuario {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+
+  /* CARRITO */
+  .btn-carrito {
+    padding: 5px 10px;
+
+    .icono-carrito {
+      width: 18px;
+      height: 18px;
+    }
+
+    .contador-carrito {
+      font-size: 12px;
+    }
+  }
+
+  /* USUARIO MENU */
+  .usuario-menu .btn-usuario {
+    padding: 5px 10px;
+
+    .avatar-circulo {
+      width: 28px;
+      height: 28px;
+      font-size: 12px;
+    }
+
+    .nombre {
+      max-width: 80px;
+      font-size: 12px;
+    }
+
+    .flecha {
+      font-size: 9px;
+    }
+  }
+
+  .usuario-menu .menu-desplegable {
+    min-width: 160px;
   }
 }

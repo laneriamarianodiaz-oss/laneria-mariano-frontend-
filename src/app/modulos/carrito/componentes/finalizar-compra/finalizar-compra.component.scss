@@ -457,4 +457,35 @@
       }
     }
   }
+  /* ============================
+   RESPONSIVE (NO SE CAMBIÓ NADA DEL DISEÑO)
+   ============================ */
+@media (max-width: 768px) {
+  .finalizar-compra .layout-checkout {
+    grid-template-columns: 1fr;
+    padding: 1rem;
+  }
+
+  .finalizar-compra .banner-envio {
+    flex-direction: column;
+    text-align: center;
+    gap: 0.5rem;
+  }
+
+  .finalizar-compra .contenido-yape {
+    grid-template-columns: 1fr !important;
+  }
+
+  .finalizar-compra .columna-resumen .resumen-card {
+    position: static;
+    margin-top: 1rem;
+  }
+
+  .finalizar-compra .lista-productos .producto-item {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}
+
 }

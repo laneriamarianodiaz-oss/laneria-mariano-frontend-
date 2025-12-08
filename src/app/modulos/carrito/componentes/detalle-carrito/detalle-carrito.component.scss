@@ -21,7 +21,6 @@
   gap: 30px;
 }
 
-// COLUMNA IZQUIERDA
 .columna-productos {
   .carrito-header {
     display: flex;
@@ -79,7 +78,6 @@
     align-items: center;
     background: rgba(255, 255, 255, 0.6);
     padding: 15px;
-
 
     input[type="checkbox"] {
       width: 20px;
@@ -192,7 +190,6 @@
   }
 }
 
-// COLUMNA DERECHA
 .columna-resumen {
   .resumen {
     background: #F9ECFF;
@@ -256,5 +253,53 @@
         background: #9b6ba8;
       }
     }
+  }
+}
+
+@media (max-width: 1200px) {
+  .producto-item {
+    grid-template-columns: 40px 100px 2fr 1fr 120px 40px;
+  }
+}
+
+@media (max-width: 900px) {
+  .carrito-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .columna-resumen .resumen {
+    position: relative;
+    top: 0;
+  }
+
+  .producto-item {
+    grid-template-columns: 40px 90px 1fr;
+    grid-template-areas:
+      "check img info"
+      "check img precio"
+      "check img cantidad"
+      "check img delete";
+    gap: 10px;
+
+    .producto-precio { grid-area: precio; }
+    .producto-cantidad { grid-area: cantidad; }
+    .btn-eliminar { grid-area: delete; justify-self: flex-end; }
+  }
+}
+
+@media (max-width: 600px) {
+  .producto-item {
+    grid-template-columns: 60px 1fr;
+    grid-template-areas:
+      "check img"
+      "info info"
+      "precio precio"
+      "cantidad cantidad"
+      "delete delete";
+  }
+
+  img {
+    width: 80px !important;
+    height: 80px !important;
   }
 }

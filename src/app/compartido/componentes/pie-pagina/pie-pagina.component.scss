@@ -65,5 +65,39 @@
   padding: 20px;
   font-size: 14px;
   color: white;
-  margin: 0 -20px; // Sale del padding del footer
+  margin: 0 -20px;
+}
+
+// RESPONSIVE
+@media (max-width: 600px) {
+  .footer {
+    padding: 30px 15px 0;
+  }
+
+  .footer-contenido {
+    gap: 25px;
+  }
+
+  .columna h3 {
+    font-size: 16px;
+  }
+
+  .columna p {
+    font-size: 13px;
+  }
+
+  .redes-sociales .red-social img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .redes-sociales .red-social span {
+    font-size: 13px;
+  }
+
+  .copyright {
+    font-size: 12px;
+    padding: 15px;
+    margin: 0 -15px;
+  }
 }

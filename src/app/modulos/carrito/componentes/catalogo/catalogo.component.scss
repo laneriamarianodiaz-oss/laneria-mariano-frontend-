@@ -2,7 +2,9 @@
   padding-bottom: 40px;
 }
 
-// CARRUSEL
+/* ===============================
+          CARRUSEL
+================================*/
 .banner-carrusel {
   position: relative;
   width: 100%;
@@ -104,7 +106,9 @@
   }
 }
 
-// SECCIÓN
+/* ===============================
+          SECCIÓN
+================================*/
 .seccion {
   max-width: 1200px;
   margin: 0 auto 50px;
@@ -133,20 +137,22 @@
   }
 }
 
-// OFERTAS – Centrado en pantalla
+/* ===============================
+        OFERTAS DIAGONAL
+================================*/
 .ofertas-diagonal {
-  display: flex;               // Ahora usa flex en vez de grid
-  justify-content: center;     // Centra horizontalmente
-  align-items: center;         // Centra verticalmente (si aplica)
-  gap: 10px;                   // Espacio entre imágenes
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
   padding: 0 20px;
   max-width: 100%;
-  margin: 0 auto;              // Asegura centrado del contenedor
+  margin: 0 auto;
 }
 
 .oferta-item {
   position: relative;
-  width: 350px;                // Ajusta si quieres más grande/pequeño
+  width: 350px;
   height: 200px;
   overflow: hidden;
   cursor: pointer;
@@ -164,8 +170,9 @@
   }
 }
 
-
-// CATEGORÍAS
+/* ===============================
+        CATEGORÍAS
+================================*/
 .categorias-grid {
   display: flex;
   justify-content: space-around;
@@ -174,7 +181,7 @@
   background: #d8d8d8;
   padding: 50px 80px;
   width: 95%;
-  margin: 0 auto 50px auto;
+  margin: 0 auto 50px;
 
   .categoria {
     text-align: center;
@@ -207,16 +214,18 @@
   }
 }
 
-// PRODUCTOS - DISEÑO ORIGINAL
+/* ===============================
+      PRODUCTOS GRID
+================================*/
 .productos-grid {
   display: grid;
   grid-template-columns: repeat(4, 320px);
-  justify-content: center;   
+  justify-content: center;
   gap: 20px;
   margin-bottom: 30px;
 
   .producto-card {
-     width: 320px; 
+    width: 320px;
     background: white;
     overflow: visible;
     box-shadow: 0 0 0 8px #e0e0e0;
@@ -226,7 +235,7 @@
 
     img {
       width: 100%;
-      height: 250px; // ⭐ Altura fija para uniformidad
+      height: 250px;
       object-fit: cover;
       border-radius: 8px;
       margin-bottom: 10px;
@@ -237,7 +246,7 @@
       font-size: 15px;
       margin: 0 0 8px;
       font-weight: 600;
-      min-height: 20px; // ⭐ Altura mínima para uniformidad
+      min-height: 20px;
     }
 
     .descripcion {
@@ -264,7 +273,6 @@
 
     .btn-agregar {
       width: 100%;
-      margin: 0;
       padding: 8px;
       background: #a875c4;
       color: white;
@@ -286,6 +294,9 @@
   }
 }
 
+/* ===============================
+       BOTÓN VER MÁS
+================================*/
 .btn-ver-mas {
   display: block;
   margin: 0 auto;
@@ -305,12 +316,14 @@
   }
 }
 
-// SECCIÓN PRODUCTOS DESTACADOS - MÁS A LA DERECHA
+/* ===============================
+     PRODUCTOS DESTACADOS
+================================*/
 .productos-seccion {
   background: #d8d8d8;
-  padding: 50px 80px 50px 150px; // ⭐ Aumentado padding-left de 80px a 150px
+  padding: 50px 80px 50px 150px;
   width: 95%;
-  margin: 0 auto 50px auto;
+  margin: 0 auto 50px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 
   h2 {
@@ -322,12 +335,14 @@
   }
 }
 
-// SECCIÓN PRODUCTOS PERSONALIZADOS - MÁS A LA DERECHA
+/* ===============================
+   PRODUCTOS PERSONALIZADOS
+================================*/
 .productos-personalizados {
   background: #d8d8d8;
-  padding: 50px 80px 50px 150px; // ⭐ Aumentado padding-left de 80px a 150px
+  padding: 50px 80px 50px 150px;
   width: 95%;
-  margin: 0 auto 50px auto;
+  margin: 0 auto 50px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.1);
 
   .frase-especial {
@@ -346,10 +361,7 @@
   }
 
   .productos-grid .producto-card {
-    .descripcion {
-      display: none;
-    }
-
+    .descripcion,
     .stock {
       display: none;
     }
@@ -359,7 +371,6 @@
     width: 100%;
     background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
     color: white;
-    border: none;
     padding: 12px;
     border-radius: 25px;
     font-size: 1rem;
@@ -377,11 +388,86 @@
       transform: scale(0.98);
     }
   }
-  .productos-seccion,
-.productos-personalizados {
-  background: #d8d8d8;
-  padding: 50px 0;     /* ⭐ Centrado total */
-  width: 95%;
-  margin: 0 auto 50px;
 }
+
+/* ===============================
+   RESPONSIVO COMPLETO
+================================*/
+
+/* Tablets */
+@media (max-width: 1024px) {
+  .banner-carrusel {
+    height: 320px;
+  }
+
+  .productos-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .productos-grid .producto-card {
+    width: 100%;
+  }
+
+  .categorias-grid {
+    padding: 40px;
+    gap: 25px;
+  }
+}
+
+/* Celulares grandes */
+@media (max-width: 768px) {
+  .banner-carrusel {
+    height: 250px;
+  }
+
+  .categorias-grid {
+    flex-wrap: wrap;
+    justify-content: center;
+    padding: 30px;
+  }
+
+  .productos-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .oferta-item {
+    width: 300px;
+    height: 170px;
+  }
+
+  .productos-seccion,
+  .productos-personalizados {
+    padding: 40px;
+  }
+}
+
+/* Celulares pequeños */
+@media (max-width: 480px) {
+  .banner-carrusel {
+    height: 180px;
+  }
+
+  .categorias-grid {
+    padding: 20px;
+    gap: 15px;
+  }
+
+  .categorias-grid .categoria img {
+    width: 95px;
+    height: 95px;
+  }
+
+  .productos-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .oferta-item {
+    width: 260px;
+    height: 150px;
+  }
+
+  .productos-seccion,
+  .productos-personalizados {
+    padding: 20px 15px;
+  }
 }
