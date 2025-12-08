@@ -68,36 +68,93 @@
   margin: 0 -20px;
 }
 
-// RESPONSIVE
-@media (max-width: 600px) {
+/* ===== 📱 RESPONSIVE MÓVIL ===== */
+@media (max-width: 768px) {
   .footer {
     padding: 30px 15px 0;
   }
 
   .footer-contenido {
-    gap: 25px;
+    grid-template-columns: 1fr;
+    gap: 30px;
+    padding-bottom: 25px;
   }
 
-  .columna h3 {
-    font-size: 16px;
+  .columna {
+    h3 {
+      font-size: 17px;
+      margin-bottom: 12px;
+    }
+
+    p {
+      font-size: 13px;
+      line-height: 1.6;
+    }
   }
 
-  .columna p {
-    font-size: 13px;
-  }
+  .redes-sociales {
+    gap: 10px;
 
-  .redes-sociales .red-social img {
-    width: 20px;
-    height: 20px;
-  }
+    .red-social {
+      img {
+        width: 22px;
+        height: 22px;
+      }
 
-  .redes-sociales .red-social span {
-    font-size: 13px;
+      span {
+        font-size: 13px;
+      }
+    }
   }
 
   .copyright {
-    font-size: 12px;
-    padding: 15px;
+    font-size: 13px;
+    padding: 18px;
     margin: 0 -15px;
+  }
+}
+
+@media (max-width: 480px) {
+  .footer {
+    padding: 25px 12px 0;
+  }
+
+  .footer-contenido {
+    gap: 25px;
+    padding-bottom: 20px;
+  }
+
+  .columna {
+    h3 {
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 12px;
+      line-height: 1.5;
+      margin-bottom: 6px;
+    }
+  }
+
+  .redes-sociales {
+    gap: 8px;
+
+    .red-social {
+      img {
+        width: 20px;
+        height: 20px;
+      }
+
+      span {
+        font-size: 12px;
+      }
+    }
+  }
+
+  .copyright {
+    font-size: 11px;
+    padding: 15px 10px;
+    margin: 0 -12px;
   }
 }

@@ -23,7 +23,6 @@
   overflow-y: auto;
 }
 
-// Botón cerrar
 .btn-cerrar {
   position: absolute;
   top: 20px;
@@ -39,7 +38,6 @@
   }
 }
 
-// Logo redondo
 .logo-circular {
   width: 120px;
   height: 120px;
@@ -63,7 +61,6 @@ h2 {
   font-weight: 500;
 }
 
-// Campos individuales
 .campo {
   margin-bottom: 25px;
 
@@ -93,7 +90,6 @@ h2 {
   }
 }
 
-// Filas de dos columnas
 .fila {
   display: flex;
   gap: 20px;
@@ -103,7 +99,6 @@ h2 {
   }
 }
 
-// Botón principal
 .btn-registrar {
   width: 100%;
   padding: 14px;
@@ -126,7 +121,6 @@ h2 {
   }
 }
 
-// Texto inferior
 .texto-login {
   text-align: center;
   color: #333;
@@ -142,7 +136,6 @@ h2 {
   }
 }
 
-// Error general
 .alerta-error {
   background: #ffdddd;
   color: #a94442;
@@ -151,4 +144,136 @@ h2 {
   font-size: 14px;
   margin-bottom: 20px;
   text-align: center;
+}
+
+/* ===== 📱 RESPONSIVE MÓVIL ===== */
+@media (max-width: 768px) {
+  .fondo-overlay {
+    top: 60px;
+    height: calc(100vh - 60px);
+  }
+
+  .modal-registro {
+    padding: 35px 30px;
+    max-width: 400px;
+    max-height: 85vh;
+  }
+
+  .logo-circular {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 15px;
+  }
+
+  h2 {
+    font-size: 18px;
+    margin-bottom: 25px;
+  }
+
+  .campo {
+    margin-bottom: 20px;
+
+    label {
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    input {
+      font-size: 13px;
+      padding: 9px 0;
+    }
+
+    small.error {
+      font-size: 11px;
+    }
+  }
+
+  .fila {
+    gap: 15px;
+  }
+
+  .btn-registrar {
+    padding: 12px;
+    font-size: 15px;
+  }
+
+  .texto-login {
+    font-size: 13px;
+  }
+
+  .alerta-error {
+    font-size: 13px;
+    padding: 9px;
+  }
+}
+
+@media (max-width: 480px) {
+  .fondo-overlay {
+    top: 50px;
+    height: calc(100vh - 50px);
+    padding: 10px;
+  }
+
+  .modal-registro {
+    padding: 25px 18px;
+    width: 95%;
+    border-radius: 15px;
+    max-height: 90vh;
+  }
+
+  .btn-cerrar {
+    top: 15px;
+    right: 15px;
+    font-size: 20px;
+  }
+
+  .logo-circular {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 12px;
+  }
+
+  h2 {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+
+  .campo {
+    margin-bottom: 16px;
+
+    label {
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+
+    input {
+      font-size: 12px;
+      padding: 8px 0;
+    }
+
+    small.error {
+      font-size: 10px;
+    }
+  }
+
+  .fila {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .btn-registrar {
+    padding: 11px;
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+
+  .texto-login {
+    font-size: 12px;
+  }
+
+  .alerta-error {
+    font-size: 12px;
+    padding: 8px;
+    margin-bottom: 15px;
+  }
 }

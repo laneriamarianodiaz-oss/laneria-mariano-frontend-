@@ -1,15 +1,16 @@
 .fondo-overlay {
   position: fixed;
-  top: 70px; // Deja espacio para el navbar
+  top: 70px;
   left: 0;
   width: 100%;
-  height: calc(100vh - 70px); // Altura menos el navbar
+  height: calc(100vh - 70px);
   background: rgba(216, 216, 216, 0.95);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 50; // Menor que el navbar
+  z-index: 50;
 }
+
 .modal-login {
   background: white;
   border-radius: 20px;
@@ -135,5 +136,112 @@ h2 {
     &:hover {
       text-decoration: underline;
     }
+  }
+}
+
+/* ===== 📱 RESPONSIVE MÓVIL ===== */
+@media (max-width: 768px) {
+  .fondo-overlay {
+    top: 60px;
+    height: calc(100vh - 60px);
+  }
+
+  .modal-login {
+    padding: 35px 30px;
+    max-width: 400px;
+  }
+
+  .logo-circular {
+    width: 100px;
+    height: 100px;
+    margin-bottom: 15px;
+  }
+
+  h2 {
+    font-size: 18px;
+    margin-bottom: 25px;
+  }
+
+  .campo {
+    margin-bottom: 20px;
+
+    label {
+      font-size: 13px;
+      margin-bottom: 6px;
+    }
+
+    input {
+      font-size: 13px;
+      padding: 9px 0;
+    }
+  }
+
+  .btn-ingresar {
+    padding: 12px;
+    font-size: 15px;
+  }
+
+  .texto-registro {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .fondo-overlay {
+    top: 50px;
+    height: calc(100vh - 50px);
+    padding: 15px;
+  }
+
+  .modal-login {
+    padding: 30px 20px;
+    width: 95%;
+    border-radius: 15px;
+  }
+
+  .btn-cerrar {
+    top: 15px;
+    right: 15px;
+    font-size: 20px;
+  }
+
+  .logo-circular {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 12px;
+  }
+
+  h2 {
+    font-size: 16px;
+    margin-bottom: 20px;
+  }
+
+  .campo {
+    margin-bottom: 18px;
+
+    label {
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+
+    input {
+      font-size: 12px;
+      padding: 8px 0;
+    }
+  }
+
+  .texto-recuperar {
+    font-size: 11px;
+    margin: 12px 0 20px;
+  }
+
+  .btn-ingresar {
+    padding: 11px;
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+
+  .texto-registro {
+    font-size: 12px;
   }
 }

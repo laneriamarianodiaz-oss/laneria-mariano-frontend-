@@ -126,7 +126,6 @@
   }
 }
 
-/* Menú de usuario */
 .usuario-menu {
   position: relative;
 
@@ -215,11 +214,8 @@
   }
 }
 
-/* ============================================================
-   📱 RESPONSIVE PARA TODOS LOS MÓVILES
-   ============================================================ */
-@media (max-width: 480px) {
-
+/* ===== 📱 RESPONSIVE MÓVIL ===== */
+@media (max-width: 768px) {
   .navbar {
     padding: 10px 15px;
   }
@@ -229,14 +225,13 @@
     gap: 10px;
   }
 
-  /* LOGO */
   .logo-seccion {
-    min-width: unset;
+    min-width: auto;
     gap: 8px;
 
     .logo {
-      width: 35px;
-      height: 35px;
+      width: 38px;
+      height: 38px;
     }
 
     .nombre-tienda {
@@ -244,16 +239,57 @@
     }
   }
 
-  /* BARRA DE BÚSQUEDA */
   .busqueda {
     order: 3;
     width: 100%;
     max-width: 100%;
-    border-radius: 20px;
 
     input {
       font-size: 13px;
-      padding: 7px 14px;
+      padding: 7px 15px;
+    }
+  }
+
+  .acciones {
+    gap: 8px;
+  }
+
+  .btn-iniciar-sesion,
+  .btn-usuario {
+    padding: 6px 14px;
+    font-size: 12px;
+  }
+
+  .btn-carrito {
+    padding: 5px 10px;
+
+    .icono-carrito {
+      width: 18px;
+      height: 18px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar {
+    padding: 8px 12px;
+  }
+
+  .logo-seccion {
+    .logo {
+      width: 32px;
+      height: 32px;
+    }
+
+    .nombre-tienda {
+      font-size: 16px;
+    }
+  }
+
+  .busqueda {
+    input {
+      font-size: 12px;
+      padding: 6px 12px;
     }
 
     .btn-buscar img {
@@ -262,37 +298,13 @@
     }
   }
 
-  /* ACCIONES */
-  .acciones {
-    width: 100%;
-    order: 2;
-    justify-content: space-between;
-    gap: 8px;
-  }
-
-  .btn-iniciar-sesion,
-  .btn-usuario {
-    padding: 6px 12px;
-    font-size: 12px;
-  }
-
-  /* CARRITO */
-  .btn-carrito {
+  .btn-iniciar-sesion {
     padding: 5px 10px;
-
-    .icono-carrito {
-      width: 18px;
-      height: 18px;
-    }
-
-    .contador-carrito {
-      font-size: 12px;
-    }
+    font-size: 11px;
   }
 
-  /* USUARIO MENU */
   .usuario-menu .btn-usuario {
-    padding: 5px 10px;
+    padding: 4px 8px;
 
     .avatar-circulo {
       width: 28px;
@@ -301,16 +313,16 @@
     }
 
     .nombre {
-      max-width: 80px;
-      font-size: 12px;
-    }
-
-    .flecha {
-      font-size: 9px;
+      display: none;
     }
   }
 
   .usuario-menu .menu-desplegable {
-    min-width: 160px;
+    min-width: 180px;
+    
+    a {
+      font-size: 13px;
+      padding: 10px 14px;
+    }
   }
 }
