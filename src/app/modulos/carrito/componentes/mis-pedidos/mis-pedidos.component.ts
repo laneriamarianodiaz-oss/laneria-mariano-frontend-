@@ -25,10 +25,14 @@ export class MisPedidosComponent implements OnInit {
   pedidoSeleccionado: Pedido | null = null;
   mostrarDetalle: boolean = false;
 
-  // ⭐ NUEVO: Variables para subir comprobante
-  subiendoComprobante: number | null = null; // ID del pedido que está subiendo
+  // ⭐ CLOUDINARY DIRECTO (igual que productos)
+  private readonly CLOUDINARY_CLOUD_NAME = 'dmrzrxjqc';
+  private readonly CLOUDINARY_UPLOAD_PRESET = 'laneria-comprobantes';
+  private readonly CLOUDINARY_FOLDER = 'laneria-mariano/comprobantes';
+
+  // Variables para subir comprobante
+  subiendoComprobante: number | null = null;
   archivoSeleccionado: File | null = null;
-  previewComprobante: string | null = null;
   pedidoParaComprobante: Pedido | null = null;
 
   constructor(
@@ -49,7 +53,6 @@ export class MisPedidosComponent implements OnInit {
         console.log('✅ Pedidos recibidos:', respuesta);
         
         if (respuesta.success && respuesta.data) {
-          // Adaptar datos del backend al modelo frontend
           this.pedidos = respuesta.data.map((venta: any) => ({
             id: venta.venta_id,
             venta_id: venta.venta_id,
@@ -68,14 +71,12 @@ export class MisPedidosComponent implements OnInit {
             metodo_pago: venta.metodo_pago,
             canal_venta: venta.canal_venta,
             codigo_operacion: venta.codigo_operacion,
-            comprobante_pago: venta.comprobante_pago, // ⭐ URL de Cloudinary
+            comprobante_pago: venta.comprobante_pago,
             observaciones: venta.observaciones,
             cliente: venta.cliente,
             cliente_id: venta.cliente_id,
             
-            // Mapear productos para la LISTA (items)
             items: (venta.productos || venta.detalles || []).map((item: any) => {
-              // Si viene del formato nuevo (productos)
               if (item.nombre) {
                 return {
                   producto_id: item.producto_id,
@@ -89,7 +90,6 @@ export class MisPedidosComponent implements OnInit {
                   subtotal: item.subtotal
                 };
               }
-              // Si viene del formato antiguo (detalles)
               return {
                 detalle_venta_id: item.detalle_venta_id,
                 producto_id: item.producto_id,
@@ -100,7 +100,6 @@ export class MisPedidosComponent implements OnInit {
               };
             }),
             
-            // Mapear productos para el MODAL (productos)
             productos: (venta.productos || venta.detalles || []).map((item: any) => ({
               producto_id: item.producto_id,
               nombre_producto: item.nombre || item.producto?.nombre_producto || 'Producto',
@@ -122,9 +121,6 @@ export class MisPedidosComponent implements OnInit {
     });
   }
 
-  /**
-   * Mapear estado del backend a formato frontend
-   */
   mapearEstado(estadoBackend: string): any {
     const mapeo: { [key: string]: string } = {
       'Pendiente': 'pendiente',
@@ -139,12 +135,8 @@ export class MisPedidosComponent implements OnInit {
     return mapeo[estadoBackend] || estadoBackend.toLowerCase();
   }
 
-  /**
-   * Obtener texto del estado para mostrar
-   */
   obtenerEstadoTexto(estado: string): string {
     const estados: { [key: string]: string } = {
-      // Estados del backend
       'Pendiente': '⏳ Pendiente',
       'Confirmado': '✓ Confirmado',
       'En Proceso': '🔄 En Proceso',
@@ -152,7 +144,6 @@ export class MisPedidosComponent implements OnInit {
       'Entregado': '📦 Entregado',
       'Completado': '✅ Completado',
       'Cancelado': '❌ Cancelado',
-      // Estados mapeados
       'pendiente': '⏳ Pendiente',
       'confirmado': '✓ Confirmado',
       'enviado': '🚚 Enviado',
@@ -162,31 +153,21 @@ export class MisPedidosComponent implements OnInit {
     return estados[estado] || estado;
   }
 
-  /**
-   * Ver detalle del pedido en MODAL
-   */
   verDetalle(pedido: Pedido): void {
     console.log('👁️ Abriendo modal de detalle:', pedido);
     this.pedidoSeleccionado = pedido;
     this.mostrarDetalle = true;
   }
 
-  /**
-   * Cerrar modal
-   */
   cerrarDetalle(): void {
     console.log('❌ Cerrando modal');
     this.mostrarDetalle = false;
     this.pedidoSeleccionado = null;
   }
 
-  /**
-   * Cancelar pedido
-   */
   cancelarPedido(pedido: Pedido, event: Event): void {
     event.stopPropagation();
 
-    // Verificar si puede cancelar
     const estado = pedido.estado_venta || pedido.estado;
     if (!this.puedeCancelar(estado)) {
       alert('Este pedido no puede ser cancelado en su estado actual');
@@ -196,7 +177,7 @@ export class MisPedidosComponent implements OnInit {
     const motivo = prompt('¿Por qué deseas cancelar este pedido?');
     
     if (motivo === null) {
-      return; // Usuario canceló
+      return;
     }
 
     const numeroVenta = pedido.numero_venta || `#${pedido.id || pedido.venta_id}`;
@@ -211,8 +192,8 @@ export class MisPedidosComponent implements OnInit {
         next: (respuesta) => {
           console.log('✅ Pedido cancelado:', respuesta);
           alert('Pedido cancelado exitosamente');
-          this.cerrarDetalle(); // Cerrar modal si está abierto
-          this.cargarPedidos(); // Recargar lista
+          this.cerrarDetalle();
+          this.cargarPedidos();
         },
         error: (error) => {
           console.error('❌ Error al cancelar:', error);
@@ -222,9 +203,6 @@ export class MisPedidosComponent implements OnInit {
     }
   }
 
-  /**
-   * Verificar si puede cancelar
-   */
   puedeCancelar(estado: string | undefined): boolean {
     if (!estado) return false;
     return ['Pendiente', 'Confirmado', 'pendiente', 'confirmado'].includes(estado);
@@ -235,7 +213,6 @@ export class MisPedidosComponent implements OnInit {
    */
   puedeSubirComprobante(pedido: Pedido): boolean {
     const estado = pedido.estado_venta || pedido.estado;
-    // Solo si está pendiente Y no tiene comprobante
     return estado === 'Pendiente' && !pedido.comprobante_pago;
   }
 
@@ -267,24 +244,13 @@ export class MisPedidosComponent implements OnInit {
       return;
     }
 
-    // Validar tamaño (10MB como el backend)
+    // Validar tamaño (10MB)
     if (file.size > 10 * 1024 * 1024) {
       alert('❌ El archivo supera el tamaño máximo de 10MB');
       return;
     }
 
     this.archivoSeleccionado = file;
-
-    // Crear preview si es imagen
-    if (file.type.startsWith('image/')) {
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        this.previewComprobante = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    } else {
-      this.previewComprobante = 'pdf';
-    }
 
     // Preguntar código de operación
     const codigoOperacion = prompt('Código de operación (opcional):');
@@ -294,14 +260,46 @@ export class MisPedidosComponent implements OnInit {
       this.subirComprobante(codigoOperacion || undefined);
     } else {
       this.archivoSeleccionado = null;
-      this.previewComprobante = null;
     }
   }
 
   /**
-   * ⭐ NUEVO: Subir comprobante al backend
+   * ⭐ SUBIR DIRECTO A CLOUDINARY (IGUAL QUE PRODUCTOS)
    */
-  subirComprobante(codigoOperacion?: string): void {
+  private async subirImagenCloudinary(file: File): Promise<string> {
+    console.log('📸 Subiendo comprobante a Cloudinary...', file.name);
+    
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', this.CLOUDINARY_UPLOAD_PRESET);
+    formData.append('folder', this.CLOUDINARY_FOLDER);
+
+    const url = `https://api.cloudinary.com/v1_1/${this.CLOUDINARY_CLOUD_NAME}/image/upload`;
+    
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        body: formData
+      });
+
+      if (!response.ok) {
+        throw new Error('Error al subir a Cloudinary');
+      }
+
+      const data = await response.json();
+      console.log('✅ Comprobante subido a Cloudinary:', data.secure_url);
+      return data.secure_url;
+      
+    } catch (error) {
+      console.error('❌ Error al subir a Cloudinary:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * ⭐ SUBIR COMPROBANTE (PROCESO COMPLETO)
+   */
+  async subirComprobante(codigoOperacion?: string): Promise<void> {
     if (!this.archivoSeleccionado || !this.pedidoParaComprobante) {
       return;
     }
@@ -314,26 +312,44 @@ export class MisPedidosComponent implements OnInit {
 
     this.subiendoComprobante = pedidoId;
 
-    this.pedidoService.subirComprobante(pedidoId, this.archivoSeleccionado, codigoOperacion).subscribe({
-      next: (respuesta) => {
-        console.log('✅ Comprobante subido:', respuesta);
-        alert('✅ Comprobante subido correctamente. Tu pedido será revisado pronto.');
-        
-        // Limpiar
-        this.archivoSeleccionado = null;
-        this.previewComprobante = null;
-        this.pedidoParaComprobante = null;
-        this.subiendoComprobante = null;
-        
-        // Recargar pedidos
-        this.cargarPedidos();
-      },
-      error: (error) => {
-        console.error('❌ Error al subir comprobante:', error);
-        alert('❌ Error al subir comprobante: ' + (error.error?.message || error.message));
-        this.subiendoComprobante = null;
-      }
-    });
+    try {
+      // 1️⃣ SUBIR A CLOUDINARY
+      console.log('📸 Subiendo a Cloudinary...');
+      const imagenUrl = await this.subirImagenCloudinary(this.archivoSeleccionado);
+      console.log('✅ URL obtenida:', imagenUrl);
+
+      // 2️⃣ ENVIAR URL AL BACKEND (JSON, no FormData)
+      console.log('📤 Enviando URL al backend...');
+      const datos = {
+        comprobante_pago: imagenUrl,
+        codigo_operacion: codigoOperacion || null
+      };
+
+      this.pedidoService.guardarComprobanteURL(pedidoId, datos).subscribe({
+        next: (respuesta) => {
+          console.log('✅ Comprobante guardado en BD:', respuesta);
+          alert('✅ Comprobante subido correctamente. Tu pedido será revisado pronto.');
+          
+          // Limpiar
+          this.archivoSeleccionado = null;
+          this.pedidoParaComprobante = null;
+          this.subiendoComprobante = null;
+          
+          // Recargar pedidos
+          this.cargarPedidos();
+        },
+        error: (error) => {
+          console.error('❌ Error al guardar en BD:', error);
+          alert('❌ Error al guardar comprobante: ' + (error.error?.message || error.message));
+          this.subiendoComprobante = null;
+        }
+      });
+
+    } catch (error: any) {
+      console.error('❌ Error en proceso:', error);
+      alert('❌ Error al subir comprobante: ' + error.message);
+      this.subiendoComprobante = null;
+    }
   }
 
   /**
@@ -345,16 +361,10 @@ export class MisPedidosComponent implements OnInit {
     }
   }
 
-  /**
-   * Obtener icono del estado
-   */
   obtenerIconoEstado(estado: string): string {
     return this.pedidoService.obtenerIconoEstado(estado);
   }
 
-  /**
-   * Obtener color del estado
-   */
   obtenerColorEstado(estado: string): string {
     return this.pedidoService.obtenerColorEstado(estado);
   }

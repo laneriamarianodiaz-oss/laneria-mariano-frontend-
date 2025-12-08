@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { entorno } from '../../../../entornos/entorno';
 
@@ -51,26 +51,20 @@ export class PedidoService {
   }
 
   /**
-   * ⭐ NUEVO: Subir comprobante de pago (CLIENTE)
-   * Usa FormData para enviar archivo al backend que sube a Cloudinary
+   * ⭐ NUEVO: Guardar URL del comprobante (RECIBE JSON CON URL DE CLOUDINARY)
    */
-  subirComprobante(id: number, archivo: File, codigoOperacion?: string): Observable<any> {
-    const formData = new FormData();
-    formData.append('comprobante', archivo);
-    
-    if (codigoOperacion) {
-      formData.append('codigo_operacion', codigoOperacion);
-    }
-
-    console.log('📤 Subiendo comprobante al backend:', {
-      pedido_id: id,
-      archivo: archivo.name,
-      tamaño: archivo.size,
-      tipo: archivo.type,
-      codigo_operacion: codigoOperacion
+  guardarComprobanteURL(id: number, datos: { comprobante_pago: string, codigo_operacion: string | null }): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
     });
 
-    return this.http.post<any>(`${this.urlApi}/pedidos/${id}/comprobante`, formData);
+    console.log('📤 Guardando comprobante (URL) en backend:', {
+      pedido_id: id,
+      comprobante_url: datos.comprobante_pago,
+      codigo_operacion: datos.codigo_operacion
+    });
+
+    return this.http.post<any>(`${this.urlApi}/ventas/${id}/comprobante`, datos, { headers });
   }
 
   /**
