@@ -1,70 +1,74 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { entorno } from '../../../entornos/entorno';
-
-export interface DetalleVenta {
-  producto_id: number;
-  cantidad: number;
-}
-
-export interface CrearVentaRequest {
-  cliente_id: number;
-  metodo_pago: 'Efectivo' | 'Transferencia' | 'Yape' | 'Plin';
-  observaciones?: string;
-  detalles: DetalleVenta[];
-}
-
-export interface Venta {
-  venta_id: number;
-  cliente_id: number;
-  fecha_venta: string;
-  estado_venta: string;
-  total_venta: number;
-  metodo_pago: string;
-  observaciones?: string;
-  detalles?: any[];
-}
 
 @Injectable({
   providedIn: 'root'
 })
 export class VentaService {
-  private urlApi = entorno.urlApi;
-
-  constructor(private http: HttpClient) {}
-
-  /**
-   * Crear venta desde el carrito
-   */
-  crearVenta(datos: CrearVentaRequest): Observable<any> {
-    return this.http.post<any>(`${this.urlApi}/ventas`, datos);
-  }
-
-  /**
-   * Crear venta desde el carrito del usuario autenticado
-   */
-crearVentaDesdeCarrito(metodo_pago: string, observaciones?: string, datosExtra?: any): Observable<any> {
-  const datos = {
-    metodo_pago,
-    observaciones,
-    ...datosExtra
-  };
   
-  return this.http.post<any>(`${this.urlApi}/carrito/checkout`, datos);
-}
+  private urlApi = `${entorno.urlApi}`;
+
+  constructor(private http: HttpClient) { }
 
   /**
-   * Obtener mis pedidos (ventas del cliente)
+   * ⭐ CREAR VENTA DESDE CARRITO CON COMPROBANTE
    */
-  obtenerMisPedidos(): Observable<any> {
-    return this.http.get<any>(`${this.urlApi}/ventas/mis-pedidos`);
+  crearVentaDesdeCarrito(
+    metodoPago: string, 
+    observaciones?: string, 
+    datosAdicionales?: any
+  ): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    // ⭐ COMBINAR TODOS LOS DATOS
+    const body = {
+      metodo_pago: metodoPago,
+      observaciones: observaciones || null,
+      ...datosAdicionales  // ⭐ Incluye comprobante_pago y codigo_operacion
+    };
+
+    console.log('📤 Enviando datos al checkout:', body);
+
+    return this.http.post<any>(
+      `${this.urlApi}/carrito/checkout`, 
+      body, 
+      { headers }
+    );
   }
 
   /**
-   * Obtener detalle de una venta
+   * Crear venta manual (ADMIN)
    */
-  obtenerVenta(ventaId: number): Observable<any> {
-    return this.http.get<any>(`${this.urlApi}/ventas/${ventaId}`);
+  crearVenta(datos: any): Observable<any> {
+    return this.http.post<any>(`${this.urlApi}/ventas/crear`, datos);
+  }
+
+  /**
+   * Listar ventas
+   */
+  listarVentas(filtros?: any): Observable<any> {
+    return this.http.get<any>(`${this.urlApi}/ventas`, { params: filtros });
+  }
+
+  /**
+   * Obtener venta por ID
+   */
+  obtenerVenta(id: number): Observable<any> {
+    return this.http.get<any>(`${this.urlApi}/ventas/${id}`);
+  }
+
+  /**
+   * Actualizar estado de venta
+   */
+  actualizarEstado(id: number, estado: string, observaciones?: string): Observable<any> {
+    const body: any = { estado };
+    if (observaciones) {
+      body.observaciones = observaciones;
+    }
+    return this.http.put<any>(`${this.urlApi}/ventas/${id}/estado`, body);
   }
 }
