@@ -65,6 +65,8 @@ cargarPedido(): void {
         console.log('  - cliente_nombre:', pedidoRaw.cliente_nombre);
         console.log('  - items:', pedidoRaw.items);
         console.log('  - items.length:', pedidoRaw.items?.length || 0);
+        console.log('  - comprobante_pago:', pedidoRaw.comprobante_pago);
+        console.log('  - codigo_operacion:', pedidoRaw.codigo_operacion);
         
         if (pedidoRaw.items && pedidoRaw.items.length > 0) {
           console.log('📦 PRODUCTOS ENCONTRADOS:');
@@ -115,6 +117,10 @@ cargarPedido(): void {
           telefono_contacto: pedidoRaw.telefono_contacto,
           observaciones: pedidoRaw.observaciones,
           
+          // ⭐ COMPROBANTE DE PAGO (AGREGADO)
+          comprobante_pago: pedidoRaw.comprobante_pago,
+          codigo_operacion: pedidoRaw.codigo_operacion,
+          
           // Productos
           productos: (pedidoRaw.items || []).map((item: any) => ({
             producto_id: item.producto_id,
@@ -132,6 +138,8 @@ cargarPedido(): void {
         console.log('  Email:', this.pedido.cliente.email);
         console.log('  Productos:', this.pedido.productos);
         console.log('  Cantidad:', this.pedido.productos.length);
+        console.log('  Comprobante:', this.pedido.comprobante_pago);
+        console.log('  Código operación:', this.pedido.codigo_operacion);
         console.log('═══════════════════════════════════════');
         
       } else {
