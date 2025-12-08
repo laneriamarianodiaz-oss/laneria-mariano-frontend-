@@ -122,7 +122,7 @@
 
   }
 
-  <!-- ⭐ MODAL DETALLE CON COMPROBANTE -->
+  <!-- MODAL DETALLE -->
   @if (mostrarModal && pedidoSeleccionado) {
     <div class="modal-overlay" (click)="cerrarModal()">
       <div class="modal-contenido" (click)="$event.stopPropagation()">
@@ -132,60 +132,6 @@
         </div>
 
         <div class="modal-body">
-
-          <!-- ⭐ COMPROBANTE DE PAGO (AGREGAR AQUÍ) -->
-          @if (pedidoSeleccionado.comprobante_pago || pedidoSeleccionado.codigo_operacion) {
-            <div class="detalle-seccion comprobante-seccion">
-              <h3>📸 Comprobante de Pago</h3>
-              
-              <!-- Imagen del comprobante -->
-              @if (pedidoSeleccionado.comprobante_pago) {
-                <div class="comprobante-imagen-container">
-                  <img 
-                    [src]="pedidoSeleccionado.comprobante_pago"
-                    alt="Comprobante de pago"
-                    class="comprobante-img"
-                    (click)="abrirImagenCompleta(pedidoSeleccionado.comprobante_pago)"
-                    (error)="onImagenError($event)">
-                  <p class="hint-zoom">👆 Haz clic para ver en tamaño completo</p>
-                </div>
-              } @else {
-                <div class="sin-comprobante">
-                  <p>⚠️ No se ha subido comprobante de pago</p>
-                </div>
-              }
-              
-              <!-- Código de operación -->
-              @if (pedidoSeleccionado.codigo_operacion) {
-                <div class="codigo-operacion-box">
-                  <div class="codigo-header">
-                    <span class="label">🔢 Código de operación:</span>
-                  </div>
-                  <div class="codigo-content">
-                    <code class="codigo-texto">{{ pedidoSeleccionado.codigo_operacion }}</code>
-                    <button 
-                      type="button"
-                      class="btn-copiar"
-                      (click)="copiarCodigo(pedidoSeleccionado.codigo_operacion)">
-                      📋 Copiar
-                    </button>
-                  </div>
-                </div>
-              }
-              
-              <!-- Botón para rechazar por comprobante inválido -->
-              @if (pedidoSeleccionado.estado_venta === 'Pendiente') {
-                <div class="acciones-comprobante">
-                  <button 
-                    type="button"
-                    class="btn-rechazar-comprobante"
-                    (click)="rechazarPorComprobanteInvalido(pedidoSeleccionado)">
-                    ❌ Rechazar por comprobante inválido
-                  </button>
-                </div>
-              }
-            </div>
-          }
 
           <div class="detalle-seccion">
             <h3>Cliente</h3>
@@ -262,16 +208,6 @@
           <button class="btn-secundario" (click)="cerrarModal()">Cerrar</button>
         </div>
 
-      </div>
-    </div>
-  }
-
-  <!-- ⭐ MODAL IMAGEN COMPLETA -->
-  @if (mostrarImagenCompleta && imagenCompletar) {
-    <div class="modal-overlay modal-imagen" (click)="cerrarImagenCompleta()">
-      <div class="imagen-fullscreen">
-        <button class="btn-cerrar-imagen" (click)="cerrarImagenCompleta()">✕</button>
-        <img [src]="imagenCompletar" alt="Comprobante completo">
       </div>
     </div>
   }
