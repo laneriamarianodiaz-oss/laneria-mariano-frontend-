@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { environment } from '../../../../../environments/environment';
@@ -82,22 +82,57 @@ export class ProductoService {
   }
 
   /**
-   * Crear producto nuevo
+   * ✅ CREAR PRODUCTO - AHORA ACEPTA JSON O FORMDATA
    */
-  crearProducto(formData: FormData): Observable<Producto> {
-    return this.http.post<any>(this.apiUrl, formData).pipe(
-      map((response: any) => mapearProductoBackend(response.data || response))
+  crearProducto(data: any): Observable<Producto> {
+    // Si recibe FormData, NO hacer nada (mantener compatibilidad)
+    // Si recibe objeto, enviar como JSON
+    const isFormData = data instanceof FormData;
+    
+    const headers = isFormData ? {} : new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    console.log('📦 Creando producto:', isFormData ? 'FormData' : 'JSON', data);
+
+    return this.http.post<any>(this.apiUrl, data, { headers }).pipe(
+      map((response: any) => {
+        console.log('✅ Producto creado:', response);
+        return mapearProductoBackend(response.data || response);
+      })
     );
   }
 
   /**
-   * Actualizar producto existente
+   * ✅ ACTUALIZAR PRODUCTO - AHORA ACEPTA JSON O FORMDATA
    */
-  actualizarProducto(id: number, formData: FormData): Observable<Producto> {
-    formData.append('_method', 'PUT');
-    return this.http.post<any>(`${this.apiUrl}/${id}`, formData).pipe(
-      map((response: any) => mapearProductoBackend(response.data || response))
-    );
+  actualizarProducto(id: number, data: any): Observable<Producto> {
+    const isFormData = data instanceof FormData;
+    
+    if (isFormData) {
+      // Si es FormData, usar el método POST con _method=PUT (Laravel)
+      data.append('_method', 'PUT');
+      return this.http.post<any>(`${this.apiUrl}/${id}`, data).pipe(
+        map((response: any) => {
+          console.log('✅ Producto actualizado:', response);
+          return mapearProductoBackend(response.data || response);
+        })
+      );
+    } else {
+      // Si es JSON, usar PUT directamente
+      const headers = new HttpHeaders({
+        'Content-Type': 'application/json'
+      });
+
+      console.log('📦 Actualizando producto con JSON:', data);
+
+      return this.http.put<any>(`${this.apiUrl}/${id}`, data, { headers }).pipe(
+        map((response: any) => {
+          console.log('✅ Producto actualizado:', response);
+          return mapearProductoBackend(response.data || response);
+        })
+      );
+    }
   }
 
   /**

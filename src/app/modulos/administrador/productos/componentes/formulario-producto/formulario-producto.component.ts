@@ -19,7 +19,11 @@ export class FormularioProductoComponent implements OnInit {
 
   private productoService = inject(ProductoService);
 
-  // ✅ AGREGAR ESTAS PROPIEDADES
+  // ✅ CONFIGURACIÓN CLOUDINARY
+  private readonly CLOUDINARY_CLOUD_NAME = 'dmrzrxjqc';
+  private readonly CLOUDINARY_UPLOAD_PRESET = 'laneria-productos';
+  private readonly CLOUDINARY_FOLDER = 'laneria-mariano/productos';
+
   parseFloat = parseFloat;
   parseInt = parseInt;
 
@@ -30,20 +34,20 @@ export class FormularioProductoComponent implements OnInit {
   proveedores = signal<any[]>([]);
 
   // Formulario
-formulario = signal<ProductoFormulario>({
-  codigo_lana: '',
-  nombre: '',
-  tipo_lana: '',
-  categoria: '',
-  color: '',
-  talla_tamano: '',
-  precio_unitario: 0,
-  stock: 0,
-  stock_minimo: 0,
-  proveedor_id: undefined,  // ✅ CAMBIAR de 0 a undefined
-  estado: 'activo',
-  descripcion: ''
-});
+  formulario = signal<ProductoFormulario>({
+    codigo_lana: '',
+    nombre: '',
+    tipo_lana: '',
+    categoria: '',
+    color: '',
+    talla_tamano: '',
+    precio_unitario: 0,
+    stock: 0,
+    stock_minimo: 0,
+    proveedor_id: undefined,
+    estado: 'activo',
+    descripcion: ''
+  });
 
   // Imágenes
   imagenesSeleccionadas = signal<File[]>([]);
@@ -51,6 +55,7 @@ formulario = signal<ProductoFormulario>({
 
   // Estados
   guardando = signal(false);
+  subiendoImagen = signal(false);
 
   ngOnInit(): void {
     if (this.producto) {
@@ -75,7 +80,7 @@ formulario = signal<ProductoFormulario>({
       precio_unitario: this.producto.precio_unitario,
       stock: this.producto.stock,
       stock_minimo: this.producto.stock_minimo,
-proveedor_id: this.producto.proveedor_id || undefined,
+      proveedor_id: this.producto.proveedor_id || undefined,
       estado: this.producto.estado,
       descripcion: this.producto.descripcion || ''
     });
@@ -90,8 +95,6 @@ proveedor_id: this.producto.proveedor_id || undefined,
    * Cargar proveedores
    */
   cargarProveedores(): void {
-    // Aquí deberías llamar al servicio de proveedores
-    // Por ahora usamos datos de prueba
     this.proveedores.set([
       { id: 1, nombre: 'Textiles San Juan' },
       { id: 2, nombre: 'Lanas del Sur' },
@@ -108,7 +111,6 @@ proveedor_id: this.producto.proveedor_id || undefined,
 
     const archivos = Array.from(input.files);
     const archivosValidos: File[] = [];
-    const previews: string[] = [];
 
     // Validar cantidad máxima
     const totalImagenes = this.imagenesSeleccionadas().length + archivos.length;
@@ -125,9 +127,9 @@ proveedor_id: this.producto.proveedor_id || undefined,
         return;
       }
 
-      // Validar tamaño (máx 2MB)
-      if (archivo.size > 2 * 1024 * 1024) {
-        alert(`${archivo.name} supera el tamaño máximo de 2MB`);
+      // Validar tamaño (máx 5MB)
+      if (archivo.size > 5 * 1024 * 1024) {
+        alert(`${archivo.name} supera el tamaño máximo de 5MB`);
         return;
       }
 
@@ -144,6 +146,39 @@ proveedor_id: this.producto.proveedor_id || undefined,
     });
 
     this.imagenesSeleccionadas.update(prev => [...prev, ...archivosValidos]);
+  }
+
+  /**
+   * 📸 SUBIR IMAGEN DIRECTAMENTE A CLOUDINARY
+   */
+  private async subirImagenCloudinary(file: File): Promise<string> {
+    console.log('📸 Subiendo imagen a Cloudinary...', file.name);
+    
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', this.CLOUDINARY_UPLOAD_PRESET);
+    formData.append('folder', this.CLOUDINARY_FOLDER);
+
+    const url = `https://api.cloudinary.com/v1_1/${this.CLOUDINARY_CLOUD_NAME}/image/upload`;
+    
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        body: formData
+      });
+
+      if (!response.ok) {
+        throw new Error(`Error HTTP: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log('✅ Imagen subida a Cloudinary:', data.secure_url);
+      return data.secure_url;
+      
+    } catch (error) {
+      console.error('❌ Error al subir a Cloudinary:', error);
+      throw error;
+    }
   }
 
   /**
@@ -166,135 +201,143 @@ proveedor_id: this.producto.proveedor_id || undefined,
   /**
    * Validar formulario
    */
-private validarFormulario(): boolean {
-  const form = this.formulario();
-  
-  // ✅ VALIDACIONES OBLIGATORIAS
-  if (!form.codigo_lana || form.codigo_lana.trim() === '') {
-    alert('❌ El código de lana es obligatorio');
-    return false;
+  private validarFormulario(): boolean {
+    const form = this.formulario();
+    
+    if (!form.codigo_lana || form.codigo_lana.trim() === '') {
+      alert('❌ El código de lana es obligatorio');
+      return false;
+    }
+    
+    if (!form.nombre || form.nombre.trim() === '') {
+      alert('❌ El nombre del producto es obligatorio');
+      return false;
+    }
+    
+    if (!form.tipo_lana) {
+      alert('❌ El tipo de lana es obligatorio');
+      return false;
+    }
+    
+    if (!form.categoria) {
+      alert('❌ La categoría es obligatoria');
+      return false;
+    }
+    
+    if (form.precio_unitario <= 0) {
+      alert('❌ El precio debe ser mayor a 0');
+      return false;
+    }
+    
+    if (form.stock < 0) {
+      alert('❌ El stock no puede ser negativo');
+      return false;
+    }
+    
+    if (form.stock_minimo < 0) {
+      alert('❌ El stock mínimo no puede ser negativo');
+      return false;
+    }
+    
+    return true;
   }
-  
-  if (!form.nombre || form.nombre.trim() === '') {
-    alert('❌ El nombre del producto es obligatorio');
-    return false;
-  }
-  
-  if (!form.tipo_lana) {
-    alert('❌ El tipo de lana es obligatorio');
-    return false;
-  }
-  
-  if (!form.categoria) {
-    alert('❌ La categoría es obligatoria');
-    return false;
-  }
-  
-  if (form.precio_unitario <= 0) {
-    alert('❌ El precio debe ser mayor a 0');
-    return false;
-  }
-  
-  if (form.stock < 0) {
-    alert('❌ El stock no puede ser negativo');
-    return false;
-  }
-  
-  if (form.stock_minimo < 0) {
-    alert('❌ El stock mínimo no puede ser negativo');
-    return false;
-  }
-  
-  return true;
-}
 
-/**
- * Guardar producto
- */
-guardarProducto(): void {
-  if (!this.validarFormulario()) return;
+  /**
+   * ✅ GUARDAR PRODUCTO CON CLOUDINARY DIRECTO
+   */
+  async guardarProducto(): Promise<void> {
+    if (!this.validarFormulario()) return;
 
-  this.guardando.set(true);
-  const form = this.formulario();
-  
-  // ✅ VALIDAR QUE TENGA CÓDIGO
-  if (!form.codigo_lana || form.codigo_lana.trim() === '') {
-    alert('❌ El código de lana es obligatorio');
-    this.guardando.set(false);
-    return;
-  }
-  
-  const formData = new FormData();
-  
-  // ✅ CAMPOS OBLIGATORIOS - NOMBRES EXACTOS DEL BACKEND
-  formData.append('codigo_producto', form.codigo_lana.trim());
-  formData.append('nombre_producto', form.nombre.trim());
-  formData.append('tipo_de_producto', form.tipo_lana);
-  formData.append('categoria', form.categoria);  // ⭐ CATEGORÍA AGREGADA
-  formData.append('precio_producto', form.precio_unitario.toString());
-  formData.append('stock_disponible', form.stock.toString());
-  formData.append('stock_minimo', form.stock_minimo.toString());
-  formData.append('estado_producto', form.estado === 'activo' ? 'Activo' : 'Inactivo');
-  
-  // ✅ CAMPOS OPCIONALES
-  if (form.color && form.color.trim()) {
-    formData.append('color_producto', form.color.trim());
-  }
-  
-  if (form.talla_tamano && form.talla_tamano.trim()) {
-    formData.append('talla_producto', form.talla_tamano.trim());
-  }
-  
-  if (form.descripcion && form.descripcion.trim()) {
-    formData.append('descripcion', form.descripcion.trim());
-  }
-  
-  // ✅ PROVEEDOR: Solo enviar si tiene valor válido
-  if (form.proveedor_id && form.proveedor_id > 0) {
-    formData.append('proveedor_id', form.proveedor_id.toString());
-  }
-  
-  // ✅ IMÁGENES
-const imagenes = this.imagenesSeleccionadas();
-if (imagenes.length > 0) {
-  formData.append('imagen', imagenes[0]); // ← Envía el archivo File completo
-}
-  // ✅ DEBUG: Ver qué se está enviando
-  console.log('=== DATOS A ENVIAR AL BACKEND ===');
-  formData.forEach((value, key) => {
-    console.log(`${key}:`, value);
-  });
-
-  const operacion = this.producto
-    ? this.productoService.actualizarProducto(this.producto.id, formData)
-    : this.productoService.crearProducto(formData);
-
-  operacion.subscribe({
-    next: (response) => {
-      console.log('✅ Producto guardado:', response);
-      alert(this.producto ? '✅ Producto actualizado correctamente' : '✅ Producto creado correctamente');
-      this.guardar.emit();
-      this.guardando.set(false);
-    },
-    error: (error) => {
-      console.error('❌ Error completo:', error);
-      console.error('❌ Error.error:', error.error);
+    this.guardando.set(true);
+    const form = this.formulario();
+    
+    try {
+      // 📸 PASO 1: SUBIR IMAGEN A CLOUDINARY SI HAY
+      let imagenUrl: string | null = null;
+      const imagenes = this.imagenesSeleccionadas();
       
-      if (error.error && error.error.errors) {
-        const errores = Object.entries(error.error.errors)
-          .map(([campo, mensajes]: [string, any]) => `• ${campo}: ${mensajes.join(', ')}`)
-          .join('\n');
-        alert(`❌ Errores de validación:\n\n${errores}`);
-      } else if (error.error && error.error.message) {
-        alert(`❌ Error: ${error.error.message}`);
-      } else {
-        alert('❌ Error al guardar el producto. Revisa la consola.');
+      if (imagenes.length > 0) {
+        this.subiendoImagen.set(true);
+        console.log('📸 Subiendo imagen a Cloudinary...');
+        imagenUrl = await this.subirImagenCloudinary(imagenes[0]);
+        console.log('✅ URL obtenida de Cloudinary:', imagenUrl);
+        this.subiendoImagen.set(false);
+      }
+
+      // 📦 PASO 2: PREPARAR DATOS PARA EL BACKEND
+      const productoData: any = {
+        codigo_producto: form.codigo_lana.trim(),
+        nombre_producto: form.nombre.trim(),
+        tipo_de_producto: form.tipo_lana,
+        categoria: form.categoria,
+        precio_producto: form.precio_unitario,
+        stock_disponible: form.stock,
+        stock_minimo: form.stock_minimo,
+        estado_producto: form.estado === 'activo' ? 'Activo' : 'Inactivo'
+      };
+
+      // Campos opcionales
+      if (form.color && form.color.trim()) {
+        productoData.color_producto = form.color.trim();
       }
       
+      if (form.talla_tamano && form.talla_tamano.trim()) {
+        productoData.talla_producto = form.talla_tamano.trim();
+      }
+      
+      if (form.descripcion && form.descripcion.trim()) {
+        productoData.descripcion = form.descripcion.trim();
+      }
+      
+      if (form.proveedor_id && form.proveedor_id > 0) {
+        productoData.proveedor_id = form.proveedor_id;
+      }
+
+      // ⭐ AGREGAR URL DE CLOUDINARY
+      if (imagenUrl) {
+        productoData.imagen_url = imagenUrl;
+      }
+
+      console.log('=== DATOS A ENVIAR AL BACKEND ===');
+      console.log(productoData);
+
+      // 🚀 PASO 3: ENVIAR AL BACKEND (SOLO JSON, NO FORMDATA)
+      const operacion = this.producto
+        ? this.productoService.actualizarProducto(this.producto.id, productoData)
+        : this.productoService.crearProducto(productoData);
+
+      operacion.subscribe({
+        next: (response) => {
+          console.log('✅ Producto guardado:', response);
+          alert(this.producto ? '✅ Producto actualizado correctamente' : '✅ Producto creado correctamente');
+          this.guardar.emit();
+          this.guardando.set(false);
+        },
+        error: (error) => {
+          console.error('❌ Error al guardar producto:', error);
+          
+          if (error.error && error.error.errors) {
+            const errores = Object.entries(error.error.errors)
+              .map(([campo, mensajes]: [string, any]) => `• ${campo}: ${mensajes.join(', ')}`)
+              .join('\n');
+            alert(`❌ Errores de validación:\n\n${errores}`);
+          } else if (error.error && error.error.message) {
+            alert(`❌ Error: ${error.error.message}`);
+          } else {
+            alert('❌ Error al guardar el producto. Revisa la consola.');
+          }
+          
+          this.guardando.set(false);
+        }
+      });
+
+    } catch (error) {
+      console.error('❌ Error al subir imagen:', error);
+      alert('❌ Error al subir la imagen a Cloudinary. Intenta de nuevo.');
       this.guardando.set(false);
+      this.subiendoImagen.set(false);
     }
-  });
-}
+  }
 
   /**
    * Cerrar modal
