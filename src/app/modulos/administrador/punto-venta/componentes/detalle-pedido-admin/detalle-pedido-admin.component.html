@@ -108,29 +108,32 @@
             </div>
           </div>
 
-<div class="card" *ngIf="pedido.comprobante_pago">
+<!-- 📸 COMPROBANTE DE PAGO -->
+<div class="card card-comprobante" *ngIf="pedido.comprobante_pago || pedido.codigo_operacion">
   <h2>📸 Comprobante de Pago</h2>
   
-  <div class="comprobante-container">
-    <!-- Imagen del comprobante -->
+  <div class="comprobante-container" *ngIf="pedido.comprobante_pago">
     <div class="comprobante-imagen">
       <img 
         [src]="pedido.comprobante_pago" 
         alt="Comprobante de pago"
         (click)="abrirImagenCompleta(pedido.comprobante_pago)"
-        class="comprobante-img">
-      <p class="zoom-hint">👆 Haz clic para ver en tamaño completo</p>
+        class="img-comprobante">
+      <p class="zoom-hint">👆 Haz clic para ampliar</p>
     </div>
-    
-    <!-- Código de operación -->
-    <div class="codigo-operacion">
-      <span class="label">Código de operación:</span>
-      <span class="codigo">{{ pedido.codigo_operacion || 'No proporcionado' }}</span>
-      
+  </div>
+  
+  <div class="codigo-operacion-destacado" *ngIf="pedido.codigo_operacion">
+    <div class="codigo-header">
+      <span class="label">🔢 Código de operación:</span>
+    </div>
+    <div class="codigo-contenido">
+      <code class="codigo-texto">{{ pedido.codigo_operacion }}</code>
       <button 
-        class="btn-copiar"
+        type="button"
+        class="btn-copiar-codigo"
         (click)="copiarCodigo(pedido.codigo_operacion)">
-        📋 Copiar código
+        📋 Copiar
       </button>
     </div>
   </div>
