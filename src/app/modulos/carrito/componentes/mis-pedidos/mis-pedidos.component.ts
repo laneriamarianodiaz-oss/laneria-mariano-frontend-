@@ -25,15 +25,7 @@ export class MisPedidosComponent implements OnInit {
   pedidoSeleccionado: Pedido | null = null;
   mostrarDetalle: boolean = false;
 
-  // ⭐ CLOUDINARY DIRECTO (igual que productos)
-  private readonly CLOUDINARY_CLOUD_NAME = 'dmrzrxjqc';
-  private readonly CLOUDINARY_UPLOAD_PRESET = 'laneria-comprobantes';
-  private readonly CLOUDINARY_FOLDER = 'laneria-mariano/comprobantes';
-
-  // Variables para subir comprobante
-  subiendoComprobante: number | null = null;
-  archivoSeleccionado: File | null = null;
-  pedidoParaComprobante: Pedido | null = null;
+  // ❌ ELIMINADAS TODAS LAS VARIABLES DE COMPROBANTE
 
   constructor(
     public pedidoService: PedidoService,
@@ -208,158 +200,13 @@ export class MisPedidosComponent implements OnInit {
     return ['Pendiente', 'Confirmado', 'pendiente', 'confirmado'].includes(estado);
   }
 
-  /**
-   * ⭐ NUEVO: Verificar si puede subir comprobante
-   */
-  puedeSubirComprobante(pedido: Pedido): boolean {
-    const estado = pedido.estado_venta || pedido.estado;
-    return estado === 'Pendiente' && !pedido.comprobante_pago;
-  }
-
-  /**
-   * ⭐ NUEVO: Abrir selector de archivo
-   */
-  seleccionarComprobante(pedido: Pedido): void {
-    this.pedidoParaComprobante = pedido;
-    const input = document.createElement('input');
-    input.type = 'file';
-    input.accept = 'image/*,.pdf';
-    input.onchange = (event: any) => {
-      const file = event.target.files[0];
-      if (file) {
-        this.onArchivoSeleccionado(file);
-      }
-    };
-    input.click();
-  }
-
-  /**
-   * ⭐ NUEVO: Cuando se selecciona un archivo
-   */
-  onArchivoSeleccionado(file: File): void {
-    // Validar tipo
-    const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'application/pdf'];
-    if (!tiposPermitidos.includes(file.type)) {
-      alert('❌ Formato no permitido. Solo JPG, PNG, GIF, WEBP o PDF');
-      return;
-    }
-
-    // Validar tamaño (10MB)
-    if (file.size > 10 * 1024 * 1024) {
-      alert('❌ El archivo supera el tamaño máximo de 10MB');
-      return;
-    }
-
-    this.archivoSeleccionado = file;
-
-    // Preguntar código de operación
-    const codigoOperacion = prompt('Código de operación (opcional):');
-    
-    // Confirmar subida
-    if (confirm(`¿Subir comprobante para el pedido ${this.pedidoParaComprobante?.numero_venta}?`)) {
-      this.subirComprobante(codigoOperacion || undefined);
-    } else {
-      this.archivoSeleccionado = null;
-    }
-  }
-
-  /**
-   * ⭐ SUBIR DIRECTO A CLOUDINARY (IGUAL QUE PRODUCTOS)
-   */
-  private async subirImagenCloudinary(file: File): Promise<string> {
-    console.log('📸 Subiendo comprobante a Cloudinary...', file.name);
-    
-    const formData = new FormData();
-    formData.append('file', file);
-    formData.append('upload_preset', this.CLOUDINARY_UPLOAD_PRESET);
-    formData.append('folder', this.CLOUDINARY_FOLDER);
-
-    const url = `https://api.cloudinary.com/v1_1/${this.CLOUDINARY_CLOUD_NAME}/image/upload`;
-    
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        body: formData
-      });
-
-      if (!response.ok) {
-        throw new Error('Error al subir a Cloudinary');
-      }
-
-      const data = await response.json();
-      console.log('✅ Comprobante subido a Cloudinary:', data.secure_url);
-      return data.secure_url;
-      
-    } catch (error) {
-      console.error('❌ Error al subir a Cloudinary:', error);
-      throw error;
-    }
-  }
-
-  /**
-   * ⭐ SUBIR COMPROBANTE (PROCESO COMPLETO)
-   */
-  async subirComprobante(codigoOperacion?: string): Promise<void> {
-    if (!this.archivoSeleccionado || !this.pedidoParaComprobante) {
-      return;
-    }
-
-    const pedidoId = this.pedidoParaComprobante.venta_id || this.pedidoParaComprobante.id;
-    if (!pedidoId) {
-      alert('Error: No se pudo identificar el pedido');
-      return;
-    }
-
-    this.subiendoComprobante = pedidoId;
-
-    try {
-      // 1️⃣ SUBIR A CLOUDINARY
-      console.log('📸 Subiendo a Cloudinary...');
-      const imagenUrl = await this.subirImagenCloudinary(this.archivoSeleccionado);
-      console.log('✅ URL obtenida:', imagenUrl);
-
-      // 2️⃣ ENVIAR URL AL BACKEND (JSON, no FormData)
-      console.log('📤 Enviando URL al backend...');
-      const datos = {
-        comprobante_pago: imagenUrl,
-        codigo_operacion: codigoOperacion || null
-      };
-
-      this.pedidoService.guardarComprobanteURL(pedidoId, datos).subscribe({
-        next: (respuesta) => {
-          console.log('✅ Comprobante guardado en BD:', respuesta);
-          alert('✅ Comprobante subido correctamente. Tu pedido será revisado pronto.');
-          
-          // Limpiar
-          this.archivoSeleccionado = null;
-          this.pedidoParaComprobante = null;
-          this.subiendoComprobante = null;
-          
-          // Recargar pedidos
-          this.cargarPedidos();
-        },
-        error: (error) => {
-          console.error('❌ Error al guardar en BD:', error);
-          alert('❌ Error al guardar comprobante: ' + (error.error?.message || error.message));
-          this.subiendoComprobante = null;
-        }
-      });
-
-    } catch (error: any) {
-      console.error('❌ Error en proceso:', error);
-      alert('❌ Error al subir comprobante: ' + error.message);
-      this.subiendoComprobante = null;
-    }
-  }
-
-  /**
-   * ⭐ NUEVO: Ver comprobante en nueva pestaña
-   */
-  verComprobante(pedido: Pedido): void {
-    if (pedido.comprobante_pago) {
-      window.open(pedido.comprobante_pago, '_blank');
-    }
-  }
+  // ❌ ELIMINADOS TODOS LOS MÉTODOS DE SUBIR COMPROBANTE:
+  // - puedeSubirComprobante()
+  // - seleccionarComprobante()
+  // - onArchivoSeleccionado()
+  // - subirImagenCloudinary()
+  // - subirComprobante()
+  // - verComprobante()
 
   obtenerIconoEstado(estado: string): string {
     return this.pedidoService.obtenerIconoEstado(estado);

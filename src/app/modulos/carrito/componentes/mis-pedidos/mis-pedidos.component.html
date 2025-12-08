@@ -79,13 +79,8 @@
             <span class="valor">{{ pedido.codigo_operacion }}</span>
           </div>
           
-          <!-- ⭐ NUEVO: Mostrar si ya tiene comprobante -->
-          <div class="info-item comprobante-subido" *ngIf="pedido.comprobante_pago">
-            <span class="label">✅ Comprobante:</span>
-            <button class="btn-ver-comprobante" (click)="verComprobante(pedido)">
-              📄 Ver Comprobante
-            </button>
-          </div>
+          <!-- ❌ ELIMINADO: Info de comprobante subido -->
+          <!-- ❌ ELIMINADO: Botón ver comprobante -->
         </div>
 
         <!-- Footer -->
@@ -99,21 +94,8 @@
               Ver Detalles
             </button>
             
-            <!-- ⭐ NUEVO: Botón subir comprobante -->
-            <button 
-              *ngIf="puedeSubirComprobante(pedido) && subiendoComprobante !== (pedido.venta_id || pedido.id)"
-              class="btn-subir-comprobante" 
-              (click)="seleccionarComprobante(pedido)">
-              📤 Subir Comprobante
-            </button>
-
-            <!-- ⭐ NUEVO: Indicador de subida -->
-            <button 
-              *ngIf="subiendoComprobante === (pedido.venta_id || pedido.id)"
-              class="btn-subiendo" 
-              disabled>
-              <span class="spinner-small"></span> Subiendo...
-            </button>
+            <!-- ❌ ELIMINADO: Botón subir comprobante -->
+            <!-- ❌ ELIMINADO: Indicador subiendo -->
             
             <button 
               *ngIf="puedeCancelar(pedido.estado_venta || pedido.estado)"
@@ -124,12 +106,12 @@
           </div>
         </div>
         
-      </div> <!-- ← FIN del pedido-card -->
-    </div> <!-- ← FIN de lista-pedidos -->
-  </div> <!-- ← FIN de contenedor -->
-</div> <!-- ← FIN de mis-pedidos -->
+      </div>
+    </div>
+  </div>
+</div>
 
-<!-- ⭐ AQUÍ VA EL MODAL - FUERA DE TODO -->
+<!-- Modal de detalle -->
 <app-detalle-pedido
   [pedido]="pedidoSeleccionado"
   [mostrar]="mostrarDetalle"

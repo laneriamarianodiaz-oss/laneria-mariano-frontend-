@@ -25,16 +25,18 @@ export class FinalizarCompraComponent implements OnInit {
   telefono = '';
   clienteId: number | null = null;
   
-  // ✅ SOLO UNA VARIABLE PARA EL COMPROBANTE
+  // ⭐ CLOUDINARY DIRECTO (IGUAL QUE PRODUCTOS)
+  private readonly CLOUDINARY_CLOUD_NAME = 'dmrzrxjqc';
+  private readonly CLOUDINARY_UPLOAD_PRESET = 'laneria-comprobantes';
+  private readonly CLOUDINARY_FOLDER = 'laneria-mariano/comprobantes';
+  
+  // Comprobante
   comprobanteFile: File | null = null;
   previsualizacionComprobante: string | null = null;
-  
-  // Datos del formulario
   codigoOperacion = '';
   
   // Estados
   cargando = false;
-  subiendoComprobante = false;
   mostrarFormularioDireccion = false;
 
   constructor(
@@ -61,7 +63,6 @@ export class FinalizarCompraComponent implements OnInit {
       }
     });
     
-    // Dirección por defecto
     this.direccionEnvio = 'Av Malinas S/n, Pacucha, Andahuaylas';
   }
 
@@ -91,28 +92,29 @@ export class FinalizarCompraComponent implements OnInit {
   }
 
   /**
-   * ✅ MÉTODO CORREGIDO - Maneja archivo Y genera preview
+   * Seleccionar archivo
    */
   onFileSelected(event: any): void {
     const file = event.target.files[0];
     if (!file) return;
     
-    // Validar tamaño (max 5MB)
-    if (file.size > 5 * 1024 * 1024) {
-      alert('El archivo no debe superar 5MB');
+    // Validar tamaño (max 10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      alert('El archivo no debe superar 10MB');
       return;
     }
     
     // Validar tipo
-    if (!['image/jpeg', 'image/jpg', 'image/png'].includes(file.type)) {
-      alert('Solo se permiten imágenes JPG o PNG');
+    const tiposPermitidos = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp', 'application/pdf'];
+    if (!tiposPermitidos.includes(file.type)) {
+      alert('Solo se permiten imágenes JPG, PNG, GIF, WEBP o PDF');
       return;
     }
     
     // Guardar archivo
     this.comprobanteFile = file;
     
-    // ✅ GENERAR PREVIEW PARA MOSTRAR EN HTML
+    // Generar preview
     const reader = new FileReader();
     reader.onload = (e: any) => {
       this.previsualizacionComprobante = e.target.result;
@@ -121,13 +123,12 @@ export class FinalizarCompraComponent implements OnInit {
   }
 
   /**
-   * ✅ ELIMINAR COMPROBANTE
+   * Eliminar comprobante
    */
   eliminarComprobante(): void {
     this.comprobanteFile = null;
     this.previsualizacionComprobante = null;
     
-    // Limpiar el input file
     const fileInput = document.getElementById('comprobante') as HTMLInputElement;
     if (fileInput) {
       fileInput.value = '';
@@ -135,34 +136,40 @@ export class FinalizarCompraComponent implements OnInit {
   }
 
   /**
-   * ✅ SUBIR COMPROBANTE AL BACKEND
+   * ⭐ SUBIR IMAGEN A CLOUDINARY (IGUAL QUE PRODUCTOS)
    */
-subirComprobante(ventaId: number): void {
-  if (!this.comprobanteFile || !this.codigoOperacion) return;
+  private async subirImagenCloudinary(file: File): Promise<string> {
+    console.log('📸 Subiendo comprobante a Cloudinary...', file.name);
+    
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('upload_preset', this.CLOUDINARY_UPLOAD_PRESET);
+    formData.append('folder', this.CLOUDINARY_FOLDER);
 
-  this.subiendoComprobante = true;
-  
-  // ✅ USAR FORMDATA
-  const formData = new FormData();
-  formData.append('comprobante', this.comprobanteFile);
-  formData.append('codigo_operacion', this.codigoOperacion);
+    const url = `https://api.cloudinary.com/v1_1/${this.CLOUDINARY_CLOUD_NAME}/image/upload`;
+    
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        body: formData
+      });
 
-  this.http.post(`${entorno.urlApi}/ventas/${ventaId}/comprobante`, formData)
-    .subscribe({
-      next: (respuesta: any) => {
-        console.log('✅ Comprobante subido:', respuesta);
-        this.subiendoComprobante = false;
-        alert('✅ Comprobante enviado correctamente');
-      },
-      error: (error) => {
-        console.error('❌ Error al subir comprobante:', error);
-        this.subiendoComprobante = false;
+      if (!response.ok) {
+        throw new Error(`Error HTTP: ${response.status}`);
       }
-    });
-}
+
+      const data = await response.json();
+      console.log('✅ Comprobante subido a Cloudinary:', data.secure_url);
+      return data.secure_url;
+      
+    } catch (error) {
+      console.error('❌ Error al subir a Cloudinary:', error);
+      throw error;
+    }
+  }
 
   /**
-   * ✅ FINALIZAR COMPRA - CORREGIDO
+   * ⭐ FINALIZAR COMPRA CON CLOUDINARY
    */
   async finalizarCompra(): Promise<void> {
     // Validaciones
@@ -198,42 +205,47 @@ subirComprobante(ventaId: number): void {
     this.cargando = true;
 
     try {
-      // ✅ PASO 1: Crear la venta (SIN el comprobante todavía)
+      // 1️⃣ SUBIR COMPROBANTE A CLOUDINARY PRIMERO
+      console.log('📸 Paso 1: Subiendo comprobante a Cloudinary...');
+      const comprobanteUrl = await this.subirImagenCloudinary(this.comprobanteFile);
+      console.log('✅ URL obtenida:', comprobanteUrl);
+
+      // 2️⃣ CREAR VENTA CON COMPROBANTE INCLUIDO
+      console.log('📦 Paso 2: Creando venta con comprobante...');
       const datos = {
         metodo_pago: 'Yape',
         direccion_envio: this.direccionEnvio,
-        telefono_contacto: this.telefono
-        // ❌ NO enviar comprobante aquí
+        telefono_contacto: this.telefono,
+        // ⭐ ENVIAR COMPROBANTE Y CÓDIGO
+        comprobante_pago: comprobanteUrl,
+        codigo_operacion: this.codigoOperacion
       };
 
       this.ventaService.crearVentaDesdeCarrito('Yape', undefined, datos).subscribe({
         next: (respuesta) => {
-          console.log('✅ Venta creada:', respuesta);
-          const ventaId = respuesta.data.venta_id;
+          console.log('✅ Venta creada con comprobante:', respuesta);
           
-          // ✅ PASO 2: Subir el comprobante DESPUÉS de crear la venta
-          this.subirComprobante(ventaId);
-          
-          // ✅ PASO 3: Mostrar mensaje y redirigir
           alert(`¡Pedido realizado con éxito! 
-          
+
 Tu pedido está en revisión. 
-Número de venta: ${respuesta.data.numero_venta || ventaId}`);
+Número de venta: ${respuesta.data.numero_venta || respuesta.data.venta_id}
+
+Recibirás confirmación pronto.`);
           
           this.carritoService.cargarCarritoBackend();
-          this.router.navigate(['/mis-pedidos']); // ✅ Mejor redirigir a mis pedidos
+          this.router.navigate(['/mis-pedidos']);
           this.cargando = false;
         },
         error: (error) => {
-          console.error('❌ Error al finalizar compra:', error);
+          console.error('❌ Error al crear venta:', error);
           alert(error.error?.message || 'Error al procesar la compra');
           this.cargando = false;
         }
       });
       
-    } catch (error) {
-      console.error('❌ Error inesperado:', error);
-      alert('Error al procesar la compra');
+    } catch (error: any) {
+      console.error('❌ Error al subir comprobante:', error);
+      alert('Error al subir comprobante: ' + error.message);
       this.cargando = false;
     }
   }
