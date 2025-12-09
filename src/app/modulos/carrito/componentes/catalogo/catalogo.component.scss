@@ -445,12 +445,13 @@
   }
 
   .banner-carrusel {
-    height: 280px;
+    height: 200px;
     margin-bottom: 25px;
 
     .slide {
       img {
         object-fit: contain;
+        object-position: top center;
       }
 
       .texto-banner {
@@ -642,12 +643,13 @@
 
 @media (max-width: 480px) {
   .banner-carrusel {
-    height: 280px;
+    height: 200px;
     margin-bottom: 20px;
 
     .slide {
       img {
         object-fit: contain;
+        object-position: top center;
       }
 
       .texto-banner {
