@@ -151,91 +151,32 @@ h2 {
   .fondo-overlay {
     top: 60px;
     height: calc(100vh - 60px);
+    align-items: flex-start;
+    padding-top: 40px;
   }
 
   .modal-registro {
-    padding: 35px 30px;
-    max-width: 400px;
-    max-height: 85vh;
-  }
-
-  .logo-circular {
-    width: 100px;
-    height: 100px;
-    margin-bottom: 15px;
-  }
-
-  h2 {
-    font-size: 18px;
-    margin-bottom: 25px;
-  }
-
-  .campo {
-    margin-bottom: 20px;
-
-    label {
-      font-size: 13px;
-      margin-bottom: 6px;
-    }
-
-    input {
-      font-size: 13px;
-      padding: 9px 0;
-    }
-
-    small.error {
-      font-size: 11px;
-    }
-  }
-
-  .fila {
-    gap: 15px;
-  }
-
-  .btn-registrar {
-    padding: 12px;
-    font-size: 15px;
-  }
-
-  .texto-login {
-    font-size: 13px;
-  }
-
-  .alerta-error {
-    font-size: 13px;
-    padding: 9px;
-  }
-}
-
-@media (max-width: 480px) {
-  .fondo-overlay {
-    top: 50px;
-    height: calc(100vh - 50px);
-    padding: 10px;
-  }
-
-  .modal-registro {
-    padding: 25px 18px;
-    width: 95%;
-    border-radius: 15px;
-    max-height: 90vh;
+    padding: 25px 20px;
+    max-width: 360px;
+    max-height: calc(100vh - 120px);
+    border-radius: 16px;
   }
 
   .btn-cerrar {
-    top: 15px;
-    right: 15px;
+    top: 12px;
+    right: 12px;
     font-size: 20px;
   }
 
   .logo-circular {
-    width: 80px;
-    height: 80px;
+    width: 70px;
+    height: 70px;
     margin-bottom: 12px;
   }
 
   h2 {
     font-size: 16px;
-    margin-bottom: 20px;
+    margin-bottom: 18px;
   }
 
   .campo {
@@ -257,14 +198,13 @@ h2 {
   }
 
   .fila {
-    flex-direction: column;
-    gap: 0;
+    gap: 12px;
   }
 
   .btn-registrar {
-    padding: 11px;
+    padding: 10px;
     font-size: 14px;
-    margin-bottom: 12px;
+    margin-bottom: 10px;
   }
 
   .texto-login {
@@ -274,6 +214,79 @@ h2 {
   .alerta-error {
     font-size: 12px;
     padding: 8px;
+    margin-bottom: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .fondo-overlay {
+    top: 50px;
+    height: calc(100vh - 50px);
+    padding: 30px 8px 10px;
+    align-items: flex-start;
+  }
+
+  .modal-registro {
+    padding: 20px 15px;
+    width: 96%;
+    border-radius: 12px;
+    max-height: calc(100vh - 100px);
+  }
+
+  .btn-cerrar {
+    top: 10px;
+    right: 10px;
+    font-size: 18px;
+  }
+
+  .logo-circular {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 10px;
+  }
+
+  h2 {
+    font-size: 14px;
     margin-bottom: 15px;
+  }
+
+  .campo {
+    margin-bottom: 12px;
+
+    label {
+      font-size: 11px;
+      margin-bottom: 4px;
+    }
+
+    input {
+      font-size: 11px;
+      padding: 7px 0;
+    }
+
+    small.error {
+      font-size: 9px;
+    }
+  }
+
+  .fila {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .btn-registrar {
+    padding: 9px;
+    font-size: 13px;
+    margin-bottom: 8px;
+    border-radius: 20px;
+  }
+
+  .texto-login {
+    font-size: 11px;
+  }
+
+  .alerta-error {
+    font-size: 11px;
+    padding: 7px;
+    margin-bottom: 10px;
   }
 }
