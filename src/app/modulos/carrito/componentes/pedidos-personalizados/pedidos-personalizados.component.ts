@@ -25,25 +25,25 @@ export class PedidosPersonalizadosComponent implements OnInit {
     {
       titulo: 'Gorros Personalizados',
       descripcion: 'Gorros tejidos con diseños únicos y colores a tu elección',
-      imagen: 'personalizados/gorros.jpg',
+      imagen: 'personalizado/gorros.jpeg',
       mensaje: '¡Hola! Me interesa un gorro personalizado 🧶'
     },
     {
       titulo: 'Chompas a Medida',
       descripcion: 'Chompas tejidas con tu talla y diseño preferido',
-      imagen: 'personalizados/chompas.jpg',
+      imagen: 'personalizado/chompas.jpeg',
       mensaje: '¡Hola! Quiero una chompa personalizada 🧥'
     },
     {
       titulo: 'Mantas y Cobijas',
       descripcion: 'Mantas tejidas del tamaño y color que necesites',
-      imagen: 'personalizados/mantas.jpg',
+      imagen: 'personalizado/mantas.jpeg',
       mensaje: '¡Hola! Me gustaría una manta personalizada 🛏️'
     },
     {
       titulo: 'Amigurumis Especiales',
       descripcion: 'Muñecos tejidos con el diseño que imagines',
-      imagen: 'personalizados/amigurumis.jpg',
+      imagen: 'personalizado/amigurumis.jpeg',
       mensaje: '¡Hola! Quiero un amigurumi personalizado 🧸'
     }
   ];
