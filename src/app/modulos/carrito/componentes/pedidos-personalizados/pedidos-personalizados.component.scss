@@ -5,7 +5,7 @@
 
 .header {
   background: linear-gradient(135deg, #7d508d 0%, #7d508d 100%);
-  padding: 3rem 2rem;
+  padding: 4rem 2rem 3rem;
   color: white;
   text-align: center;
   position: relative;
@@ -386,14 +386,14 @@
   100% { transform: rotate(360deg); }
 }
 
-/* ===== 📱 RESPONSIVE MÓVIL - TODO EN COLUMNAS ===== */
+/* ===== 📱 RESPONSIVE MÓVIL ===== */
 @media (max-width: 768px) {
   .header {
-    padding: 2rem 1rem;
+    padding: 3rem 1rem 2.5rem;
 
     h1 {
       font-size: 1.5rem;
-      margin-top: 1rem;
+      margin-top: 0.5rem;
     }
 
     .subtitulo {
@@ -403,7 +403,7 @@
 
   .btn-volver {
     left: 1rem;
-    top: 1rem;
+    top: 1.5rem;
     padding: 0.5rem 0.8rem;
     font-size: 0.85rem;
     border-radius: 8px;
@@ -449,11 +449,11 @@
     }
   }
 
-  /* ✅ TIPOS GRID - 4 COLUMNAS */
+  /* ✅ TIPOS GRID - 2 COLUMNAS */
   .tipos-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
     padding: 0 1rem;
   }
 
@@ -464,24 +464,24 @@
   }
 
   .tipo-imagen {
-    height: 100px;
+    height: 140px;
 
     .btn-contactar-overlay {
-      padding: 0.5rem 0.8rem;
-      font-size: 0.7rem;
+      padding: 0.6rem 1rem;
+      font-size: 0.75rem;
     }
   }
 
   .tipo-info {
-    padding: 8px;
+    padding: 10px;
 
     h3 {
-      font-size: 0.75rem;
-      margin-bottom: 4px;
+      font-size: 0.9rem;
+      margin-bottom: 5px;
     }
 
     p {
-      font-size: 0.65rem;
+      font-size: 0.75rem;
       line-height: 1.3;
     }
   }
@@ -500,57 +500,57 @@
     }
   }
 
-  /* ✅ PRODUCTOS GRID - 2 COLUMNAS */
+  /* ✅ PRODUCTOS GRID - 4 COLUMNAS */
   .productos-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
     padding: 0 1rem;
   }
 
   .producto-card {
-    border-radius: 12px;
+    border-radius: 10px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 
   .producto-imagen {
-    height: 160px;
+    height: 100px;
   }
 
   .producto-info {
-    padding: 12px;
+    padding: 8px;
 
     h4 {
-      font-size: 0.95rem;
-      margin-bottom: 6px;
-      line-height: 1.3;
-      height: auto;
-      overflow: visible;
+      font-size: 0.75rem;
+      margin-bottom: 4px;
+      line-height: 1.2;
+      height: 2.4em;
+      overflow: hidden;
     }
 
     .descripcion {
-      font-size: 0.8rem;
-      line-height: 1.3;
-      height: 3em;
-      margin: 6px 0;
+      font-size: 0.65rem;
+      line-height: 1.2;
+      height: 2.4em;
+      margin: 4px 0;
     }
 
     .precio {
-      font-size: 1.1rem;
-      margin: 6px 0 3px 0;
+      font-size: 0.85rem;
+      margin: 4px 0 2px 0;
     }
 
     .nota-precio {
-      font-size: 0.7rem;
-      margin-bottom: 10px;
+      font-size: 0.55rem;
+      margin-bottom: 6px;
     }
   }
 
   .btn-contactar {
-    padding: 8px;
-    font-size: 0.8rem;
-    border-radius: 8px;
-    font-weight: 600;
+    padding: 5px 4px;
+    font-size: 0.58rem;
+    border-radius: 5px;
+    font-weight: 700;
   }
 
   .seccion-proceso {
@@ -562,33 +562,35 @@
     }
   }
 
-  /* ✅ PROCESO GRID - 4 COLUMNAS */
+  /* ✅ PROCESO GRID - 2 COLUMNAS CENTRADO */
   .proceso-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
     padding: 0 1rem;
+    max-width: 500px;
+    margin: 0 auto;
   }
 
   .paso {
-    padding: 0.8rem 0.3rem;
+    padding: 1rem 0.5rem;
 
     .numero {
-      width: 38px;
-      height: 38px;
-      font-size: 1.2rem;
-      margin-bottom: 0.4rem;
+      width: 45px;
+      height: 45px;
+      font-size: 1.3rem;
+      margin-bottom: 0.5rem;
     }
 
     h3 {
-      font-size: 0.7rem;
-      margin: 0.4rem 0 0.2rem 0;
+      font-size: 0.85rem;
+      margin: 0.5rem 0 0.3rem 0;
       line-height: 1.2;
     }
 
     p {
-      font-size: 0.58rem;
-      line-height: 1.25;
+      font-size: 0.7rem;
+      line-height: 1.3;
     }
   }
 
@@ -626,7 +628,7 @@
 
 @media (max-width: 480px) {
   .header {
-    padding: 1.5rem 0.8rem;
+    padding: 2.5rem 0.8rem 2rem;
 
     h1 {
       font-size: 1.3rem;
@@ -639,7 +641,7 @@
 
   .btn-volver {
     left: 0.8rem;
-    top: 0.8rem;
+    top: 1.2rem;
     padding: 0.4rem 0.7rem;
     font-size: 0.8rem;
   }
@@ -672,23 +674,23 @@
   }
 
   .tipos-grid {
-    gap: 8px;
+    gap: 10px;
     padding: 0 0.8rem;
   }
 
   .tipo-imagen {
-    height: 85px;
+    height: 120px;
   }
 
   .tipo-info {
-    padding: 6px;
+    padding: 8px;
 
     h3 {
-      font-size: 0.7rem;
+      font-size: 0.85rem;
     }
 
     p {
-      font-size: 0.6rem;
+      font-size: 0.7rem;
     }
   }
 
@@ -705,37 +707,37 @@
   }
 
   .productos-grid {
-    gap: 10px;
+    gap: 8px;
     padding: 0 0.8rem;
   }
 
   .producto-imagen {
-    height: 140px;
+    height: 85px;
   }
 
   .producto-info {
-    padding: 10px;
+    padding: 6px;
 
     h4 {
-      font-size: 0.9rem;
+      font-size: 0.7rem;
     }
 
     .descripcion {
-      font-size: 0.75rem;
+      font-size: 0.6rem;
     }
 
     .precio {
-      font-size: 1rem;
+      font-size: 0.8rem;
     }
 
     .nota-precio {
-      font-size: 0.65rem;
+      font-size: 0.5rem;
     }
   }
 
   .btn-contactar {
-    padding: 7px;
-    font-size: 0.75rem;
+    padding: 4px 3px;
+    font-size: 0.55rem;
   }
 
   .seccion-proceso {
@@ -747,29 +749,29 @@
   }
 
   .proceso-grid {
-    gap: 6px;
+    gap: 10px;
     padding: 0 0.8rem;
+    max-width: 400px;
   }
 
   .paso {
-    padding: 0.7rem 0.25rem;
+    padding: 0.8rem 0.4rem;
 
     .numero {
-      width: 35px;
-      height: 35px;
-      font-size: 1.1rem;
+      width: 40px;
+      height: 40px;
+      font-size: 1.2rem;
       margin-bottom: 0.4rem;
     }
 
     h3 {
-      font-size: 0.65rem;
-      margin: 0.3rem 0 0.2rem 0;
-      line-height: 1.1;
+      font-size: 0.8rem;
+      margin: 0.4rem 0 0.25rem 0;
     }
 
     p {
-      font-size: 0.55rem;
-      line-height: 1.2;
+      font-size: 0.65rem;
+      line-height: 1.25;
     }
   }
 
