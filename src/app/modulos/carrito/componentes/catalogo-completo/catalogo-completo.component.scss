@@ -208,94 +208,39 @@
 
 @media (max-width: 768px) {
   .header {
-    height: 180px;
+    height: 140px;
 
     h1 {
-      font-size: 1.8rem;
+      font-size: 1.5rem;
       padding: 0 1rem;
       text-align: center;
+      margin-top: 1rem;
     }
   }
 
   .btn-volver {
     left: 1rem;
     top: 1rem;
-    padding: 0.5rem 1rem;
-    font-size: 0.9rem;
-  }
-
-  .seccion-productos {
-    padding: 1.5rem;
-  }
-
-  .info-resultados .contador {
-    font-size: 1rem;
-  }
-
-  .productos-grid {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-  }
-
-  .producto-imagen {
-    height: 180px;
-  }
-
-  .producto-info {
-    padding: 0.9rem;
-
-    h4 {
-      font-size: 1rem;
-      margin-bottom: 0.3rem;
-    }
-
-    .descripcion {
-      font-size: 0.8rem;
-      height: 2.3em;
-    }
-
-    .precio {
-      font-size: 1.2rem;
-      margin: 0.3rem 0;
-    }
-
-    .stock {
-      font-size: 0.8rem;
-      margin-bottom: 0.8rem;
-    }
-  }
-
-  .btn-agregar,
-  .btn-limpiar {
-    padding: 0.65rem;
-    font-size: 0.9rem;
-  }
-}
-
-@media (max-width: 480px) {
-  .header {
-    height: 150px;
-
-    h1 {
-      font-size: 1.5rem;
-      padding: 0 0.8rem;
-    }
-  }
-
-  .btn-volver {
-    left: 0.8rem;
-    top: 0.8rem;
-    padding: 0.45rem 0.9rem;
+    padding: 0.5rem 0.9rem;
     font-size: 0.85rem;
-    border-radius: 8px;
+    background: white;
+    color: #7d508d;
+    border: none;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+
+    &:hover {
+      background: #f0f0f0;
+      transform: translateX(-3px);
+    }
   }
 
   .seccion-productos {
-    padding: 1rem;
+    padding: 1.5rem 1rem;
   }
 
   .info-resultados {
-    margin-bottom: 1rem;
+    margin-bottom: 1.2rem;
 
     .contador {
       font-size: 0.9rem;
@@ -303,48 +248,136 @@
   }
 
   .productos-grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
   }
 
   .producto-card {
-    border-radius: 15px;
-
-    &:hover {
-      transform: translateY(-4px);
-    }
+    border-radius: 10px;
   }
 
   .producto-imagen {
-    height: 200px;
+    height: 100px;
   }
 
   .producto-info {
-    padding: 1rem;
+    padding: 8px;
 
     h4 {
-      font-size: 0.95rem;
+      font-size: 0.75rem;
+      margin-bottom: 4px;
+      line-height: 1.2;
+      height: 2.4em;
+      overflow: hidden;
     }
 
     .descripcion {
-      font-size: 0.8rem;
+      font-size: 0.65rem;
+      line-height: 1.2;
       height: 2.4em;
+      margin: 4px 0;
     }
 
     .precio {
-      font-size: 1.15rem;
+      font-size: 0.85rem;
+      margin: 4px 0;
     }
 
     .stock {
-      font-size: 0.75rem;
-      margin-bottom: 0.7rem;
+      font-size: 0.6rem;
+      margin-bottom: 6px;
     }
   }
 
   .btn-agregar,
   .btn-limpiar {
-    padding: 0.6rem;
-    font-size: 0.85rem;
+    padding: 5px 4px;
+    font-size: 0.58rem;
+    border-radius: 5px;
+    font-weight: 700;
+  }
+}
+
+@media (max-width: 480px) {
+  .header {
+    height: 120px;
+
+    h1 {
+      font-size: 1.3rem;
+      padding: 0 0.8rem;
+    }
+  }
+
+  .btn-volver {
+    left: 0.8rem;
+    top: 0.8rem;
+    padding: 0.4rem 0.7rem;
+    font-size: 0.8rem;
     border-radius: 8px;
+  }
+
+  .seccion-productos {
+    padding: 1rem 0.8rem;
+  }
+
+  .info-resultados {
+    margin-bottom: 1rem;
+
+    .contador {
+      font-size: 0.85rem;
+    }
+  }
+
+  .productos-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+
+  .producto-card {
+    border-radius: 8px;
+
+    &:hover {
+      transform: translateY(-3px);
+    }
+  }
+
+  .producto-imagen {
+    height: 85px;
+  }
+
+  .producto-info {
+    padding: 6px;
+
+    h4 {
+      font-size: 0.7rem;
+      margin-bottom: 3px;
+      line-height: 1.1;
+      height: 2.2em;
+    }
+
+    .descripcion {
+      font-size: 0.6rem;
+      line-height: 1.1;
+      height: 2.2em;
+      margin: 3px 0;
+    }
+
+    .precio {
+      font-size: 0.8rem;
+      margin: 3px 0;
+    }
+
+    .stock {
+      font-size: 0.55rem;
+      margin-bottom: 5px;
+    }
+  }
+
+  .btn-agregar,
+  .btn-limpiar {
+    padding: 4px 3px;
+    font-size: 0.55rem;
+    border-radius: 4px;
+    font-weight: 700;
   }
 }
