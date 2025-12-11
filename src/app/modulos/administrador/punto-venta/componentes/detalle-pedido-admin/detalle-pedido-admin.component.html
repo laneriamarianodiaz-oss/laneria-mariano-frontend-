@@ -50,35 +50,35 @@
           </div>
 
           <!-- Productos -->
-<div class="card">
-  <h2>🛍️ Productos ({{ totalProductos }} items)</h2>
-  <div class="productos-lista">
-    <div class="producto-item" *ngFor="let producto of pedido.productos">
-      
-      <!-- Imagen del producto si existe -->
-      <div class="producto-imagen" *ngIf="producto.imagen_url">
-        <img 
-          [src]="producto.imagen_url" 
-          [alt]="producto.nombre_producto"
-          (error)="onImageError($event)">
-      </div>
-      
-      <!-- Icono si no hay imagen -->
-      <div class="producto-icono" *ngIf="!producto.imagen_url">
-        📦
-      </div>
-      
-      <div class="producto-info">
-        <h4>{{ producto.nombre_producto }}</h4>
-        <p class="producto-cantidad">Cantidad: <strong>{{ producto.cantidad }}</strong></p>
-        <p class="producto-unitario">Precio unitario: S/ {{ producto.precio_unitario?.toFixed(2) }}</p>
-      </div>
-      <div class="producto-precio">
-        <strong>S/ {{ producto.subtotal?.toFixed(2) }}</strong>
-      </div>
-    </div>
-  </div>
-</div>
+          <div class="card">
+            <h2>🛍️ Productos ({{ totalProductos }} items)</h2>
+            <div class="productos-lista">
+              <div class="producto-item" *ngFor="let producto of pedido.productos">
+                
+                <!-- Imagen del producto si existe -->
+                <div class="producto-imagen" *ngIf="producto.imagen_url">
+                  <img 
+                    [src]="producto.imagen_url" 
+                    [alt]="producto.nombre_producto"
+                    (error)="onImageError($event)">
+                </div>
+                
+                <!-- Icono si no hay imagen -->
+                <div class="producto-icono" *ngIf="!producto.imagen_url">
+                  📦
+                </div>
+                
+                <div class="producto-info">
+                  <h4>{{ producto.nombre_producto }}</h4>
+                  <p class="producto-cantidad">Cantidad: <strong>{{ producto.cantidad }}</strong></p>
+                  <p class="producto-unitario">Precio unitario: S/ {{ producto.precio_unitario?.toFixed(2) }}</p>
+                </div>
+                <div class="producto-precio">
+                  <strong>S/ {{ producto.subtotal?.toFixed(2) }}</strong>
+                </div>
+              </div>
+            </div>
+          </div>
 
         </div>
 
@@ -108,73 +108,45 @@
             </div>
           </div>
 
-<div class="card" *ngIf="pedido.comprobante_pago">
-  <h2>📸 Comprobante de Pago</h2>
-  
-  <div class="comprobante-container">
-    <!-- Imagen del comprobante -->
-    <div class="comprobante-imagen">
-      <img 
-        [src]="pedido.comprobante_pago" 
-        alt="Comprobante de pago"
-        (click)="abrirImagenCompleta(pedido.comprobante_pago)"
-        class="comprobante-img">
-      <p class="zoom-hint">👆 Haz clic para ver en tamaño completo</p>
-    </div>
-    
-    <!-- Código de operación -->
-    <div class="codigo-operacion">
-      <span class="label">Código de operación:</span>
-      <span class="codigo">{{ pedido.codigo_operacion || 'No proporcionado' }}</span>
-      
-      <button 
-        class="btn-copiar"
-        (click)="copiarCodigo(pedido.codigo_operacion)">
-        📋 Copiar código
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- 📸 COMPROBANTE DE PAGO -->
-<div class="card card-comprobante" *ngIf="pedido.comprobante_pago || pedido.codigo_operacion">
-  <h2>📸 Comprobante de Pago</h2>
-  
-  <!-- Imagen del comprobante -->
-  <div class="comprobante-container" *ngIf="pedido.comprobante_pago">
-    <div class="comprobante-imagen">
-      <img 
-        [src]="pedido.comprobante_pago" 
-        alt="Comprobante de pago"
-        (click)="abrirImagenCompleta(pedido.comprobante_pago)"
-        (error)="onComprobanteError($event)"
-        class="img-comprobante">
-      <p class="zoom-hint">👆 Haz clic para ampliar</p>
-    </div>
-  </div>
-  
-  <!-- Mensaje si no hay imagen -->
-  <div class="sin-comprobante" *ngIf="!pedido.comprobante_pago">
-    <p>⚠️ No se ha subido comprobante aún</p>
-  </div>
-  
-  <!-- Código de operación destacado -->
-  <div class="codigo-operacion-destacado" *ngIf="pedido.codigo_operacion">
-    <div class="codigo-header">
-      <span class="label">🔢 Código de operación:</span>
-    </div>
-    <div class="codigo-contenido">
-      <code class="codigo-texto">{{ pedido.codigo_operacion }}</code>
-      <button 
-        type="button"
-        class="btn-copiar-codigo"
-        (click)="copiarCodigo(pedido.codigo_operacion)"
-        title="Copiar código">
-        📋 Copiar
-      </button>
-    </div>
-  </div>
-</div>
+          <!-- 📸 COMPROBANTE DE PAGO -->
+          <div class="card card-comprobante" *ngIf="pedido.comprobante_pago || pedido.codigo_operacion">
+            <h2>📸 Comprobante de Pago</h2>
+            
+            <!-- Imagen del comprobante -->
+            <div class="comprobante-container" *ngIf="pedido.comprobante_pago">
+              <div class="comprobante-imagen">
+                <img 
+                  [src]="pedido.comprobante_pago" 
+                  alt="Comprobante de pago"
+                  (click)="abrirImagenCompleta(pedido.comprobante_pago)"
+                  (error)="onComprobanteError($event)"
+                  class="img-comprobante">
+                <p class="zoom-hint">👆 Haz clic para ampliar</p>
+              </div>
+            </div>
+            
+            <!-- Mensaje si no hay imagen -->
+            <div class="sin-comprobante" *ngIf="!pedido.comprobante_pago">
+              <p>⚠️ No se ha subido comprobante aún</p>
+            </div>
+            
+            <!-- Código de operación destacado -->
+            <div class="codigo-operacion-destacado" *ngIf="pedido.codigo_operacion">
+              <div class="codigo-header">
+                <span class="label">🔢 Código de operación:</span>
+              </div>
+              <div class="codigo-contenido">
+                <code class="codigo-texto">{{ pedido.codigo_operacion }}</code>
+                <button 
+                  type="button"
+                  class="btn-copiar-codigo"
+                  (click)="copiarCodigo(pedido.codigo_operacion)"
+                  title="Copiar código">
+                  📋 Copiar
+                </button>
+              </div>
+            </div>
+          </div>
 
           <!-- Información del Pedido -->
           <div class="card">
@@ -191,10 +163,6 @@
               <div class="info-item">
                 <span class="label">Método de pago:</span>
                 <span class="valor">{{ pedido.metodo_pago || 'No especificado' }}</span>
-              </div>
-              <div class="info-item" *ngIf="pedido.codigo_operacion">
-                <span class="label">Código operación:</span>
-                <span class="valor">{{ pedido.codigo_operacion }}</span>
               </div>
             </div>
           </div>

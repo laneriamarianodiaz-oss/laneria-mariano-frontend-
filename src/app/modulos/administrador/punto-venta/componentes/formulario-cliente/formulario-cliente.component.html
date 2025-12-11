@@ -43,7 +43,7 @@
     </form>
   }
 
-  <!-- ⭐ RESULTADOS DE BÚSQUEDA (si hay múltiples) -->
+  <!-- ⭐ RESULTADOS DE BÚSQUEDA -->
   @if (resultadosBusqueda().length > 0) {
     <div class="formulario-body">
       <div class="alerta-info">
@@ -56,7 +56,7 @@
           <div class="tarjeta-cliente-resultado" (click)="seleccionarCliente(cliente)">
             <div class="info-cliente-resultado">
               <p class="nombre-resultado">
-                <strong>{{ cliente.nombre_clie }}</strong>
+                <strong>{{ cliente.nombre_cliente }}</strong>
               </p>
               @if (cliente.dni) {
                 <p class="dato-resultado">🪪 DNI: {{ cliente.dni }}</p>

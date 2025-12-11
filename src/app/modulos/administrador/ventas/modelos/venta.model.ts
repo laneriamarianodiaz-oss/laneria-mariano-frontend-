@@ -31,7 +31,7 @@ export interface Venta {
   cliente_id?: number;
   cliente?: {
     cliente_id: number;
-    nombre_clie: string;
+    nombre_cliente: string;
     telefono: string;
     email?: string;
     direccion?: string;

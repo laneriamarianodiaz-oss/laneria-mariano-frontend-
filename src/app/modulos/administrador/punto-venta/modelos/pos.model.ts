@@ -5,18 +5,17 @@ import { Producto } from '../../productos/modelos/producto.model';
  */
 export interface Cliente {
   cliente_id: number;
-  nombre_clie: string;
-  nombre_cliente?: string;  
-  dni?: string;              
+  nombre_cliente: string;  // ✅ CORREGIDO (era nombre_cliente)
+  contacto_cliente?: string;
   telefono: string;
   email?: string;
   direccion?: string;
-  contacto_clie?: string;
-  contacto_cliente?: string;
-  preferencias_clie?: string;
-  preferencias_cliente?: string;
+  preferencias_cliente?: string;  // ✅ CORREGIDO (era preferencias_clientente)
   historial_compras?: string;
   fecha_registro?: string;
+  dni?: string;
+  created_at?: string;
+  updated_at?: string;
 }
 
 /**
@@ -130,7 +129,7 @@ export interface RespuestaCliente {
  */
 export interface SolicitudCliente {
   nombre: string;
-  dni?: string;      // ⭐ ESTA LÍNEA ES LA QUE FALTA
+  dni?: string;
   telefono: string;
   email?: string;
   direccion?: string;

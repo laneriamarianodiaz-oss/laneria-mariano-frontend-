@@ -304,7 +304,7 @@ getMetodoPagoIcono(metodo: string): string {
 exportarHistorial(): void {
   if (!this.clienteSeleccionado) return;
   
-  alert(`📄 Exportando historial de ${this.clienteSeleccionado.nombre_clie}...\n\n(Funcionalidad en desarrollo)`);
+  alert(`📄 Exportando historial de ${this.clienteSeleccionado.nombre_cliente}...\n\n(Funcionalidad en desarrollo)`);
   
   // TODO: Implementar exportación real con jsPDF
 }

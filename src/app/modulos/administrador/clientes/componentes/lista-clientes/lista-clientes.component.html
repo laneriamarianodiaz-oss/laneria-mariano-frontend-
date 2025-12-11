@@ -60,7 +60,7 @@
             @for (cliente of estadisticas()!.top_clientes; track cliente.cliente_id) {
               <div class="top-item">
                 <div class="top-info">
-                  <span class="top-nombre">{{ cliente.nombre_clie }}</span>
+                  <span class="top-nombre">{{ cliente.nombre_cliente }}</span>
                   <span class="top-compras">{{ cliente.cantidad_compras }} compras</span>
                 </div>
                 <div class="top-total">{{ formatearMoneda(cliente.total_compras) }}</div>
@@ -155,9 +155,9 @@
               <!-- NOMBRE -->
               <td>
                 <div class="cliente-info">
-                  <span class="cliente-nombre">{{ cliente.nombre_clie || 'Sin nombre' }}</span>
-                  @if (cliente.contacto_clie) {
-                    <span class="cliente-contacto">{{ cliente.contacto_clie }}</span>
+                  <span class="cliente-nombre">{{ cliente.nombre_cliente || 'Sin nombre' }}</span>
+                  @if (cliente.contacto_cliente) {
+                    <span class="cliente-contacto">{{ cliente.contacto_cliente }}</span>
                   }
                 </div>
               </td>
@@ -273,7 +273,7 @@
         <div class="header-left">
           <div class="icono-cliente">👤</div>
           <div class="header-info">
-            <h2>{{ clienteSeleccionado.nombre_clie }}</h2>
+            <h2>{{ clienteSeleccionado.nombre_cliente }}</h2>
             <p class="cliente-telefono">📱 {{ clienteSeleccionado.telefono }}</p>
           </div>
         </div>
@@ -329,10 +329,10 @@
           <span class="dato-label">📍 Dirección:</span>
           <span class="dato-valor">{{ clienteSeleccionado.direccion || 'No registrada' }}</span>
         </div>
-        @if (clienteSeleccionado.preferencias_clie) {
+        @if (clienteSeleccionado.preferencias_cliente) {
           <div class="dato-item full-width">
             <span class="dato-label">⭐ Preferencias:</span>
-            <span class="dato-valor">{{ clienteSeleccionado.preferencias_clie }}</span>
+            <span class="dato-valor">{{ clienteSeleccionado.preferencias_cliente }}</span>
           </div>
         }
       </div>

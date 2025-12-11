@@ -47,7 +47,7 @@
             <div class="info-item">
               <span class="info-label">Nombre Completo:</span>
               <span class="info-valor nombre-destacado">
-                {{ cliente()!.nombre_clie }}
+                {{ cliente()!.nombre_cliente }}
               </span>
             </div>
 
@@ -66,10 +66,10 @@
             </div>
 
             <!-- Contacto Adicional -->
-            @if (cliente()!.contacto_clie) {
+            @if (cliente()!.contacto_cliente) {
               <div class="info-item">
                 <span class="info-label">👥 Contacto Adicional:</span>
-                <span class="info-valor">{{ cliente()!.contacto_clie }}</span>
+                <span class="info-valor">{{ cliente()!.contacto_cliente }}</span>
               </div>
             }
 
@@ -82,10 +82,10 @@
             }
 
             <!-- Preferencias -->
-            @if (cliente()!.preferencias_clie) {
+            @if (cliente()!.preferencias_cliente) {
               <div class="info-item full-width">
                 <span class="info-label">⭐ Preferencias:</span>
-                <span class="info-valor">{{ cliente()!.preferencias_clie }}</span>
+                <span class="info-valor">{{ cliente()!.preferencias_cliente }}</span>
               </div>
             }
 
@@ -191,7 +191,7 @@
                         {{ compra.estado_venta }}
                       </span>
                       <span class="total-compra">
-                        {{ formatearMoneda(compra.total_venta) }}
+                        {{ formatearMoneda(compra.total) }}
                       </span>
                     </div>
                   </div>

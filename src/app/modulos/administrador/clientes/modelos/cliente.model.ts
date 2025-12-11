@@ -4,12 +4,12 @@
 
 export interface Cliente {
   cliente_id: number;
-  nombre_clie: string;
-  contacto_clie?: string;
+  nombre_cliente: string;
+  contacto_cliente?: string;
   telefono: string;
   email?: string;
   direccion?: string;
-  preferencias_clie?: string;
+  preferencias_cliente?: string;
   historial_compras?: string;
   fecha_registro: string;
   total_compras?: number;
@@ -43,21 +43,21 @@ export interface FiltrosCliente {
 }
 
 export interface CrearClienteDTO {
-  nombre_clie: string;
+  nombre_cliente: string;
   telefono: string;
   email?: string;
   direccion?: string;
-  contacto_clie?: string;
-  preferencias_clie?: string;
+  contacto_cliente?: string;
+  preferencias_cliente?: string;
 }
 
 export interface ActualizarClienteDTO {
-  nombre_clie?: string;
+  nombre_cliente?: string;
   telefono?: string;
   email?: string;
   direccion?: string;
-  contacto_clie?: string;
-  preferencias_clie?: string;
+  contacto_cliente?: string;
+  preferencias_cliente?: string;
 }
 
 // ✅ MODELO CORRECTO DEL HISTORIAL
@@ -86,7 +86,7 @@ export interface EstadisticasCliente {
   clientes_activos: number;
   top_clientes: {
     cliente_id: number;
-    nombre_clie: string;
+    nombre_cliente: string;
     total_compras: number;
     cantidad_compras: number;
   }[];

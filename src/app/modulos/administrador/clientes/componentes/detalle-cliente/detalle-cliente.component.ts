@@ -83,7 +83,7 @@ export class DetalleClienteComponent implements OnInit {
     if (!this.cliente()) return;
 
     const confirmar = confirm(
-      `¿Está seguro de eliminar al cliente "${this.cliente()!.nombre_clie}"?\n\nEsta acción no se puede deshacer.`
+      `¿Está seguro de eliminar al cliente "${this.cliente()!.nombre_cliente}"?\n\nEsta acción no se puede deshacer.`
     );
 
     if (confirmar) {

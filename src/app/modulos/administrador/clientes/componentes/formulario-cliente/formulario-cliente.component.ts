@@ -53,12 +53,12 @@ export class FormularioClienteComponent implements OnInit {
       next: (respuesta) => {
         if (respuesta.success) {
           const cliente = respuesta.data;
-          this.nombre.set(cliente.nombre_clie);
+          this.nombre.set(cliente.nombre_cliente);
           this.telefono.set(cliente.telefono);
           this.email.set(cliente.email || '');
           this.direccion.set(cliente.direccion || '');
-          this.contacto.set(cliente.contacto_clie || '');
-          this.preferencias.set(cliente.preferencias_clie || '');
+          this.contacto.set(cliente.contacto_cliente || '');
+          this.preferencias.set(cliente.preferencias_cliente || '');
         }
         this.cargando.set(false);
       },
@@ -120,12 +120,12 @@ export class FormularioClienteComponent implements OnInit {
    */
   crearCliente(): void {
     const datos: CrearClienteDTO = {
-      nombre_clie: this.nombre().trim(),
+      nombre_cliente: this.nombre().trim(),
       telefono: this.telefono().trim(),
       email: this.email().trim() || undefined,
       direccion: this.direccion().trim() || undefined,
-      contacto_clie: this.contacto().trim() || undefined,
-      preferencias_clie: this.preferencias().trim() || undefined,
+      contacto_cliente: this.contacto().trim() || undefined,
+      preferencias_cliente: this.preferencias().trim() || undefined,
     };
 
     this.clienteService.crearCliente(datos).subscribe({
@@ -151,12 +151,12 @@ export class FormularioClienteComponent implements OnInit {
     if (!this.clienteId()) return;
 
     const datos: ActualizarClienteDTO = {
-      nombre_clie: this.nombre().trim(),
+      nombre_cliente: this.nombre().trim(),
       telefono: this.telefono().trim(),
       email: this.email().trim() || undefined,
       direccion: this.direccion().trim() || undefined,
-      contacto_clie: this.contacto().trim() || undefined,
-      preferencias_clie: this.preferencias().trim() || undefined,
+      contacto_cliente: this.contacto().trim() || undefined,
+      preferencias_cliente: this.preferencias().trim() || undefined,
     };
 
     this.clienteService.actualizarCliente(this.clienteId()!, datos).subscribe({
