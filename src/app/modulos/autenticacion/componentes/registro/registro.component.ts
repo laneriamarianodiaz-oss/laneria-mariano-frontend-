@@ -25,7 +25,9 @@ export class RegistroComponent {
       email: ['', [Validators.required, Validators.email]],
       nombre: ['', [Validators.required, Validators.minLength(2)]],
       apellido: ['', [Validators.required, Validators.minLength(2)]],
-      telefono: ['', [Validators.required, Validators.minLength(9)]],
+      telefono: ['', [Validators.required, Validators.pattern(/^9\d{8}$/)]],
+      dni: ['', [Validators.required, Validators.pattern(/^\d{8}$/)]], // ⭐ OBLIGATORIO
+      direccion: [''], // ⭐ Opcional
       password: ['', [Validators.required, Validators.minLength(6)]],
       password_confirmation: ['', [Validators.required]]
     }, {
@@ -49,26 +51,28 @@ export class RegistroComponent {
         email: this.formularioRegistro.value.email,
         password: this.formularioRegistro.value.password,
         password_confirmation: this.formularioRegistro.value.password,
-        telefono: this.formularioRegistro.value.telefono
+        telefono: this.formularioRegistro.value.telefono,
+        dni: this.formularioRegistro.value.dni, // ⭐ Se envía siempre
+        direccion: this.formularioRegistro.value.direccion || undefined
       };
+
+      console.log('📤 Enviando datos de registro:', datos);
 
       this.authService.registrarse(datos).subscribe({
         next: (respuesta) => {
           console.log('✅ Registro exitoso', respuesta);
           
           if (respuesta.success && respuesta.data && respuesta.data.token) {
-            // Pequeña pausa para asegurar que el token se guardó
             setTimeout(() => {
-              // Redirigir según el rol
               const rol = respuesta.data.user.rol;
               
               if (rol === 'administrador') {
                 this.router.navigate(['/administrador']).then(() => {
-                  window.location.reload(); // Refrescar para actualizar el estado
+                  window.location.reload();
                 });
               } else {
                 this.router.navigate(['/catalogo']).then(() => {
-                  window.location.reload(); // Refrescar para actualizar el estado
+                  window.location.reload();
                 });
               }
             }, 300);
@@ -80,7 +84,6 @@ export class RegistroComponent {
         error: (error) => {
           console.error('❌ Error al registrarse', error);
           
-          // Mostrar error específico
           if (error.error?.message) {
             this.error = error.error.message;
           } else if (error.error?.errors) {
@@ -94,7 +97,6 @@ export class RegistroComponent {
         }
       });
     } else {
-      // Mostrar qué campo está mal
       if (this.formularioRegistro.errors?.['passwordsMismatch']) {
         this.error = 'Las contraseñas no coinciden';
       } else {

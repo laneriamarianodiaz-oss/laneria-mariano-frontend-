@@ -28,17 +28,43 @@
         <div class="campo">
           <label>Nombre</label>
           <input type="text" formControlName="nombre" placeholder="Ingresa un nombre">
+          <small *ngIf="formularioRegistro.get('nombre')?.invalid && formularioRegistro.get('nombre')?.touched" class="error">
+            Mínimo 2 caracteres
+          </small>
         </div>
 
         <div class="campo">
           <label>Apellido</label>
           <input type="text" formControlName="apellido" placeholder="Ingresa apellidos">
+          <small *ngIf="formularioRegistro.get('apellido')?.invalid && formularioRegistro.get('apellido')?.touched" class="error">
+            Mínimo 2 caracteres
+          </small>
         </div>
       </div>
 
+      <!-- ⭐ CELULAR Y DNI EN FILA -->
+      <div class="fila">
+        <div class="campo">
+          <label>Celular</label>
+          <input type="tel" formControlName="telefono" placeholder="987654321" maxlength="9">
+          <small *ngIf="formularioRegistro.get('telefono')?.invalid && formularioRegistro.get('telefono')?.touched" class="error">
+            Debe comenzar con 9 y tener 9 dígitos
+          </small>
+        </div>
+
+        <div class="campo">
+          <label>DNI</label>
+          <input type="text" formControlName="dni" placeholder="12345678" maxlength="8">
+          <small *ngIf="formularioRegistro.get('dni')?.invalid && formularioRegistro.get('dni')?.touched" class="error">
+            Debe tener 8 dígitos
+          </small>
+        </div>
+      </div>
+
+      <!-- ⭐ DIRECCIÓN (OPCIONAL) -->
       <div class="campo">
-        <label>Celular</label>
-        <input type="tel" formControlName="telefono" placeholder="+51 | Ingresa un celular">
+        <label>Dirección (opcional)</label>
+        <input type="text" formControlName="direccion" placeholder="Av. Principal 123">
       </div>
 
       <div class="campo">
