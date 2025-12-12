@@ -289,28 +289,5 @@ h2 {
     padding: 7px;
     margin-bottom: 10px;
   }
-  /* ------- TODO TU SCSS ORIGINAL AQUÍ -------- */
-
-/* ⭐ AGREGADO PARA MOSTRAR/OCULTAR CONTRASEÑA */
-.password-wrapper {
-  position: relative;
-  width: 100%;
-}
-
-.toggle-pass {
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 18px;
-  padding: 5px;
-}
-
-.password-campo input {
-  padding-right: 35px !important;
-}
-
+  
 }

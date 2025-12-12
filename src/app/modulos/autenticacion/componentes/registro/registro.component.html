@@ -9,7 +9,10 @@
 
     <h2>Regístrate</h2>
 
-    <div *ngIf="error" class="alerta-error">{{ error }}</div>
+    <!-- Mostrar errores -->
+    <div *ngIf="error" class="alerta-error">
+      {{ error }}
+    </div>
 
     <form [formGroup]="formularioRegistro" (ngSubmit)="registrarse()">
 
@@ -17,76 +20,73 @@
         <label>Correo electrónico</label>
         <input type="email" formControlName="email" placeholder="Ingresa un correo">
         <small *ngIf="formularioRegistro.get('email')?.invalid && formularioRegistro.get('email')?.touched" class="error">
-          Solo se permiten correos @gmail.com o @unajma.edu.pe
+          Correo inválido
         </small>
       </div>
 
       <div class="fila">
         <div class="campo">
           <label>Nombre</label>
-          <input type="text" formControlName="nombre">
+          <input type="text" formControlName="nombre" placeholder="Ingresa un nombre">
+          <small *ngIf="formularioRegistro.get('nombre')?.invalid && formularioRegistro.get('nombre')?.touched" class="error">
+            Mínimo 2 caracteres
+          </small>
         </div>
 
         <div class="campo">
           <label>Apellido</label>
-          <input type="text" formControlName="apellido">
+          <input type="text" formControlName="apellido" placeholder="Ingresa apellidos">
+          <small *ngIf="formularioRegistro.get('apellido')?.invalid && formularioRegistro.get('apellido')?.touched" class="error">
+            Mínimo 2 caracteres
+          </small>
         </div>
       </div>
 
+      <!-- ⭐ CELULAR Y DNI EN FILA -->
       <div class="fila">
         <div class="campo">
           <label>Celular</label>
-          <input type="tel" formControlName="telefono" maxlength="9">
+          <input type="tel" formControlName="telefono" placeholder="987654321" maxlength="9">
+          <small *ngIf="formularioRegistro.get('telefono')?.invalid && formularioRegistro.get('telefono')?.touched" class="error">
+            Debe comenzar con 9 y tener 9 dígitos
+          </small>
         </div>
 
         <div class="campo">
           <label>DNI</label>
-          <input type="text" formControlName="dni" maxlength="8">
+          <input type="text" formControlName="dni" placeholder="12345678" maxlength="8">
+          <small *ngIf="formularioRegistro.get('dni')?.invalid && formularioRegistro.get('dni')?.touched" class="error">
+            Debe tener 8 dígitos
+          </small>
         </div>
+      </div>
+
+      <!-- ⭐ DIRECCIÓN (OPCIONAL) -->
+      <div class="campo">
+        <label>Dirección (opcional)</label>
+        <input type="text" formControlName="direccion" placeholder="Av. Principal 123">
       </div>
 
       <div class="campo">
-        <label>Dirección (opcional)</label>
-        <input type="text" formControlName="direccion">
-      </div>
-
-      <!-- PASSWORD -->
-      <div class="campo password-campo">
         <label>Contraseña</label>
-        <div class="password-wrapper">
-          <input 
-            [type]="mostrarPassword ? 'text' : 'password'"
-            formControlName="password"
-            placeholder="Ingresa una contraseña"
-          >
-          <button type="button" class="toggle-pass" (click)="togglePassword()">
-            {{ mostrarPassword ? '👁️' : '🙈' }}
-          </button>
-        </div>
+        <input type="password" formControlName="password" placeholder="Ingresa una contraseña">
+        <small *ngIf="formularioRegistro.get('password')?.invalid && formularioRegistro.get('password')?.touched" class="error">
+          Mínimo 6 caracteres
+        </small>
       </div>
 
-      <!-- CONFIRM PASSWORD -->
-      <div class="campo password-campo">
+      <div class="campo">
         <label>Confirmar contraseña</label>
-        <div class="password-wrapper">
-          <input 
-            [type]="mostrarPasswordConfirm ? 'text' : 'password'"
-            formControlName="password_confirmation"
-            placeholder="Confirma tu contraseña"
-          >
-          <button type="button" class="toggle-pass" (click)="togglePasswordConfirm()">
-            {{ mostrarPasswordConfirm ? '👁️' : '🙈' }}
-          </button>
-        </div>
-
-        <small *ngIf="formularioRegistro.errors?.['passwordsMismatch'] 
-               && formularioRegistro.get('password_confirmation')?.touched"
-          class="error">Las contraseñas no coinciden</small>
+        <input type="password" formControlName="password_confirmation" placeholder="Confirma tu contraseña">
+        <small *ngIf="formularioRegistro.get('password_confirmation')?.value !== formularioRegistro.get('password')?.value && formularioRegistro.get('password_confirmation')?.touched" class="error">
+          Las contraseñas no coinciden
+        </small>
       </div>
 
       <button type="submit" class="btn-registrar" [disabled]="cargando || formularioRegistro.invalid">
         {{ cargando ? 'Registrando...' : 'Registrarte' }}
       </button>
+
     </form>
 
     <p class="texto-login">
