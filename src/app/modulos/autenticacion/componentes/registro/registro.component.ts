@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, AbstractControl, ValidationErrors } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AutenticacionService } from '../../../../nucleo/servicios/autenticacion.service';
 
@@ -15,6 +15,8 @@ export class RegistroComponent {
   formularioRegistro: FormGroup;
   cargando = false;
   error: string | null = null;
+  mostrarPassword = false;
+  mostrarPasswordConfirmacion = false;
 
   constructor(
     private fb: FormBuilder,
@@ -22,12 +24,12 @@ export class RegistroComponent {
     private router: Router
   ) {
     this.formularioRegistro = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.email, this.validarCorreoPermitido]],
       nombre: ['', [Validators.required, Validators.minLength(2)]],
       apellido: ['', [Validators.required, Validators.minLength(2)]],
       telefono: ['', [Validators.required, Validators.pattern(/^9\d{8}$/)]],
-      dni: ['', [Validators.required, Validators.pattern(/^\d{8}$/)]], // ⭐ OBLIGATORIO
-      direccion: [''], // ⭐ Opcional
+      dni: ['', [Validators.required, Validators.pattern(/^\d{8}$/)]],
+      direccion: [''],
       password: ['', [Validators.required, Validators.minLength(6)]],
       password_confirmation: ['', [Validators.required]]
     }, {
@@ -35,10 +37,28 @@ export class RegistroComponent {
     });
   }
 
+  validarCorreoPermitido(control: AbstractControl): ValidationErrors | null {
+    const email = control.value;
+    if (!email) return null;
+    
+    const dominiosPermitidos = ['@gmail.com', '@unajma.edu.pe'];
+    const esValido = dominiosPermitidos.some(dominio => email.toLowerCase().endsWith(dominio));
+    
+    return esValido ? null : { correoNoPermitido: true };
+  }
+
   passwordsCoinciden(group: FormGroup) {
     const password = group.get('password')?.value;
     const confirmacion = group.get('password_confirmation')?.value;
     return password === confirmacion ? null : { passwordsMismatch: true };
+  }
+
+  toggleMostrarPassword(): void {
+    this.mostrarPassword = !this.mostrarPassword;
+  }
+
+  toggleMostrarPasswordConfirmacion(): void {
+    this.mostrarPasswordConfirmacion = !this.mostrarPasswordConfirmacion;
   }
 
   registrarse(): void {
@@ -52,7 +72,7 @@ export class RegistroComponent {
         password: this.formularioRegistro.value.password,
         password_confirmation: this.formularioRegistro.value.password,
         telefono: this.formularioRegistro.value.telefono,
-        dni: this.formularioRegistro.value.dni, // ⭐ Se envía siempre
+        dni: this.formularioRegistro.value.dni,
         direccion: this.formularioRegistro.value.direccion || undefined
       };
 
