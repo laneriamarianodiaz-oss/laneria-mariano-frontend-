@@ -1,6 +1,5 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TableroService } from '../../servicios/tablero.service';
 
 @Component({
   selector: 'app-tarjetas-estadisticas',
@@ -9,11 +8,9 @@ import { TableroService } from '../../servicios/tablero.service';
   templateUrl: './tarjetas-estadisticas.component.html',
   styleUrl: './tarjetas-estadisticas.component.css'
 })
-export class TarjetasEstadisticasComponent implements OnInit {
+export class TarjetasEstadisticasComponent {
   
-  private tableroService = inject(TableroService);
-  
-  // ✅ Inicializar con valores por defecto
+  // ✅ Recibir estadísticas desde el componente padre
   @Input() estadisticas: any = {
     ventasHoy: 0,
     ventasMes: 0,
@@ -23,40 +20,6 @@ export class TarjetasEstadisticasComponent implements OnInit {
     cambioVentasMes: 0,
     cambioTicket: 0
   };
-
-  cargando: boolean = true;
-
-  ngOnInit(): void {
-    this.cargarEstadisticas();
-  }
-
-  cargarEstadisticas(): void {
-    this.cargando = true;
-    
-    this.tableroService.obtenerEstadisticas().subscribe({
-      next: (data) => {
-        console.log('📊 Datos recibidos en componente:', data);
-        
-        // ✅ Asignar directamente los datos recibidos
-        this.estadisticas = {
-          ventasHoy: data.ventasHoy || 0,
-          ventasMes: data.ventasMes || 0,
-          ticketPromedio: data.ticketPromedio || 0,
-          productosStockBajo: data.productosStockBajo || 0,
-          cambioVentasHoy: data.cambioVentasHoy || 0,
-          cambioVentasMes: data.cambioVentasMes || 0,
-          cambioTicket: data.cambioTicket || 0
-        };
-        
-        this.cargando = false;
-        console.log('✅ Estadísticas actualizadas:', this.estadisticas);
-      },
-      error: (error) => {
-        console.error('❌ Error al cargar estadísticas:', error);
-        this.cargando = false;
-      }
-    });
-  }
 
   /**
    * Formatea un número como moneda peruana

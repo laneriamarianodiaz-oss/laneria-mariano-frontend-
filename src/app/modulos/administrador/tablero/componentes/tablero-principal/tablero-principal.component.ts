@@ -34,37 +34,37 @@ export class TableroPrincipalComponent implements OnInit {
   }
 
   /**
-   * Cargar datos del dashboard
+   * Cargar todos los datos del dashboard
    */
   cargarDatos(): void {
     this.cargando.set(true);
     this.error.set(null);
 
-    // ✅ USAR obtenerEstadisticas() en lugar de obtenerDatosDashboard()
-    this.tableroService.obtenerEstadisticas().subscribe({
-      next: (estadisticas) => {
-        console.log('📊 Estadísticas recibidas:', estadisticas);
+    // ✅ Usar el método que carga todos los datos
+    this.tableroService.obtenerDatosDashboard().subscribe({
+      next: (resultado) => {
+        console.log('📊 Datos del dashboard recibidos:', resultado);
         
-        // ✅ Construir DashboardData con los datos reales
         const dashboardData: DashboardData = {
           estadisticas: {
-            ventasHoy: estadisticas.ventasHoy,
-            ventasMes: estadisticas.ventasMes,
-            ticketPromedio: estadisticas.ticketPromedio,
-            productosStockBajo: estadisticas.productosStockBajo
+            ventasHoy: resultado.estadisticas.ventasHoy,
+            ventasMes: resultado.estadisticas.ventasMes,
+            ticketPromedio: resultado.estadisticas.ticketPromedio,
+            productosStockBajo: resultado.estadisticas.productosStockBajo,
+            cambioVentasHoy: resultado.estadisticas.cambioVentasHoy,
+            cambioVentasMes: resultado.estadisticas.cambioVentasMes,
+            cambioTicket: resultado.estadisticas.cambioTicket
           },
-          // Datos de prueba para las secciones que aún no tienen backend
-          ventasSemana: this.generarVentasSemana(),
-          alertasStock: [],
-          ventasRecientes: [],
-          topProductos: []
+          ventasSemana: resultado.ventasSemana || [],
+          alertasStock: resultado.alertasStock || [],
+          ventasRecientes: resultado.ventasRecientes || [],
+          topProductos: resultado.topProductos || []
         };
 
         this.datos.set(dashboardData);
         this.cargando.set(false);
         
-        // Cargar alertas de stock
-        this.cargarAlertasStock();
+        console.log('✅ Dashboard cargado exitosamente');
       },
       error: (err) => {
         console.error('❌ Error al cargar datos del dashboard:', err);
@@ -78,50 +78,18 @@ export class TableroPrincipalComponent implements OnInit {
   }
 
   /**
-   * Cargar alertas de stock
-   */
-  private cargarAlertasStock(): void {
-    this.tableroService.obtenerAlertasStock().subscribe({
-      next: (alertas) => {
-        const datosActuales = this.datos();
-        if (datosActuales) {
-          this.datos.set({
-            ...datosActuales,
-            alertasStock: alertas
-          });
-        }
-      },
-      error: (err) => {
-        console.error('❌ Error al cargar alertas:', err);
-      }
-    });
-  }
-
-  /**
-   * Generar datos de ventas de la semana (placeholder)
-   */
-  private generarVentasSemana() {
-    return [
-      { fecha: 'Lun', total: 0 },
-      { fecha: 'Mar', total: 0 },
-      { fecha: 'Mié', total: 0 },
-      { fecha: 'Jue', total: 0 },
-      { fecha: 'Vie', total: 0 },
-      { fecha: 'Sáb', total: 0 },
-      { fecha: 'Dom', total: 0 }
-    ];
-  }
-
-  /**
    * Datos de prueba para desarrollo
    */
   private cargarDatosPrueba(): void {
     const datosPrueba: DashboardData = {
       estadisticas: {
         ventasHoy: 0,
-        ventasMes: 25.00,
-        ticketPromedio: 25.00,
-        productosStockBajo: 0
+        ventasMes: 0,
+        ticketPromedio: 0,
+        productosStockBajo: 0,
+        cambioVentasHoy: 0,
+        cambioVentasMes: 0,
+        cambioTicket: 0
       },
       ventasSemana: [
         { fecha: 'Lun', total: 0 },
@@ -129,7 +97,7 @@ export class TableroPrincipalComponent implements OnInit {
         { fecha: 'Mié', total: 0 },
         { fecha: 'Jue', total: 0 },
         { fecha: 'Vie', total: 0 },
-        { fecha: 'Sáb', total: 25 },
+        { fecha: 'Sáb', total: 0 },
         { fecha: 'Dom', total: 0 }
       ],
       alertasStock: [],

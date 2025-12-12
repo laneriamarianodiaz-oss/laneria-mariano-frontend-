@@ -43,6 +43,9 @@ export interface DashboardData {
     ventasMes: number;
     ticketPromedio: number;
     productosStockBajo: number;
+    cambioVentasHoy?: number;      // ⭐ Agregado
+    cambioVentasMes?: number;      // ⭐ Agregado
+    cambioTicket?: number;          // ⭐ Agregado
   };
   ventasSemana: VentaDiaria[];
   alertasStock: ProductoStock[];
