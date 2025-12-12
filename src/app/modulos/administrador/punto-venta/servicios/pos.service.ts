@@ -1,7 +1,7 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { tap, map } from 'rxjs/operators';
+import { Observable, throwError } from 'rxjs';
+import { tap, map, catchError } from 'rxjs/operators';
 import { environment } from '../../../../../environments/environment';
 import {
   EstadoPOS,
@@ -58,16 +58,33 @@ export class PosService {
   readonly procesandoVenta = computed(() => this.estado().procesando_venta);
 
   /**
-   * ⭐ NUEVO: Búsqueda universal de clientes por nombre, DNI o teléfono
+   * ⭐ BUSCAR CLIENTE - Búsqueda universal por nombre, DNI o teléfono
    */
   buscarCliente(termino: string): Observable<{ success: boolean; data: Cliente[]; message: string }> {
+    console.log('🌐 === PosService.buscarCliente ===');
+    console.log('🌐 Término:', termino);
+    console.log('🌐 URL completa:', `${this.API_URL}/clientes/buscar?q=${termino}`);
+    
     const params = new HttpParams().set('q', termino);
     
     return this.http.get<any>(`${this.API_URL}/clientes/buscar`, { params })
       .pipe(
-        map(response => {
-          console.log('✅ Búsqueda de clientes:', response);
-          return response;
+        tap(response => {
+          console.log('🌐 ✅ Respuesta del servidor:', response);
+          console.log('🌐 Success:', response.success);
+          console.log('🌐 Data:', response.data);
+          console.log('🌐 Cantidad de clientes:', response.data?.length || 0);
+          
+          if (response.data && response.data.length > 0) {
+            console.log('🌐 Primer cliente encontrado:', response.data[0]);
+          }
+        }),
+        catchError(error => {
+          console.error('🌐 ❌ Error en búsqueda:', error);
+          console.error('🌐 Status:', error.status);
+          console.error('🌐 Message:', error.message);
+          console.error('🌐 Error completo:', error.error);
+          return throwError(() => error);
         })
       );
   }
@@ -76,15 +93,26 @@ export class PosService {
    * Buscar cliente por teléfono (mantener para compatibilidad)
    */
   buscarClientePorTelefono(telefono: string): Observable<RespuestaCliente> {
+    console.log('🌐 Buscando cliente por teléfono:', telefono);
+    
     return this.http.get<RespuestaCliente>(
-      `${this.API_URL}/clientes/buscar/telefono/${telefono}`
+      `${this.API_URL}/clientes/telefono/${telefono}`
+    ).pipe(
+      tap(response => console.log('🌐 Respuesta teléfono:', response)),
+      catchError(error => {
+        console.error('🌐 Error búsqueda por teléfono:', error);
+        return throwError(() => error);
+      })
     );
   }
 
   /**
-   * Crear nuevo cliente
+   * ⭐ CREAR NUEVO CLIENTE
    */
   crearCliente(datos: any): Observable<RespuestaCliente> {
+    console.log('🌐 === PosService.crearCliente ===');
+    console.log('🌐 Datos recibidos:', datos);
+    
     const solicitud: SolicitudCliente = {
       nombre: datos.nombre || '',
       dni: datos.dni || undefined,
@@ -93,7 +121,22 @@ export class PosService {
       direccion: datos.direccion || undefined,
     };
 
-    return this.http.post<RespuestaCliente>(`${this.API_URL}/clientes`, solicitud);
+    console.log('🌐 Solicitud preparada:', solicitud);
+    console.log('🌐 URL:', `${this.API_URL}/clientes`);
+
+    return this.http.post<RespuestaCliente>(`${this.API_URL}/clientes`, solicitud)
+      .pipe(
+        tap(response => {
+          console.log('🌐 ✅ Cliente creado:', response);
+          console.log('🌐 Data del cliente:', response.data);
+        }),
+        catchError(error => {
+          console.error('🌐 ❌ Error al crear cliente:', error);
+          console.error('🌐 Status:', error.status);
+          console.error('🌐 Errores de validación:', error.error?.errors);
+          return throwError(() => error);
+        })
+      );
   }
 
   /**
@@ -168,12 +211,29 @@ export class PosService {
   }
 
   /**
-   * Seleccionar cliente
+   * ⭐ SELECCIONAR CLIENTE
    */
   seleccionarCliente(cliente: Cliente): void {
+    console.log('✅ === Seleccionando cliente en servicio ===');
+    console.log('✅ Cliente:', cliente);
+    console.log('✅ ID:', cliente.cliente_id);
+    console.log('✅ Nombre:', cliente.nombre_cliente);
+    
     this.estado.update((estado) => ({
       ...estado,
       cliente_seleccionado: cliente,
+    }));
+    
+    console.log('✅ Estado actualizado. Cliente seleccionado:', this.clienteSeleccionado());
+  }
+
+  /**
+   * Limpiar cliente seleccionado
+   */
+  limpiarCliente(): void {
+    this.estado.update((estado) => ({
+      ...estado,
+      cliente_seleccionado: null,
     }));
   }
 
@@ -277,9 +337,10 @@ export class PosService {
   }
 
   /**
-   * Resetear POS
+   * ⭐ RESETEAR POS - Limpiar todo
    */
   resetearPOS(): void {
+    console.log('🔄 Reseteando POS');
     this.estado.set(this.estadoInicial);
   }
 
