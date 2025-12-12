@@ -1,6 +1,8 @@
 <div class="inventario-container">
   
-  <!-- Header -->
+  <!-- ========================================
+       HEADER
+  ======================================== -->
   <div class="page-header">
     <div class="header-left">
       <h1 class="page-title">📊 Gestión de Inventario</h1>
@@ -14,14 +16,66 @@
     </div>
   </div>
 
-  <!-- Panel de Alertas COMENTADO TEMPORALMENTE -->
-  <!--
+  <!-- ========================================
+       PANEL DE ESTADÍSTICAS
+  ======================================== -->
   @if (estadisticas()) {
-    <app-panel-alertas-stock [estadisticas]="estadisticas()!" />
-  }
-  -->
+    <div class="estadisticas-grid">
+      
+      <div class="estadistica-card">
+        <div class="estadistica-icon">📦</div>
+        <div class="estadistica-content">
+          <span class="estadistica-valor">{{ estadisticas()!.total_productos }}</span>
+          <span class="estadistica-label">Total Productos</span>
+        </div>
+      </div>
 
-  <!-- Alertas -->
+      <div class="estadistica-card">
+        <div class="estadistica-icon">💰</div>
+        <div class="estadistica-content">
+          <span class="estadistica-valor">S/ {{ estadisticas()!.valor_total_inventario | number:'1.2-2' }}</span>
+          <span class="estadistica-label">Valor Total</span>
+        </div>
+      </div>
+
+      <div class="estadistica-card critico">
+        <div class="estadistica-icon">🚨</div>
+        <div class="estadistica-content">
+          <span class="estadistica-valor">{{ estadisticas()!.productos_stock_critico }}</span>
+          <span class="estadistica-label">Stock Crítico</span>
+        </div>
+      </div>
+
+      <div class="estadistica-card bajo">
+        <div class="estadistica-icon">⚠️</div>
+        <div class="estadistica-content">
+          <span class="estadistica-valor">{{ estadisticas()!.productos_stock_bajo }}</span>
+          <span class="estadistica-label">Stock Bajo</span>
+        </div>
+      </div>
+
+      <div class="estadistica-card normal">
+        <div class="estadistica-icon">✅</div>
+        <div class="estadistica-content">
+          <span class="estadistica-valor">{{ estadisticas()!.productos_stock_normal }}</span>
+          <span class="estadistica-label">Stock Normal</span>
+        </div>
+      </div>
+
+      <div class="estadistica-card exceso">
+        <div class="estadistica-icon">📈</div>
+        <div class="estadistica-content">
+          <span class="estadistica-valor">{{ estadisticas()!.productos_exceso }}</span>
+          <span class="estadistica-label">Stock Exceso</span>
+        </div>
+      </div>
+
+    </div>
+  }
+
+  <!-- ========================================
+       ALERTAS RÁPIDAS
+  ======================================== -->
   <div class="alertas-grid">
     @if (productosStockCritico() > 0) {
       <div class="alerta alerta-critico">
@@ -44,7 +98,9 @@
     }
   </div>
 
-  <!-- Filtros -->
+  <!-- ========================================
+       FILTROS
+  ======================================== -->
   <div class="filtros-container">
     <div class="filtros-grid">
       
@@ -119,7 +175,9 @@
     </div>
   </div>
 
-  <!-- Loading -->
+  <!-- ========================================
+       LOADING
+  ======================================== -->
   @if (cargando()) {
     <div class="loading-container">
       <div class="spinner"></div>
@@ -127,7 +185,9 @@
     </div>
   }
 
-  <!-- Tabla de Inventario -->
+  <!-- ========================================
+       TABLA DE INVENTARIO
+  ======================================== -->
   @if (!cargando() && productos().length > 0) {
     <div class="table-container">
       <table class="table-inventario">
@@ -136,6 +196,7 @@
             <th>Código</th>
             <th>Producto</th>
             <th>Categoría</th>
+            <th>Tipo/Color</th>
             <th>Stock Actual</th>
             <th>Stock Mínimo</th>
             <th>Estado</th>
@@ -148,17 +209,30 @@
           @for (producto of productos(); track producto.id) {
             <tr [class.fila-critico]="producto.estado_stock === 'critico'">
               
+              <!-- Código -->
               <td class="producto-codigo">{{ producto.codigo_lana }}</td>
 
+              <!-- Nombre -->
               <td>
                 <div class="producto-info">
                   <span class="producto-nombre">{{ producto.nombre }}</span>
-                  <span class="producto-tipo">{{ producto.tipo_lana }} - {{ producto.color }}</span>
                 </div>
               </td>
 
-              <td>{{ producto.categoria }}</td>
+              <!-- Categoría -->
+              <td>
+                <span class="badge badge-secondary">{{ producto.categoria }}</span>
+              </td>
 
+              <!-- Tipo/Color -->
+              <td>
+                <div class="producto-detalle">
+                  <span class="producto-tipo">{{ producto.tipo_lana }}</span>
+                  <span class="producto-color">{{ producto.color }}</span>
+                </div>
+              </td>
+
+              <!-- Stock Actual -->
               <td>
                 <div class="stock-actual">
                   <span class="stock-numero" [class.stock-critico]="producto.estado_stock === 'critico'">
@@ -168,8 +242,10 @@
                 </div>
               </td>
 
+              <!-- Stock Mínimo -->
               <td class="text-muted">{{ producto.stock_minimo }} unid.</td>
 
+              <!-- Estado -->
               <td>
                 <span 
                   class="badge" 
@@ -179,10 +255,13 @@
                 </span>
               </td>
 
+              <!-- Precio -->
               <td class="precio">S/ {{ producto.precio_unitario | number:'1.2-2' }}</td>
 
+              <!-- Valor Total -->
               <td class="valor-total">S/ {{ producto.valor_total | number:'1.2-2' }}</td>
 
+              <!-- Acciones -->
               <td>
                 <div class="action-buttons">
                   <button 
@@ -206,6 +285,7 @@
         </tbody>
       </table>
 
+      <!-- Footer de la tabla -->
       <div class="table-footer">
         <div class="footer-info">
           <span>Total de productos: <strong>{{ productos().length }}</strong></span>
@@ -216,7 +296,9 @@
     </div>
   }
 
-  <!-- Estado Vacío -->
+  <!-- ========================================
+       ESTADO VACÍO
+  ======================================== -->
   @if (!cargando() && productos().length === 0) {
     <div class="empty-state">
       <div class="empty-icon">📦</div>
@@ -227,24 +309,5 @@
       </button>
     </div>
   }
-
-  <!-- MODALES COMENTADOS TEMPORALMENTE -->
-  <!--
-  @if (mostrarModalAjuste() && productoSeleccionado()) {
-    <app-modal-ajuste-stock
-      [producto]="productoSeleccionado()!"
-      (cerrar)="cerrarModales()"
-      (stockAjustado)="stockAjustado()"
-    />
-  }
-
-  @if (mostrarModalHistorial() && productoSeleccionado()) {
-    <app-historial-stock
-      [productoId]="productoSeleccionado()!.id"
-      [productoNombre]="productoSeleccionado()!.nombre"
-      (cerrar)="cerrarModales()"
-    />
-  }
-  -->
 
 </div>

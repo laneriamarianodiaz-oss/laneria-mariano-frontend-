@@ -1,9 +1,6 @@
 import { Component, inject, OnInit, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-// import { ModalAjusteStockComponent } from '../modal-ajuste-stock/modal-ajuste-stock.component'; // ⬅️ COMENTADO
-// import { HistorialStockComponent } from '../historial-stock/historial-stock.component'; // ⬅️ COMENTADO
-// import { PanelAlertasStockComponent } from '../panel-alertas-stock/panel-alertas-stock.component'; // ⬅️ COMENTADO
 import { InventarioService } from '../../servicios/inventario.service';
 import {
   ProductoInventario,
@@ -18,10 +15,7 @@ import { CATEGORIAS } from '../../../productos/modelos/producto.model';
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule,
-    // ModalAjusteStockComponent, // ⬅️ COMENTADO
-    // HistorialStockComponent, // ⬅️ COMENTADO
-    // PanelAlertasStockComponent // ⬅️ COMENTADO
+    FormsModule
   ],
   templateUrl: './lista-inventario.component.html',
   styleUrl: './lista-inventario.component.css'
@@ -30,18 +24,18 @@ export class ListaInventarioComponent implements OnInit {
   
   private inventarioService = inject(InventarioService);
 
-  // Signals
+  // 🎯 Signals
   productos = signal<ProductoInventario[]>([]);
   estadisticas = signal<EstadisticasInventario | null>(null);
   cargando = signal(true);
   filtrosActivos = signal<FiltrosInventario>({});
   
-  // Modals
+  // 🎯 Modals (para futuro)
   mostrarModalAjuste = signal(false);
   mostrarModalHistorial = signal(false);
   productoSeleccionado = signal<ProductoInventario | null>(null);
 
-  // Opciones
+  // 🎯 Opciones para filtros
   categorias = ['Todas', ...CATEGORIAS];
   estadosStock = ESTADOS_STOCK;
   ordenamiento = [
@@ -50,7 +44,7 @@ export class ListaInventarioComponent implements OnInit {
     { valor: 'valor', texto: 'Valor' }
   ];
 
-  // Computed
+  // 🎯 Computed (valores calculados)
   valorTotalInventario = computed(() => {
     return this.productos().reduce((total, p) => total + p.valor_total, 0);
   });
@@ -67,74 +61,91 @@ export class ListaInventarioComponent implements OnInit {
     this.cargarDatos();
   }
 
-cargarDatos(): void {
-  this.cargando.set(true);
-  
-  this.inventarioService.obtenerInventario(this.filtrosActivos()).subscribe({
-    next: (productos) => {
-      console.log('✅ Productos cargados:', productos);
-      this.productos.set(productos);
-      this.cargando.set(false);
-    },
-    error: (error) => {
-      console.error('Error al cargar inventario:', error);
-      this.cargarDatosPrueba();
-    }
-  });
+  /**
+   * 🔄 Cargar datos del inventario
+   */
+  cargarDatos(): void {
+    this.cargando.set(true);
+    
+    // Cargar productos
+    this.inventarioService.obtenerInventario(this.filtrosActivos()).subscribe({
+      next: (productos) => {
+        console.log('✅ Productos cargados:', productos);
+        this.productos.set(productos);
+        this.cargando.set(false);
+      },
+      error: (error) => {
+        console.error('❌ Error al cargar inventario:', error);
+        this.cargando.set(false);
+      }
+    });
 
-  // COMENTAR TEMPORALMENTE LAS ESTADÍSTICAS
-  /*
-  this.inventarioService.obtenerEstadisticas().subscribe({
-    next: (stats) => {
-      this.estadisticas.set(stats);
-    },
-    error: () => {
-      this.estadisticas.set({
-        total_productos: 156,
-        valor_total_inventario: 45678.50,
-        productos_stock_critico: 3,
-        productos_stock_bajo: 8,
-        productos_stock_normal: 135,
-        productos_exceso: 10,
-        movimientos_hoy: 15,
-        movimientos_mes: 342
-      });
-    }
-  });
-  */
-}
+    // Cargar estadísticas
+    this.inventarioService.obtenerEstadisticas().subscribe({
+      next: (stats) => {
+        console.log('✅ Estadísticas cargadas:', stats);
+        this.estadisticas.set(stats);
+      },
+      error: (error) => {
+        console.error('❌ Error al cargar estadísticas:', error);
+      }
+    });
+  }
 
+  /**
+   * 🔍 Aplicar filtros
+   */
   aplicarFiltros(filtros: FiltrosInventario): void {
     this.filtrosActivos.set(filtros);
     this.cargarDatos();
   }
 
+  /**
+   * 🧹 Limpiar filtros
+   */
   limpiarFiltros(): void {
     this.filtrosActivos.set({});
     this.cargarDatos();
   }
 
+  /**
+   * 🔧 Abrir modal de ajuste de stock
+   */
   abrirModalAjuste(producto: ProductoInventario): void {
     this.productoSeleccionado.set(producto);
     this.mostrarModalAjuste.set(true);
+    console.log('🔧 Modal de ajuste para:', producto.nombre);
   }
 
+  /**
+   * 📜 Abrir historial de movimientos
+   */
   abrirHistorial(producto: ProductoInventario): void {
     this.productoSeleccionado.set(producto);
     this.mostrarModalHistorial.set(true);
+    console.log('📜 Historial para:', producto.nombre);
   }
 
+  /**
+   * ❌ Cerrar modales
+   */
   cerrarModales(): void {
     this.mostrarModalAjuste.set(false);
     this.mostrarModalHistorial.set(false);
     this.productoSeleccionado.set(null);
   }
 
+  /**
+   * ✅ Callback cuando se ajusta el stock
+   */
   stockAjustado(): void {
     this.cerrarModales();
     this.cargarDatos();
   }
 
+  /**
+   * 🎨 Obtener clase CSS para el badge de stock
+   */
   getStockBadgeClass(estado: string): string {
     const clases: Record<string, string> = {
       'critico': 'badge-danger',
@@ -145,6 +156,9 @@ cargarDatos(): void {
     return clases[estado] || 'badge-secondary';
   }
 
+  /**
+   * 📝 Obtener texto del estado de stock
+   */
   getEstadoTexto(estado: string): string {
     const textos: Record<string, string> = {
       'critico': 'Crítico',
@@ -153,83 +167,5 @@ cargarDatos(): void {
       'exceso': 'Exceso'
     };
     return textos[estado] || estado;
-  }
-
-  private cargarDatosPrueba(): void {
-    const productosPrueba: ProductoInventario[] = [
-      {
-        id: 1,
-        codigo_lana: 'AMG-005',
-        nombre: 'Oso abrazo',
-        categoria: 'Peluches',
-        tipo_lana: 'Perlita domino',
-        color: 'Blanco',
-        stock: 6,
-        stock_minimo: 10,
-        stock_maximo: 50,
-        precio_unitario: 15.00,
-        valor_total: 90.00,
-        estado_stock: 'bajo'
-      },
-      {
-        id: 2,
-        codigo_lana: 'KIT-024',
-        nombre: 'Tijeras de tejidos',
-        categoria: 'Kit de costura',
-        tipo_lana: 'Silvia Clásica',
-        color: 'Dorado',
-        stock: 15,
-        stock_minimo: 10,
-        stock_maximo: 40,
-        precio_unitario: 52.00,
-        valor_total: 780.00,
-        estado_stock: 'normal'
-      },
-      {
-        id: 3,
-        codigo_lana: 'PDO-001',
-        nombre: 'Gorra nórdica',
-        categoria: 'Ropa',
-        tipo_lana: 'Perlita domino',
-        color: 'Piel',
-        stock: 5,
-        stock_minimo: 10,
-        stock_maximo: 30,
-        precio_unitario: 45.00,
-        valor_total: 225.00,
-        estado_stock: 'critico'
-      },
-      {
-        id: 4,
-        codigo_lana: 'AMG-012',
-        nombre: 'Mini plantas',
-        categoria: 'Souvenirs',
-        tipo_lana: 'Silvia Clásica',
-        color: 'Verde',
-        stock: 32,
-        stock_minimo: 15,
-        stock_maximo: 50,
-        precio_unitario: 31.00,
-        valor_total: 992.00,
-        estado_stock: 'normal'
-      },
-      {
-        id: 5,
-        codigo_lana: 'PDO-015',
-        nombre: 'Merinos premium',
-        categoria: 'Lanas',
-        tipo_lana: 'Silvia Clásica',
-        color: 'Rosa',
-        stock: 2,
-        stock_minimo: 20,
-        stock_maximo: 100,
-        precio_unitario: 19.90,
-        valor_total: 39.80,
-        estado_stock: 'critico'
-      }
-    ];
-
-    this.productos.set(productosPrueba);
-    this.cargando.set(false);
   }
 }
