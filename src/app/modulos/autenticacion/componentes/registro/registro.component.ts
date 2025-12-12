@@ -12,9 +12,13 @@ import { AutenticacionService } from '../../../../nucleo/servicios/autenticacion
   styleUrl: './registro.component.scss'
 })
 export class RegistroComponent {
+
   formularioRegistro: FormGroup;
   cargando = false;
   error: string | null = null;
+
+  mostrarPassword = false;
+  mostrarPasswordConfirm = false;
 
   constructor(
     private fb: FormBuilder,
@@ -22,12 +26,16 @@ export class RegistroComponent {
     private router: Router
   ) {
     this.formularioRegistro = this.fb.group({
-      email: ['', [Validators.required, Validators.email]],
+      email: ['', [
+        Validators.required,
+        Validators.email,
+        Validators.pattern(/^[a-zA-Z0-9._%+-]+@(gmail\.com|unajma\.edu\.pe)$/)   // ⭐ SOLO Gmail y UNAJMA
+      ]],
       nombre: ['', [Validators.required, Validators.minLength(2)]],
       apellido: ['', [Validators.required, Validators.minLength(2)]],
       telefono: ['', [Validators.required, Validators.pattern(/^9\d{8}$/)]],
-      dni: ['', [Validators.required, Validators.pattern(/^\d{8}$/)]], // ⭐ OBLIGATORIO
-      direccion: [''], // ⭐ Opcional
+      dni: ['', [Validators.required, Validators.pattern(/^\d{8}$/)]],
+      direccion: [''],
       password: ['', [Validators.required, Validators.minLength(6)]],
       password_confirmation: ['', [Validators.required]]
     }, {
@@ -41,6 +49,14 @@ export class RegistroComponent {
     return password === confirmacion ? null : { passwordsMismatch: true };
   }
 
+  togglePassword() {
+    this.mostrarPassword = !this.mostrarPassword;
+  }
+
+  togglePasswordConfirm() {
+    this.mostrarPasswordConfirm = !this.mostrarPasswordConfirm;
+  }
+
   registrarse(): void {
     if (this.formularioRegistro.valid) {
       this.cargando = true;
@@ -52,28 +68,19 @@ export class RegistroComponent {
         password: this.formularioRegistro.value.password,
         password_confirmation: this.formularioRegistro.value.password,
         telefono: this.formularioRegistro.value.telefono,
-        dni: this.formularioRegistro.value.dni, // ⭐ Se envía siempre
+        dni: this.formularioRegistro.value.dni,
         direccion: this.formularioRegistro.value.direccion || undefined
       };
 
-      console.log('📤 Enviando datos de registro:', datos);
-
       this.authService.registrarse(datos).subscribe({
         next: (respuesta) => {
-          console.log('✅ Registro exitoso', respuesta);
-          
-          if (respuesta.success && respuesta.data && respuesta.data.token) {
+          if (respuesta.success && respuesta.data?.token) {
             setTimeout(() => {
               const rol = respuesta.data.user.rol;
-              
               if (rol === 'administrador') {
-                this.router.navigate(['/administrador']).then(() => {
-                  window.location.reload();
-                });
+                this.router.navigate(['/administrador']).then(() => window.location.reload());
               } else {
-                this.router.navigate(['/catalogo']).then(() => {
-                  window.location.reload();
-                });
+                this.router.navigate(['/catalogo']).then(() => window.location.reload());
               }
             }, 300);
           } else {
@@ -82,8 +89,6 @@ export class RegistroComponent {
           }
         },
         error: (error) => {
-          console.error('❌ Error al registrarse', error);
-          
           if (error.error?.message) {
             this.error = error.error.message;
           } else if (error.error?.errors) {
@@ -92,7 +97,6 @@ export class RegistroComponent {
           } else {
             this.error = 'Error al registrarse. Intenta de nuevo.';
           }
-          
           this.cargando = false;
         }
       });
