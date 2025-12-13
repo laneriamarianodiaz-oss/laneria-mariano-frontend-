@@ -68,10 +68,16 @@
           </div>
         </div>
         <div class="panel-body">
-          @for (producto of datos()!.topProductos; track producto.id) {
-            <div class="top-producto-item">
-              <span class="producto-nombre">{{ $index + 1 }}. {{ producto.nombre }}</span>
-              <span class="producto-cantidad">{{ producto.cantidadVendida }} vendidas</span>
+          @if (datos()!.topProductos && datos()!.topProductos.length > 0) {
+            @for (producto of datos()!.topProductos; track producto.id) {
+              <div class="top-producto-item">
+                <span class="producto-nombre">{{ $index + 1 }}. {{ producto.nombre }}</span>
+                <span class="producto-cantidad">{{ producto.cantidadVendida }} vendidas</span>
+              </div>
+            }
+          } @else {
+            <div class="empty-state">
+              <p>📭 No hay productos vendidos aún</p>
             </div>
           }
         </div>
