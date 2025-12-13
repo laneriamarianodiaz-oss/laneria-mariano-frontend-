@@ -18,7 +18,7 @@ export class PedidosPersonalizadosComponent implements OnInit {
   cargando = false;
 
   // ⚙️ CONFIGURACIÓN DE WHATSAPP
-  numeroWhatsApp = '5196467447'; // ← CAMBIAR POR TU NÚMERO (código país + número)
+  numeroWhatsApp = '51964674477'; // ← CAMBIAR POR TU NÚMERO (código país + número)
   
   // Mensajes de ejemplo para diferentes tipos de pedidos
   tiposPedidos = [
