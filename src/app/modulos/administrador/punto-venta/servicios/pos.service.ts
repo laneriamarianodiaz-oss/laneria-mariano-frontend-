@@ -268,7 +268,7 @@ export class PosService {
   }
 
   /**
-   * ⭐ PROCESAR VENTA POS - RUTA ACTUALIZADA
+   * ⭐ PROCESAR VENTA POS - RUTA ACTUALIZADA Y CORREGIDA
    */
   procesarVenta(): Observable<RespuestaVenta> {
     const estadoActual = this.estado();
@@ -285,20 +285,41 @@ export class PosService {
       throw new Error('Debe seleccionar un método de pago');
     }
 
-    const solicitud: SolicitudVenta = {
-      cliente_id: estadoActual.cliente_seleccionado.cliente_id,
-      items: estadoActual.carrito.items.map((item) => ({
-        producto_id: item.producto.id,
+    // ⭐ MAPEAR ITEMS CORRECTAMENTE
+    const items = estadoActual.carrito.items.map((item) => {
+      // ✅ Usar producto_id o id dependiendo de lo que esté disponible
+      const productoId = item.producto.producto_id || item.producto.id;
+      
+      console.log('🔍 Mapeando item:', {
+        nombre: item.producto.nombre,
+        id: item.producto.id,
+        producto_id: item.producto.producto_id,
+        productoId_seleccionado: productoId,
+        cantidad: item.cantidad,
+        precio: item.precio_unitario
+      });
+
+      return {
+        producto_id: productoId,
         cantidad: item.cantidad,
         precio_unitario: item.precio_unitario,
-      })),
+      };
+    });
+
+    const solicitud: SolicitudVenta = {
+      cliente_id: estadoActual.cliente_seleccionado.cliente_id,
+      items: items,
       metodo_pago: estadoActual.metodo_pago,
       canal_venta: estadoActual.canal_venta || 'Tienda física',
       observaciones: estadoActual.observaciones || undefined,
       descuento: estadoActual.carrito.descuento_total || undefined,
     };
 
-    console.log('📤 Enviando solicitud de venta POS:', solicitud);
+    console.log('📤 === ENVIANDO SOLICITUD DE VENTA POS ===');
+    console.log('📤 Cliente ID:', solicitud.cliente_id);
+    console.log('📤 Items:', JSON.stringify(solicitud.items, null, 2));
+    console.log('📤 Método de pago:', solicitud.metodo_pago);
+    console.log('📤 Solicitud completa:', JSON.stringify(solicitud, null, 2));
 
     this.estado.update((estado) => ({
       ...estado,
@@ -317,6 +338,8 @@ export class PosService {
         },
         error: (error) => {
           console.error('❌ Error al procesar venta:', error);
+          console.error('❌ Status:', error.status);
+          console.error('❌ Error completo:', error.error);
           this.estado.update((estado) => ({
             ...estado,
             procesando_venta: false,
