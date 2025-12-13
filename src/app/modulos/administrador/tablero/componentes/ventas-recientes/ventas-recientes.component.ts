@@ -26,8 +26,4 @@ export class VentasRecientesComponent {
   verTodasVentas(): void {
     this.router.navigate(['/admin/ventas']);
   }
-
-  verDetalle(id: number): void {
-    this.router.navigate(['/admin/ventas', id]);
-  }
 }
