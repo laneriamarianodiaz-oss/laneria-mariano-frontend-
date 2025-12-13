@@ -2,37 +2,45 @@
   <div class="table-header">
     <h3>📋 Últimas Ventas</h3>
     <button class="btn-view-all" (click)="verTodasVentas()">
-      Ver todas →
+      Ver todas
     </button>
   </div>
 
   <table class="table">
     <thead>
       <tr>
-        <th>N° Venta</th>
-        <th>Fecha</th>
-        <th>Cliente</th>
-        <th>Total</th>
-        <th>Estado</th>
-        <th>Acciones</th>
+        <th>N° VENTA</th>
+        <th>FECHA</th>
+        <th>CLIENTE</th>
+        <th>TOTAL</th>
+        <th>ESTADO</th>
       </tr>
     </thead>
     <tbody>
-      @for (venta of ventas; track venta.id) {
+      @if (ventas.length > 0) {
+        @for (venta of ventas; track venta.id) {
+          <tr>
+            <td class="venta-numero">{{ venta.numero }}</td>
+            <td>{{ venta.fecha }}</td>
+            <td>{{ venta.cliente }}</td>
+            <td class="venta-total">S/ {{ venta.total.toFixed(2) }}</td>
+            <td>
+              <span 
+                class="badge"
+                [class.badge-success]="venta.estado === 'completada'"
+                [class.badge-warning]="venta.estado === 'pendiente'"
+                [class.badge-danger]="venta.estado === 'cancelada'"
+              >
+                {{ venta.estado === 'completada' ? 'COMPLETADA' : 
+                   venta.estado === 'pendiente' ? 'PENDIENTE' : 'CANCELADA' }}
+              </span>
+            </td>
+          </tr>
+        }
+      } @else {
         <tr>
-          <td class="venta-numero">{{ venta.numero }}</td>
-          <td>{{ venta.fecha }}</td>
-          <td>{{ venta.cliente }}</td>
-          <td class="venta-total">S/ {{ venta.total | number:'1.2-2' }}</td>
-          <td>
-            <span 
-              class="badge"
-              [class.badge-success]="venta.estado === 'completada'"
-              [class.badge-warning]="venta.estado === 'pendiente'"
-              [class.badge-danger]="venta.estado === 'cancelada'"
-            >
-              {{ venta.estado | titlecase }}
-            </span>
+          <td colspan="5" style="text-align: center; padding: 40px; color: #6b7280;">
+            No hay ventas recientes
           </td>
         </tr>
       }
