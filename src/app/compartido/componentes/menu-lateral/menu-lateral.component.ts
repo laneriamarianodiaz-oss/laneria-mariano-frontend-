@@ -65,19 +65,9 @@ export class MenuLateralComponent {
     route: '/admin/clientes'
   },
   {
-    iconUrl: 'panel/proveedores.png',
-    label: 'Proveedores',
-    route: '/admin/proveedores'
-  },
-  {
     iconUrl: 'panel/reportes.png',
     label: 'Reportes',
     route: '/admin/reportes'
-  },
-  {
-    iconUrl: 'panel/reportes.png',
-    label: 'Configuración',
-    route: '/admin/configuracion'
   }
 ]);
 
