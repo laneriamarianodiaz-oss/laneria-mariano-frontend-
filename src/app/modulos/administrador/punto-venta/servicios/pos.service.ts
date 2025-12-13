@@ -268,7 +268,7 @@ export class PosService {
   }
 
   /**
-   * Procesar venta
+   * ⭐ PROCESAR VENTA POS - RUTA ACTUALIZADA
    */
   procesarVenta(): Observable<RespuestaVenta> {
     const estadoActual = this.estado();
@@ -298,14 +298,15 @@ export class PosService {
       descuento: estadoActual.carrito.descuento_total || undefined,
     };
 
-    console.log('📤 Enviando solicitud de venta:', solicitud);
+    console.log('📤 Enviando solicitud de venta POS:', solicitud);
 
     this.estado.update((estado) => ({
       ...estado,
       procesando_venta: true,
     }));
 
-    return this.http.post<RespuestaVenta>(`${this.API_URL}/ventas`, solicitud).pipe(
+    // ⭐ RUTA ACTUALIZADA PARA POS
+    return this.http.post<RespuestaVenta>(`${this.API_URL}/ventas/crear`, solicitud).pipe(
       tap({
         next: (respuesta) => {
           console.log('✅ Venta procesada exitosamente:', respuesta);
