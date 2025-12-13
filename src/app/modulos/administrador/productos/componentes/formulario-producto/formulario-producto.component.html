@@ -17,7 +17,7 @@
         <!-- Fila 1: Código y Nombre -->
         <div class="form-row">
           <div class="form-group">
-            <label>Código de lana <span class="required">*</span></label>
+            <label>Código de producto <span class="required">*</span></label>
             <input 
               type="text" 
               class="form-input"
@@ -39,22 +39,8 @@
           </div>
         </div>
 
-        <!-- Fila 2: Tipo y Categoría -->
+        <!-- Fila 2: Categoría (ocupa todo el ancho) -->
         <div class="form-row">
-          <div class="form-group">
-            <label>Tipo de lana <span class="required">*</span></label>
-            <select 
-              class="form-select"
-              [value]="formulario().tipo_lana"
-              (change)="actualizarCampo('tipo_lana', $any($event.target).value)"
-            >
-              <option value="">Seleccionar...</option>
-              @for (tipo of tiposLana; track tipo) {
-                <option [value]="tipo">{{ tipo }}</option>
-              }
-            </select>
-          </div>
-
           <div class="form-group">
             <label>Categoría <span class="required">*</span></label>
             <select 
@@ -123,7 +109,7 @@
           </div>
         </div>
 
-        <!-- Fila 5: Stock Mínimo y Proveedor -->
+        <!-- Fila 5: Stock Mínimo -->
         <div class="form-row">
           <div class="form-group">
             <label>Stock mínimo <span class="required">*</span></label>
@@ -135,20 +121,6 @@
               [value]="formulario().stock_minimo"
               (input)="actualizarCampo('stock_minimo', parseInt($any($event.target).value) || 0)"
             >
-          </div>
-
-          <div class="form-group">
-            <label>Proveedor</label>
-            <select 
-              class="form-select"
-              [value]="formulario().proveedor_id || ''"
-              (change)="actualizarCampo('proveedor_id', $any($event.target).value ? parseInt($any($event.target).value) : undefined)"
-            >
-              <option value="">Seleccionar...</option>
-              @for (prov of proveedores(); track prov.id) {
-                <option [value]="prov.id">{{ prov.nombre }}</option>
-              }
-            </select>
           </div>
         </div>
 

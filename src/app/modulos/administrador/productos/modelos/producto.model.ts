@@ -9,14 +9,14 @@ import type { Producto } from '../../../../compartido/modelos/producto.modelo';
 export interface ProductoFormulario {
   codigo_lana: string;
   nombre: string;
-  tipo_lana: string;
+  tipo_lana: string; // Se mantiene por compatibilidad pero no se usa en el formulario
   categoria: string;
   color: string;
   talla_tamano?: string;
   precio_unitario: number;
   stock: number;
   stock_minimo: number;
-  proveedor_id?: number;
+  proveedor_id?: number; // Se mantiene por compatibilidad pero no se usa
   estado: string;
   descripcion?: string;
 }
@@ -48,12 +48,8 @@ export const CATEGORIAS = [
   'Kits'
 ];
 
-export const TIPOS_LANA = [
-  'Perlita domino',
-  'Silvia Clásica',
-  'Alpaca',
-  'Merino'
-];
+// Ya no se usa TIPOS_LANA pero se mantiene vacío por compatibilidad
+export const TIPOS_LANA: string[] = [];
 
 export const COLORES = [
   'Blanco',

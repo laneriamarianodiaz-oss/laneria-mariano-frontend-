@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, OnInit, Output, signal, inject } from '
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ProductoService } from '../../servicios/producto.service';
-import { Producto, ProductoFormulario, CATEGORIAS, TIPOS_LANA, COLORES } from '../../modelos/producto.model';
+import { Producto, ProductoFormulario, CATEGORIAS, COLORES } from '../../modelos/producto.model';
 
 @Component({
   selector: 'app-formulario-producto',
@@ -29,22 +29,20 @@ export class FormularioProductoComponent implements OnInit {
 
   // Opciones
   categorias = CATEGORIAS;
-  tiposLana = TIPOS_LANA;
   colores = COLORES;
-  proveedores = signal<any[]>([]);
 
-  // Formulario
+  // Formulario (sin tipo_lana y proveedor_id)
   formulario = signal<ProductoFormulario>({
     codigo_lana: '',
     nombre: '',
-    tipo_lana: '',
+    tipo_lana: '', // Se mantiene por compatibilidad pero no se usa
     categoria: '',
     color: '',
     talla_tamano: '',
     precio_unitario: 0,
     stock: 0,
     stock_minimo: 0,
-    proveedor_id: undefined,
+    proveedor_id: undefined, // Se mantiene por compatibilidad pero no se usa
     estado: 'activo',
     descripcion: ''
   });
@@ -61,7 +59,6 @@ export class FormularioProductoComponent implements OnInit {
     if (this.producto) {
       this.cargarDatosProducto();
     }
-    this.cargarProveedores();
   }
 
   /**
@@ -73,14 +70,14 @@ export class FormularioProductoComponent implements OnInit {
     this.formulario.set({
       codigo_lana: this.producto.codigo_lana,
       nombre: this.producto.nombre,
-      tipo_lana: this.producto.tipo_lana,
+      tipo_lana: '', // Ya no se usa
       categoria: this.producto.categoria,
       color: this.producto.color,
       talla_tamano: this.producto.talla_tamano || '',
       precio_unitario: this.producto.precio_unitario,
       stock: this.producto.stock,
       stock_minimo: this.producto.stock_minimo,
-      proveedor_id: this.producto.proveedor_id || undefined,
+      proveedor_id: undefined, // Ya no se usa
       estado: this.producto.estado,
       descripcion: this.producto.descripcion || ''
     });
@@ -89,17 +86,6 @@ export class FormularioProductoComponent implements OnInit {
     if (this.producto.imagenes) {
       this.imagenesPreview.set([...this.producto.imagenes]);
     }
-  }
-
-  /**
-   * Cargar proveedores
-   */
-  cargarProveedores(): void {
-    this.proveedores.set([
-      { id: 1, nombre: 'Textiles San Juan' },
-      { id: 2, nombre: 'Lanas del Sur' },
-      { id: 3, nombre: 'Importadora Lima' }
-    ]);
   }
 
   /**
@@ -199,23 +185,18 @@ export class FormularioProductoComponent implements OnInit {
   }
 
   /**
-   * Validar formulario
+   * Validar formulario (SIN tipo_lana)
    */
   private validarFormulario(): boolean {
     const form = this.formulario();
     
     if (!form.codigo_lana || form.codigo_lana.trim() === '') {
-      alert('❌ El código de lana es obligatorio');
+      alert('❌ El código de producto es obligatorio');
       return false;
     }
     
     if (!form.nombre || form.nombre.trim() === '') {
       alert('❌ El nombre del producto es obligatorio');
-      return false;
-    }
-    
-    if (!form.tipo_lana) {
-      alert('❌ El tipo de lana es obligatorio');
       return false;
     }
     
@@ -243,7 +224,7 @@ export class FormularioProductoComponent implements OnInit {
   }
 
   /**
-   * ✅ GUARDAR PRODUCTO CON CLOUDINARY DIRECTO
+   * ✅ GUARDAR PRODUCTO (SIN tipo_lana y proveedor_id)
    */
   async guardarProducto(): Promise<void> {
     if (!this.validarFormulario()) return;
@@ -264,11 +245,11 @@ export class FormularioProductoComponent implements OnInit {
         this.subiendoImagen.set(false);
       }
 
-      // 📦 PASO 2: PREPARAR DATOS PARA EL BACKEND
+      // 📦 PASO 2: PREPARAR DATOS (SIN tipo_de_producto y proveedor_id)
       const productoData: any = {
         codigo_producto: form.codigo_lana.trim(),
         nombre_producto: form.nombre.trim(),
-        tipo_de_producto: form.tipo_lana,
+        tipo_de_producto: 'General', // Valor por defecto
         categoria: form.categoria,
         precio_producto: form.precio_unitario,
         stock_disponible: form.stock,
@@ -288,10 +269,6 @@ export class FormularioProductoComponent implements OnInit {
       if (form.descripcion && form.descripcion.trim()) {
         productoData.descripcion = form.descripcion.trim();
       }
-      
-      if (form.proveedor_id && form.proveedor_id > 0) {
-        productoData.proveedor_id = form.proveedor_id;
-      }
 
       // ⭐ AGREGAR URL DE CLOUDINARY
       if (imagenUrl) {
@@ -301,7 +278,7 @@ export class FormularioProductoComponent implements OnInit {
       console.log('=== DATOS A ENVIAR AL BACKEND ===');
       console.log(productoData);
 
-      // 🚀 PASO 3: ENVIAR AL BACKEND (SOLO JSON, NO FORMDATA)
+      // 🚀 PASO 3: ENVIAR AL BACKEND
       const operacion = this.producto
         ? this.productoService.actualizarProducto(this.producto.id, productoData)
         : this.productoService.crearProducto(productoData);
