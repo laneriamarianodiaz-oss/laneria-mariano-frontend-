@@ -17,13 +17,17 @@
       </tr>
     </thead>
     <tbody>
-      @if (ventas.length > 0) {
+      @if (ventas && ventas.length > 0) {
         @for (venta of ventas; track venta.id) {
           <tr>
-            <td class="venta-numero">{{ venta.numero }}</td>
+            <td>
+              <span class="venta-numero">{{ venta.numero }}</span>
+            </td>
             <td>{{ venta.fecha }}</td>
             <td>{{ venta.cliente }}</td>
-            <td class="venta-total">S/ {{ venta.total.toFixed(2) }}</td>
+            <td>
+              <span class="venta-total">S/ {{ venta.total.toFixed(2) }}</span>
+            </td>
             <td>
               <span 
                 class="badge"
@@ -39,8 +43,8 @@
         }
       } @else {
         <tr>
-          <td colspan="5" style="text-align: center; padding: 40px; color: #6b7280;">
-            No hay ventas recientes
+          <td colspan="5" style="text-align: center; padding: 40px; color: #6b7280; font-size: 14px;">
+            📭 No hay ventas recientes
           </td>
         </tr>
       }
