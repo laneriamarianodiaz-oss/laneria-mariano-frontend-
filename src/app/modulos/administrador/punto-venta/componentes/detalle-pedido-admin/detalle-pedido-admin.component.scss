@@ -121,7 +121,7 @@
 }
 
 /* ============================================ */
-/* 🎨 PRODUCTOS - DISEÑO CORREGIDO */
+/* 🎨 PRODUCTOS - DISEÑO OPTIMIZADO */
 /* ============================================ */
 .productos-lista {
   display: flex;
@@ -145,7 +145,7 @@
   }
 }
 
-/* 📸 Imagen del producto - TAMAÑO CORREGIDO */
+/* 📸 Imagen del producto - TAMAÑO OPTIMIZADO */
 .producto-imagen {
   flex-shrink: 0;
   width: 60px;
@@ -253,6 +253,131 @@
   }
 }
 
+/* ============================================ */
+/* 📸 COMPROBANTE DE PAGO - DISEÑO MEJORADO */
+/* ============================================ */
+.card-comprobante {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border: 2px solid #dee2e6;
+}
+
+.comprobante-container {
+  margin-top: 10px;
+}
+
+.comprobante-imagen {
+  text-align: center;
+  background: white;
+  padding: 15px;
+  border-radius: 8px;
+  border: 2px dashed #dee2e6;
+  
+  img,
+  .img-comprobante {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+    width: auto;
+    max-height: 250px; /* ✅ Altura máxima controlada */
+    height: auto;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    object-fit: contain; /* ✅ Mantener proporción */
+    
+    &:hover {
+      transform: scale(1.05);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+    }
+  }
+  
+  .zoom-hint {
+    color: #667eea;
+    font-size: 0.85rem;
+    margin-top: 12px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  }
+}
+
+.sin-comprobante {
+  text-align: center;
+  padding: 30px;
+  background: #fff3cd;
+  border-radius: 8px;
+  border: 2px dashed #ffc107;
+  
+  p {
+    margin: 0;
+    color: #856404;
+    font-weight: 500;
+  }
+}
+
+/* 🔢 Código de Operación - DISEÑO DESTACADO */
+.codigo-operacion-destacado {
+  margin-top: 15px;
+  background: white;
+  border-radius: 8px;
+  padding: 15px;
+  border: 2px solid #667eea;
+  
+  .codigo-header {
+    margin-bottom: 10px;
+    
+    .label {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #333;
+    }
+  }
+  
+  .codigo-contenido {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: #f8f9fa;
+    padding: 12px 15px;
+    border-radius: 6px;
+    
+    .codigo-texto {
+      flex: 1;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #667eea;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 1px;
+    }
+    
+    .btn-copiar-codigo {
+      padding: 8px 16px;
+      background: #667eea;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      white-space: nowrap;
+      
+      &:hover {
+        background: #5568d3;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(102, 126, 234, 0.3);
+      }
+      
+      &:active {
+        transform: translateY(0);
+      }
+    }
+  }
+}
+
 /* Resumen de Pago */
 .resumen-pago {
   background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -304,7 +429,9 @@
   }
 }
 
-/* Responsive */
+/* ============================================ */
+/* 📱 RESPONSIVE */
+/* ============================================ */
 @media (max-width: 1200px) {
   .grid-container {
     grid-template-columns: 1fr;
@@ -342,69 +469,18 @@
       max-width: 100%;
     }
   }
-
-  .comprobante-container {
-  padding: 20px;
-}
-
-.comprobante-imagen {
-  text-align: center;
-  margin-bottom: 20px;
   
-  .comprobante-img {
-    max-width: 100%;
-    max-height: 400px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    cursor: pointer;
-    transition: transform 0.3s ease;
+  /* Comprobante en móvil */
+  .comprobante-imagen img,
+  .comprobante-imagen .img-comprobante {
+    max-height: 200px; /* ✅ Más pequeño en móvil */
+  }
+  
+  .codigo-contenido {
+    flex-direction: column;
     
-    &:hover {
-      transform: scale(1.02);
+    .btn-copiar-codigo {
+      width: 100%;
     }
   }
-  
-  .zoom-hint {
-    color: #666;
-    font-size: 0.9rem;
-    margin-top: 10px;
-  }
-}
-
-.codigo-operacion {
-  background: #f8f9fa;
-  padding: 15px;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  gap: 15px;
-  
-  .label {
-    font-weight: 600;
-    color: #333;
-  }
-  
-  .codigo {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: #667eea;
-    font-family: monospace;
-  }
-  
-  .btn-copiar {
-    padding: 8px 16px;
-    background: #667eea;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
-    
-    &:hover {
-      background: #5568d3;
-      transform: translateY(-2px);
-    }
-  }
-}
 }
